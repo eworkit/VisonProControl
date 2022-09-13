@@ -16,7 +16,7 @@ namespace VisionApplication
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-            FileInfo file = new FileInfo(Environment.CurrentDirectory + "\\app.config");
+            FileInfo file = new FileInfo(Environment.CurrentDirectory + "\\log4net.config");
             log4net.Config.XmlConfigurator.ConfigureAndWatch(file);
             Application.Run(new MainForm());
 

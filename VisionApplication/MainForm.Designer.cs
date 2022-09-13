@@ -31,10 +31,6 @@ namespace VisionApplication
             this.uiFlowLayoutPanel1 = new Sunny.UI.UIFlowLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.visionControl1 = new VisionControl.VisionUC();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnRun = new System.Windows.Forms.ToolStripButton();
             this.btnRunMannul = new System.Windows.Forms.ToolStripButton();
@@ -42,6 +38,10 @@ namespace VisionApplication
             this.btnPreview = new System.Windows.Forms.ToolStripButton();
             this.button_Configuration = new System.Windows.Forms.ToolStripButton();
             this.btnTool = new System.Windows.Forms.ToolStripButton();
+            this.visionControl1 = new VisionControl.VisionUC();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.uiFlowLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -102,48 +102,6 @@ namespace VisionApplication
             this.toolStripContainer1.Size = new System.Drawing.Size(150, 175);
             this.toolStripContainer1.TabIndex = 3;
             this.toolStripContainer1.Text = "toolStripContainer1";
-            // 
-            // visionControl1
-            // 
-            this.visionControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.visionControl1.Controls.Add(this.statusStrip1);
-            this.visionControl1.Font = new System.Drawing.Font("Œ¢»Ì—≈∫⁄", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.visionControl1.Location = new System.Drawing.Point(-4, 88);
-            this.visionControl1.Margin = new System.Windows.Forms.Padding(4);
-            this.visionControl1.MinimumSize = new System.Drawing.Size(1, 1);
-            this.visionControl1.Name = "visionControl1";
-            this.visionControl1.Size = new System.Drawing.Size(1924, 551);
-            this.visionControl1.TabIndex = 2;
-            this.visionControl1.Text = null;
-            this.visionControl1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-            this.visionControl1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 529);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.ShowItemToolTips = true;
-            this.statusStrip1.Size = new System.Drawing.Size(1924, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 55;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 16);
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Margin = new System.Windows.Forms.Padding(50, 3, 0, 2);
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
             // 
             // btnOpen
             // 
@@ -228,13 +186,60 @@ namespace VisionApplication
             this.btnTool.Size = new System.Drawing.Size(87, 43);
             this.btnTool.Text = "π§æﬂ";
             // 
+            // visionControl1
+            // 
+            this.visionControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.visionControl1.Controls.Add(this.statusStrip1);
+            this.visionControl1.Font = new System.Drawing.Font("Œ¢»Ì—≈∫⁄", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.visionControl1.Location = new System.Drawing.Point(-2, 89);
+            this.visionControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.visionControl1.MinimumSize = new System.Drawing.Size(1, 1);
+            this.visionControl1.Name = "visionControl1";
+            this.visionControl1.Size = new System.Drawing.Size(1920, 548);
+            this.visionControl1.TabIndex = 2;
+            this.visionControl1.Text = null;
+            this.visionControl1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            this.visionControl1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.toolStripStatusLabel2});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 526);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.ShowItemToolTips = true;
+            this.statusStrip1.Size = new System.Drawing.Size(1920, 22);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 55;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 16);
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Margin = new System.Windows.Forms.Padding(50, 3, 0, 2);
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
+            // 
             // MainForm
             // 
+            this.AllowAddControlOnTitle = true;
             this.ClientSize = new System.Drawing.Size(1920, 656);
             this.Controls.Add(this.uiFlowLayoutPanel1);
             this.Controls.Add(this.visionControl1);
             this.Controls.Add(this.toolStripContainer1);
+            this.ExtendBox = true;
             this.Name = "MainForm";
+            this.Padding = new System.Windows.Forms.Padding(2, 36, 2, 2);
+            this.ShowDragStretch = true;
+            this.ShowRadius = false;
             this.Text = " ”æıºÏ≤‚œµÕ≥";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.ZoomScaleRect = new System.Drawing.Rectangle(19, 19, 1002, 656);

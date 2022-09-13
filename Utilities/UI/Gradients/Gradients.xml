@@ -1,0 +1,663 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Gradients</name>
+    </assembly>
+    <members>
+        <member name="T:Gradients.GradientBorder">
+            <summary>
+            Container control which paints a gradient transparent border around its interior. By setting
+            <see cref="P:Gradients.GradientBorder.BorderWidth"/> the width of this border as well as the <see cref="P:System.Windows.Forms.ScrollableControl.DockPadding"/>
+            is set. Thus a contained <see cref="T:System.Windows.Forms.Control"/> which is docked won't overlap the transparent border. 
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorder.#ctor">
+            <summary>
+            Creates a new instance.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorder.OnInnerColorChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorder.InnerColorChanged"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorder.OnBorderWidthChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorder.BorderWidthChanged"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorder.OnAutoUpdateInteriorColorsChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorder.AutoUpdateInteriorColorsChanged"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorder.OnInnerAreaClick(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorder.InnerAreaClick"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorder.ShouldSerializeDefaultInnerColor">
+            <summary>
+            Indicates the designer whether <see cref="P:Gradients.GradientBorder.InnerColor"/> needs
+            to be serialized.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorder.ShouldSerializeBackColor">
+            <summary>
+            Indicates the designer whether <see cref="P:Gradients.GradientBorder.BackColor"/> needs
+            to be serialized. Always return false.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorder.Invalidate">
+            <summary>
+            Invalidates the control and causes a paint message being sent to it.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorder.OnControlAdded(System.Windows.Forms.ControlEventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorder.InnerColorChanged"/> event and optionally
+            set the <see cref="P:System.Windows.Forms.Control.BackColor"/> of the added <see cref="T:System.Windows.Forms.Control"/>.
+            </summary>
+            <param name="e">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorder.OnClick(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Windows.Forms.Control.Click"/> event and the
+            <see cref="E:Gradients.GradientBorder.InnerAreaClick"/> event if the click didn't
+            occur within the border.
+            </summary>
+            <param name="e">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorder.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Paints the border.
+            </summary>
+            <param name="e">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorder.OnLayout(System.Windows.Forms.LayoutEventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Windows.Forms.Control.Layout"/> event and invalidates
+            this instance.
+            </summary>
+            <param name="levent">Event data.</param>
+        </member>
+        <member name="E:Gradients.GradientBorder.InnerColorChanged">
+            <summary>
+            Event which gets fired when <see cref="P:Gradients.GradientBorder.InnerColor"/> has changed.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorder.BorderWidthChanged">
+            <summary>
+            Event which gets fired when <see cref="P:Gradients.GradientBorder.BorderWidth"/> has changed.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorder.AutoUpdateInteriorColorsChanged">
+            <summary>
+            Event which gets fired when <see cref="P:Gradients.GradientBorder.AutoUpdateInteriorColors"/> has changed.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorder.InnerAreaClick">
+            <summary>
+            Event which gets fired when a click occured in the inner area
+            (meaning not on the border) of this instance. When a contained control
+            is clicked this event will not fire.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorder.AutoUpdateInteriorColors">
+            <summary>
+            Gets or sets whether the <see cref="P:System.Windows.Forms.Control.BackColor"/> of contained controls
+            should automatically be updated when the <see cref="P:Gradients.GradientBorder.InnerColor"/> changes.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorder.InnerColor">
+            <summary>
+            Gets or sets the color of the interior and the border.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorder.BorderWidth">
+            <summary>
+            Gets or sets the width of the border.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorder.InnerBounds">
+            <summary>
+            Gets a rectangle containing the area of this instance which
+            is not covered by the border.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorder.DefaultInnerColor">
+            <summary>
+            Gets the default value of the <see cref="P:Gradients.GradientBorder.InnerColor"/> property.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorder.BackColor">
+            <summary>
+            Overriden to hide the property from the designer and to
+            ignore changes.
+            </summary>
+        </member>
+        <member name="T:Gradients.GradientBorderAnimationExtender">
+            <summary>
+            Helper class for easy runtime animation of <see cref="P:Gradients.GradientBorderAnimationExtender.GradientBorder"/>s.
+            Internalyl it uses <see cref="T:Gradients.GradientBorderInnerColorAnimator"/>,
+            <see cref="T:Animations.ControlForeColorAnimator"/> and
+            <see cref="T:Gradients.GradientBorderWidthAnimator"/> to accomplish
+            the animation.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderAnimationExtender.#ctor(System.ComponentModel.IContainer)">
+            <summary>
+            Creates a new instance.
+            </summary>
+            <param name="container">Container the new instance should be added to.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderAnimationExtender.#ctor">
+            <summary>
+            Creates a new instance.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderAnimationExtender.Dispose(System.Boolean)">
+            <summary>
+            Frees used resources.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Gradients.GradientBorderAnimationExtender.InitializeComponent">
+            <summary>
+            Erforderliche Methode f黵 die Designerunterst黷zung. 
+            Der Inhalt der Methode darf nicht mit dem Code-Editor ge鋘dert werden.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderAnimationExtender.Change(System.Drawing.Color,System.Int32,System.Drawing.Color)">
+            <summary>
+            Changes the properties of the set <see cref="P:Gradients.GradientBorderAnimationExtender.GradientBorder"/> to the new values.
+            </summary>
+            <param name="innerColor">The new <see cref="P:Gradients.GradientBorder.InnerColor"/> value.</param>
+            <param name="borderWidth">The new <see cref="P:Gradients.GradientBorder.BorderWidth"/> value.</param>
+            <param name="foreColor">The new <see cref="P:System.Windows.Forms.Control.ForeColor"/> value.</param>
+        </member>
+        <member name="E:Gradients.GradientBorderAnimationExtender.AnimationStarted">
+            <summary>
+            Event which gets fired when animation has been started.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorderAnimationExtender.AnimationFinished">
+            <summary>
+            Event which gets fired when animation has finished running.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderAnimationExtender.GradientBorder">
+            <summary>
+            Gets or sets the <see cref="P:Gradients.GradientBorderAnimationExtender.GradientBorder"/> which sould be animated.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderAnimationExtender.StepSize">
+            <summary>
+            Gets or sets the size of each step (in %) when updating the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderAnimationExtender.Intervall">
+            <summary>
+            Gets or sets the intervall (in milliseconds) between updates to the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderAnimationExtender.IsAnimated">
+            <summary>
+            Gets or sets whether <see cref="M:Gradients.GradientBorderAnimationExtender.Change(System.Drawing.Color,System.Int32,System.Drawing.Color)"/> calls are done immediatly
+            or animated.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderAnimationExtender.IsRunning">
+            <summary>
+            Gets whether an animation is currently running.
+            </summary>
+        </member>
+        <member name="T:Gradients.GradientBorderButton">
+            <summary>
+            Class deriving from <see cref="T:Gradients.GradientBorder"/> which shows a text in it's centre
+            and is able to animate it's <see cref="P:Gradients.GradientBorder.BorderWidth"/> and
+            <see cref="P:Gradients.GradientBorder.InnerColor"/> when the mouse is moved above it.
+            When the contained <see cref="T:System.Windows.Forms.Label"/> is clicked the <see cref="E:Gradients.GradientBorder.InnerAreaClick"/>
+            event is raised.
+            </summary>
+        </member>
+        <member name="T:Gradients.GradientBorderLabel">
+            <summary>
+            Class inheriting from <see cref="T:Gradients.GradientBorder"/> which adds a text.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderLabel.#ctor">
+            <summary>
+            Creates a new instance.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderLabel.InitializeComponent">
+            <summary> 
+            Erforderliche Methode f黵 die Designerunterst黷zung. 
+            Der Inhalt der Methode darf nicht mit dem Code-Editor ge鋘dert werden.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderLabel.Dispose(System.Boolean)">
+            <summary>
+            Frees used resources.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Gradients.GradientBorderLabel.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Adds the painting of the text to the base implementation.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Gradients.GradientBorderLabel.OnRightToLeftChanged(System.EventArgs)">
+            <summary>
+            Reinitializes the internal string format of the text.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Gradients.GradientBorderLabel.OnTextAlignChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorderLabel.TextAlignChanged"/> event.
+            </summary>
+            <param name="eventArgs"></param>
+        </member>
+        <member name="E:Gradients.GradientBorderLabel.TextAlignChanged">
+            <summary>
+            Event which gets fired when <see cref="P:Gradients.GradientBorderLabel.TextAlign"/> has changed.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderLabel.Text">
+            <summary>
+            Redirects the given text to the contained <see cref="T:System.Windows.Forms.Label"/>.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderLabel.TextAlign">
+            <summary>
+            Gets or sets the alignment of the text.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.#ctor">
+            <summary>
+            Creates a new instance.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.InitializeComponent">
+            <summary>
+            Erforderliche Methode f黵 die Designerunterst黷zung. 
+            Der Inhalt der Methode darf nicht mit dem Code-Editor ge鋘dert werden.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.Dispose(System.Boolean)">
+            <summary>
+            Frees used resources.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.OnMouseEnter(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Windows.Forms.Control.MouseEnter"/> event and starts (if
+            necessary) an animation.
+            </summary>
+            <param name="e">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.OnMouseLeave(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Windows.Forms.Control.MouseLeave"/> event and starts (if
+            necessary) an animation.
+            </summary>
+            <param name="e">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.OnAnimationStarted(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorderButton.AnimationStarted"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.OnAnimationFinished(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorderButton.AnimationFinished"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.OnIsFocusedChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorderButton.IsFocusedChanged"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.OnIsAnimationEnabledChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorderButton.IsAnimationEnabledChanged"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.OnAnimationSettingsChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorderButton.AnimationSettingsChanged"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.OnAnimationStepSizeChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorderButton.AnimationStepSizeChanged"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.OnAnimationIntervallChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Gradients.GradientBorderButton.AnimationIntervallChanged"/> event.
+            </summary>
+            <param name="eventArgs">Event data.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.ShouldSerializeInnerColorFocused">
+            <summary>
+            Indicates the designer whether <see cref="P:Gradients.GradientBorderButton.InnerColorFocused"/> needs
+            to be serialized.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.ShouldSerializeInnerColorUnfocused">
+            <summary>
+            Indicates the designer whether <see cref="P:Gradients.GradientBorderButton.InnerColorUnfocused"/> needs
+            to be serialized.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.ShouldSerializeForeColorFocused">
+            <summary>
+            Indicates the designer whether <see cref="P:Gradients.GradientBorderButton.ForeColorFocused"/> needs
+            to be serialized.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderButton.ShouldSerializeForeColorUnfocused">
+            <summary>
+            Indicates the designer whether <see cref="P:Gradients.GradientBorderButton.ForeColorUnfocused"/> needs
+            to be serialized.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorderButton.AnimationStarted">
+            <summary>
+            Event which gets fired when animation has been started.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorderButton.AnimationFinished">
+            <summary>
+            Event which gets fired when animation has finished running.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorderButton.IsFocusedChanged">
+            <summary>
+            Event which gets fired when <see cref="P:Gradients.GradientBorderButton.IsFocused"/> has changed.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorderButton.IsAnimationEnabledChanged">
+            <summary>
+            Event which gets fired when <see cref="P:Gradients.GradientBorderButton.IsAnimationEnabled"/> has changed.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorderButton.AnimationSettingsChanged">
+            <summary>
+            Event which gets fired when any of the focused/unfocused properties has changed.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorderButton.AnimationStepSizeChanged">
+            <summary>
+            Event which gets fired when <see cref="P:Gradients.GradientBorderButton.AnimationStepSize"/> has changed.
+            </summary>
+        </member>
+        <member name="E:Gradients.GradientBorderButton.AnimationIntervallChanged">
+            <summary>
+            Event which gets fired when <see cref="P:Gradients.GradientBorderButton.AnimationIntervall"/> has changed.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.ForeColor">
+            <summary>
+            Overridden property to disable designer support.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.InnerColor">
+            <summary>
+            Overridden property to disable designer support.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.BorderWidth">
+            <summary>
+            Overridden property to disable designer support.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.BorderWidthFocused">
+            <summary>
+            Gets or sets the desired <see cref="P:Gradients.GradientBorder.BorderWidth"/> when
+            the cursor is located above the button.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.BorderWidthUnfocused">
+            <summary>
+            Gets or sets the desired <see cref="P:Gradients.GradientBorder.BorderWidth"/> when
+            the cursor is not located above the button.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.InnerColorFocused">
+            <summary>
+            Gets or sets the desired <see cref="P:Gradients.GradientBorder.InnerColor"/> when
+            the cursor is located above the button.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.InnerColorUnfocused">
+            <summary>
+            Gets or sets the desired <see cref="P:Gradients.GradientBorder.InnerColor"/> when
+            the cursor is not located above the button.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.ForeColorFocused">
+            <summary>
+            Gets or sets the desired <see cref="P:System.Windows.Forms.Control.ForeColor"/> when
+            the cursor is not located above the button.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.ForeColorUnfocused">
+            <summary>
+            Gets or sets the desired <see cref="P:System.Windows.Forms.Control.ForeColor"/> when
+            the cursor is located above the button.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.IsFocused">
+            <summary>
+            Gets whether the button is currently focused. In this context it means
+            if the cursor is located above the button.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.IsAnimationEnabled">
+            <summary>
+            Gets or sets whether the button anmates when the cursor is
+            moved above it. Any animation in process will be continued.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.IsAnimationRunning">
+            <summary>
+            Gets whether the button is currently animating.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.AnimationIntervall">
+            <summary>
+            Gets or sets the intervall (in milliseconds) between updates to the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.AnimationStepSize">
+            <summary>
+            Gets or sets the size of each step (in %) when updating the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.DefaultInnerColorFocused">
+            <summary>
+            Gets the default value of the <see cref="P:Gradients.GradientBorderButton.InnerColorFocused"/> property.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.DefaultInnerColorUnfocused">
+            <summary>
+            Gets the default value of the <see cref="P:Gradients.GradientBorderButton.InnerColorUnfocused"/> property.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.DefaultForeColorFocused">
+            <summary>
+            Gets the default value of the <see cref="P:Gradients.GradientBorderButton.InnerColorFocused"/> property.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderButton.DefaultForeColorUnfocused">
+            <summary>
+            Gets the default value of the <see cref="P:Gradients.GradientBorderButton.InnerColorUnfocused"/> property.
+            </summary>
+        </member>
+        <member name="T:Gradients.GradientBorderInnerColorAnimator">
+            <summary>
+            Class inheriting <see cref="T:Animations.AnimatorBase"/> to animated the
+            <see cref="P:Gradients.GradientBorder.InnerColor"/> of a <see cref="P:Gradients.GradientBorderInnerColorAnimator.GradientBorder"/>.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderInnerColorAnimator.#ctor(System.ComponentModel.IContainer)">
+            <summary>
+            Creates a new instance.
+            </summary>
+            <param name="container">Container the new instance should be added to.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderInnerColorAnimator.#ctor">
+            <summary>
+            Creates a new instance.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderInnerColorAnimator.GetValueForStep(System.Double)">
+            <summary>
+            Calculates an interpolated value between <see cref="P:Gradients.GradientBorderInnerColorAnimator.StartValue"/> and
+            <see cref="P:Gradients.GradientBorderInnerColorAnimator.EndValue"/> for a given step in %.
+            Giving 0 will return the <see cref="P:Gradients.GradientBorderInnerColorAnimator.StartValue"/>.
+            Giving 100 will return the <see cref="P:Gradients.GradientBorderInnerColorAnimator.EndValue"/>.
+            </summary>
+            <param name="step">Animation step in %</param>
+            <returns>Interpolated value for the given step.</returns>
+        </member>
+        <member name="M:Gradients.GradientBorderInnerColorAnimator.ShouldSerializeStartColor">
+            <summary>
+            Indicates the designer whether <see cref="P:Gradients.GradientBorderInnerColorAnimator.StartColor"/> needs
+            to be serialized.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderInnerColorAnimator.ShouldSerializeEndColor">
+            <summary>
+            Indicates the designer whether <see cref="P:Gradients.GradientBorderInnerColorAnimator.EndColor"/> needs
+            to be serialized.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderInnerColorAnimator.StartColor">
+            <summary>
+            Gets or sets the starting color for the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderInnerColorAnimator.EndColor">
+            <summary>
+            Gets or sets the ending Color for the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderInnerColorAnimator.GradientBorder">
+            <summary>
+            Gets or sets the <see cref="P:Gradients.GradientBorderInnerColorAnimator.GradientBorder"/> which 
+            <see cref="P:Gradients.GradientBorder.InnerColor"/> should be animated.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderInnerColorAnimator.CurrentValueInternal">
+            <summary>
+            Gets or sets the currently shown value.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderInnerColorAnimator.StartValue">
+            <summary>
+            Gets or sets the starting value for the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderInnerColorAnimator.EndValue">
+            <summary>
+            Gets or sets the ending value for the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderInnerColorAnimator.DefaultStartColor">
+            <summary>
+            Gets the default value of the <see cref="P:Gradients.GradientBorderInnerColorAnimator.StartColor"/> property.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderInnerColorAnimator.DefaultEndColor">
+            <summary>
+            Gets the default value of the <see cref="P:Gradients.GradientBorderInnerColorAnimator.EndColor"/> property.
+            </summary>
+        </member>
+        <member name="T:Gradients.GradientBorderWidthAnimator">
+            <summary>
+            Class inheriting <see cref="T:Animations.AnimatorBase"/> to animated the
+            <see cref="P:Gradients.GradientBorder.BorderWidth"/> of a <see cref="P:Gradients.GradientBorderWidthAnimator.GradientBorder"/>.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderWidthAnimator.#ctor(System.ComponentModel.IContainer)">
+            <summary>
+            Creates a new instance.
+            </summary>
+            <param name="container">Container the new instance should be added to.</param>
+        </member>
+        <member name="M:Gradients.GradientBorderWidthAnimator.#ctor">
+            <summary>
+            Creates a new instance.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderWidthAnimator.GetValueForStep(System.Double)">
+            <summary>
+            Calculates an interpolated value between <see cref="P:Gradients.GradientBorderWidthAnimator.StartValue"/> and
+            <see cref="P:Gradients.GradientBorderWidthAnimator.EndValue"/> for a given step in %.
+            Giving 0 will return the <see cref="P:Gradients.GradientBorderWidthAnimator.StartValue"/>.
+            Giving 100 will return the <see cref="P:Gradients.GradientBorderWidthAnimator.EndValue"/>.
+            </summary>
+            <param name="step">Animation step in %</param>
+            <returns>Interpolated value for the given step.</returns>
+        </member>
+        <member name="M:Gradients.GradientBorderWidthAnimator.ShouldSerializeStartColor">
+            <summary>
+            Indicates the designer whether <see cref="P:Gradients.GradientBorderWidthAnimator.StartWidth"/> needs
+            to be serialized.
+            </summary>
+        </member>
+        <member name="M:Gradients.GradientBorderWidthAnimator.ShouldSerializeEndColor">
+            <summary>
+            Indicates the designer whether <see cref="P:Gradients.GradientBorderWidthAnimator.EndWidth"/> needs
+            to be serialized.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderWidthAnimator.StartWidth">
+            <summary>
+            Gets or sets the starting border width for the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderWidthAnimator.EndWidth">
+            <summary>
+            Gets or sets the ending border width for the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderWidthAnimator.GradientBorder">
+            <summary>
+            Gets or sets the <see cref="P:Gradients.GradientBorderWidthAnimator.GradientBorder"/> which 
+            <see cref="P:Gradients.GradientBorder.BorderWidth"/> should be animated.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderWidthAnimator.CurrentValueInternal">
+            <summary>
+            Gets or sets the currently shown value.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderWidthAnimator.StartValue">
+            <summary>
+            Gets or sets the starting value for the animation.
+            </summary>
+        </member>
+        <member name="P:Gradients.GradientBorderWidthAnimator.EndValue">
+            <summary>
+            Gets or sets the ending value for the animation.
+            </summary>
+        </member>
+    </members>
+</doc>

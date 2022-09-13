@@ -207,6 +207,7 @@ namespace VisionControl
             InitializeComponent();
             //if (!DesignMode)
             //    this.tabPage1.Controls.Add(new UCOneJob() { Dock = DockStyle.Fill });
+            this.uiTabControl1.TabVisible = false;
 #if Test
             FillJobTabs();
 #endif
@@ -2030,6 +2031,22 @@ namespace VisionControl
                 return false;
             }
             return true;
+        }
+
+        private void uiNavBar1_TabIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void uiNavBar1_MenuItemClick(string itemText, int menuIndex, int pageIndex)
+        {
+            this.uiTabControl1.SelectedIndex = menuIndex;
+         
+        }
+
+        private void uiNavBar1_NodeMouseClick(TreeNode node, int menuIndex, int pageIndex)
+        {
+
         }
     }
 

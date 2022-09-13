@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ByteConverter.cs" />
     <Compile Include="FormAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +120,18 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UcTcpClient.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcTcpClient.Designer.cs">
+      <DependentUpon>UcTcpClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UcTcpServer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcTcpServer.Designer.cs">
+      <DependentUpon>UcTcpServer.cs</DependentUpon>
     </Compile>
     <Compile Include="TriggerFifo.cs" />
     <Compile Include="UCOneJob.cs">
@@ -171,6 +184,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UcTcpClient.resx">
+      <DependentUpon>UcTcpClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcTcpServer.resx">
+      <DependentUpon>UcTcpServer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UCOneJob.resx">
       <DependentUpon>UCOneJob.cs</DependentUpon>
     </EmbeddedResource>
@@ -181,6 +200,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{cadec15a-bb9d-4352-ac44-276aa27cc445}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
