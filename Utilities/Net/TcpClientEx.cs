@@ -22,7 +22,7 @@ namespace Utilities.Net
         {
             client = new TcpClient();
         }
-
+        public bool IsOnline =>  !(!client.Connected || (client.Client.Poll(1000, SelectMode.SelectRead) && (client.Available == 0)));
         public void Start(string strServerIP, int serverPort)
         {          
             try { Stop(); }
@@ -285,6 +285,7 @@ namespace Utilities.Net
 
         public void Dispose()
         {
+            Stop();
             if (netstream != null)
             {
                 netstream.Close();

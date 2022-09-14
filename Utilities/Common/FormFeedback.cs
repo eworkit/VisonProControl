@@ -83,7 +83,7 @@ namespace Utilities
             }
             if (true.Equals(e.Result))
             {
-                MessageBox.Show(sOK, sInfo, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, sOK, sInfo, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = System.Windows.Forms.DialogResult.OK;
             }
             else

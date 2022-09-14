@@ -322,7 +322,7 @@
             this.Controls.Add(this.uiLabel1);
             this.Controls.Add(this.uiLabel5);
             this.Name = "UcTcpServer";
-            this.Size = new System.Drawing.Size(438, 738);
+            this.Size = new System.Drawing.Size(471, 567);
             this.ResumeLayout(false);
 
         }

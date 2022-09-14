@@ -114,6 +114,7 @@
     <Compile Include="FormSetPasswords.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MessageBoxE.cs" />
     <Compile Include="OptionsFile.cs" />
     <Compile Include="PasswordFile.cs" />
     <Compile Include="strings.Designer.cs">

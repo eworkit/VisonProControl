@@ -257,7 +257,7 @@ namespace Utilities.Net
                         continue;
                     return saddr;
                 }
-            return "";
+            return "127.0.0.1";
         }
         public static string GetOuterIP()
         {

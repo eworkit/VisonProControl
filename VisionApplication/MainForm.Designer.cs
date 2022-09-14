@@ -30,7 +30,6 @@ namespace VisionApplication
     {
             this.uiFlowLayoutPanel1 = new Sunny.UI.UIFlowLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnRun = new System.Windows.Forms.ToolStripButton();
             this.btnRunMannul = new System.Windows.Forms.ToolStripButton();
@@ -38,6 +37,7 @@ namespace VisionApplication
             this.btnPreview = new System.Windows.Forms.ToolStripButton();
             this.button_Configuration = new System.Windows.Forms.ToolStripButton();
             this.btnTool = new System.Windows.Forms.ToolStripButton();
+            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.visionControl1 = new VisionControl.VisionUC();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -87,21 +87,6 @@ namespace VisionApplication
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripContainer1
-            // 
-            this.toolStripContainer1.BottomToolStripPanelVisible = false;
-            // 
-            // toolStripContainer1.ContentPanel
-            // 
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(150, 150);
-            this.toolStripContainer1.LeftToolStripPanelVisible = false;
-            this.toolStripContainer1.Location = new System.Drawing.Point(28, 35);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(150, 175);
-            this.toolStripContainer1.TabIndex = 3;
-            this.toolStripContainer1.Text = "toolStripContainer1";
             // 
             // btnOpen
             // 
@@ -186,6 +171,21 @@ namespace VisionApplication
             this.btnTool.Size = new System.Drawing.Size(87, 43);
             this.btnTool.Text = "¹¤¾ß";
             // 
+            // toolStripContainer1
+            // 
+            this.toolStripContainer1.BottomToolStripPanelVisible = false;
+            // 
+            // toolStripContainer1.ContentPanel
+            // 
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(150, 150);
+            this.toolStripContainer1.LeftToolStripPanelVisible = false;
+            this.toolStripContainer1.Location = new System.Drawing.Point(28, 35);
+            this.toolStripContainer1.Name = "toolStripContainer1";
+            this.toolStripContainer1.RightToolStripPanelVisible = false;
+            this.toolStripContainer1.Size = new System.Drawing.Size(150, 175);
+            this.toolStripContainer1.TabIndex = 3;
+            this.toolStripContainer1.Text = "toolStripContainer1";
+            // 
             // visionControl1
             // 
             this.visionControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -197,11 +197,12 @@ namespace VisionApplication
             this.visionControl1.Margin = new System.Windows.Forms.Padding(4);
             this.visionControl1.MinimumSize = new System.Drawing.Size(1, 1);
             this.visionControl1.Name = "visionControl1";
-            this.visionControl1.Size = new System.Drawing.Size(1920, 548);
+            this.visionControl1.Size = new System.Drawing.Size(1916, 548);
             this.visionControl1.TabIndex = 2;
             this.visionControl1.Text = null;
             this.visionControl1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
             this.visionControl1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+      
             // 
             // statusStrip1
             // 
@@ -212,7 +213,7 @@ namespace VisionApplication
             this.statusStrip1.Location = new System.Drawing.Point(0, 526);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.ShowItemToolTips = true;
-            this.statusStrip1.Size = new System.Drawing.Size(1920, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1916, 22);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 55;
             this.statusStrip1.Text = "statusStrip1";

@@ -172,5 +172,7 @@ namespace VisionApplication
             else
                 visionControl1.RunJobCont(visionControl1.SelectedTab);
         }
+
+       
     }
 }

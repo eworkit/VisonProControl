@@ -35,13 +35,16 @@ namespace Utilities.ExMethod
                 return defaultValue;
             }
         }
-        public static int ToInt32(this object obj, int defaultValue = 0)
+        public static int ToInt32(this object obj, int? defaultValue =null )
         {
-            if (obj == null) return defaultValue;
+            if (obj == null && defaultValue.HasValue) return defaultValue.Value;
             try { return Convert.ToInt32(obj); }
-            catch { return defaultValue; }
+            catch (Exception ex){
+                if (defaultValue == null)
+                    throw ex;
+                return defaultValue.Value; }
         }
-        public static int ToIntHex(this string s, int defaultValue = 0)
+        public static int ToIntHex(this string s, int? defaultValue=null)
         {
             try
             {
@@ -49,10 +52,13 @@ namespace Utilities.ExMethod
                     s = s.Remove(0, 2);
                 return Convert.ToInt32(s, 16);
             }
-            catch { }
-            return defaultValue;
+            catch (Exception ex) {
+                if (defaultValue == null)
+                    throw ex;
+            }
+            return defaultValue.Value;
         }
-        public static uint ToUIntHex(this string s, uint defaultValue = 0)
+        public static uint ToUIntHex(this string s, uint? defaultValue = null)
         {
             try
             {
@@ -60,8 +66,11 @@ namespace Utilities.ExMethod
                     s = s.Remove(0, 2);
                 return Convert.ToUInt32(s, 16);
             }
-            catch { }
-            return defaultValue;
+             catch (Exception ex) {
+                if (defaultValue == null)
+                    throw ex;
+            }
+            return defaultValue.Value;
         }
         public static int ToInt(this Color obj, int defaultValue = 0)
         {

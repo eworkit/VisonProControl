@@ -25,42 +25,85 @@ namespace VisionControl
             tbPort.SetType(TextInputType.Int, false);
             tcpClient = new TcpClientEx();
             tcpClient.OnReceive += TcpClient_OnReceive;
+            this.Disposed += UcTcpClient_Disposed;
+            btnDisCon.Enabled = false;
 
+        }
+
+        private void UcTcpClient_Disposed(object sender, EventArgs e)
+        {
+            tcpClient.Dispose();
         }
 
         private void TcpClient_OnReceive(object sender, TcpClientEventArgs e)
         {
             string text = ByteConverter.ToSocketString(e.Read, ckRcvHex.Checked);
-            if (string.IsNullOrEmpty(tbRcvData.Text))
-                text = Environment.NewLine + text;
-            tbRcvData.SafeInvoke(()=> tbRcvData.AppendText(text));
+            
+            tbRcvData.SafeInvoke(()=>
+            {
+                if (!string.IsNullOrEmpty(tbRcvData.Text))
+                    text = Environment.NewLine + text;
+                tbRcvData.AppendText(text);
+            });
         }
-
+        void SetUIStat()
+        {
+            bool conn = tcpClient.IsOnline;
+            this.SafeInvoke(() =>
+            {
+                btnConnect.Enabled = !conn;
+                btnDisCon.Enabled = conn;
+            });
+        }
         private void btnConnect_Click(object sender, EventArgs e)
         {
             try
             {
                 tcpClient.BeginConnect(tbServer.Text, tbPort.Text.ToInt());
+                SetUIStat();
             }catch(Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBoxE.Show(this, ex.Message);
             }
         }
 
         private void btnDisCon_Click(object sender, EventArgs e)
         {
             tcpClient.Stop();
+            SetUIStat();
         }
 
         private void btnSend_Click(object sender, EventArgs e)
         { 
             if(string.IsNullOrEmpty( tbSentData.Text))
             {
-                MessageBox.Show("请输入要发送的数据");
+                MessageBoxE.Show("请输入要发送的数据");
             }
-
-            var data = ByteConverter.ToSocketBytes(tbSentData.Text, ckSentHex.Checked);
-            tcpClient.Send(data);
+            try
+            {
+                if(!tcpClient.IsOnline )
+                {
+                    if(ckAutoConn.Checked)
+                    {
+                        btnConnect_Click(sender, e);
+                    }
+                    else
+                    {
+                        MessageBoxE.Show(this, "TCP未连接");
+                    }
+                }
+                var data = ByteConverter.ToSocketBytes(tbSentData.Text, ckSentHex.Checked);
+                if(!tcpClient.client.Connected)
+                {
+                    MessageBoxE.Show(this, "未连接到服务器");
+                    return;
+                }
+                tcpClient.Send(data);
+            }
+            catch(Exception ex)
+            {
+                MessageBoxE.Show(this, ex.Message);
+            }
         }
     }
 }

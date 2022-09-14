@@ -360,7 +360,7 @@ namespace VisionControl
                 if (ex.InnerException != null)
                 {
                     jobError = ex.InnerException.Message;
-                    MessageBox.Show(this,jobError);
+                    MessageBoxE.Show(this, jobError);
                 }
                 SetErrorMsg(ResourceUtility.GetString("RtErrorLoadingVpp") + ex.Message);
                 return false;
@@ -674,7 +674,7 @@ namespace VisionControl
                 mCurrentRunState = RunState.Stopped;
                 UpdateControlsEnabled();
                 log.Error(ex);
-                MessageBox.Show(ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
+                MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                   mApplicationName);
             }
         }
@@ -736,7 +736,7 @@ namespace VisionControl
                     mCurrentRunState = RunState.Stopped;
                     UpdateControlsEnabled();
                     log.Error(ex);
-                    MessageBox.Show(ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
+                    MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                       mApplicationName);
                 }
             }
@@ -747,7 +747,7 @@ namespace VisionControl
                 return;
             if (i >= mJM.JobCount)
             {
-                MessageBox.Show(this, "当前所选Job未配置");
+                MessageBoxE.Show(this, "当前所选Job未配置");
                 return;
             }
             var job = mJM.Job(i);
@@ -794,7 +794,7 @@ namespace VisionControl
                     mCurrentRunState = RunState.Stopped;
                     UpdateControlsEnabled();
                     log.Error(ex);
-                    MessageBox.Show(ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
+                    MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                       mApplicationName);
                 }
             }
@@ -1237,7 +1237,7 @@ namespace VisionControl
 
             // for now, show a brief error message.  in the future, we may bring up a more
             // flexible error log here
-            MessageBox.Show(ResourceUtility.FormatString("RtImageQueueOverrun", jobname),
+            MessageBoxE.Show(this, ResourceUtility.FormatString("RtImageQueueOverrun", jobname),
               mApplicationName, MessageBoxButtons.OK);
 
             // since the message has been viewed, now clear the sender's error icon display
@@ -1467,7 +1467,7 @@ namespace VisionControl
                     RestoreJobStates();
                     mCurrentRunState = RunState.Stopped;
                     SetResultBarCurrent();
-                    MessageBox.Show(ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
+                    MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                       mApplicationName);
 
                     // need to set the checkbox back to unchecked - note that this causes a recurse call
@@ -1552,7 +1552,7 @@ namespace VisionControl
                     return false;
                 if (prompt.Password != expected)
                 {
-                    MessageBox.Show(ResourceUtility.GetString("RtInvalidPassword2"), ResourceUtility.GetString("RtInvalidPassword"));
+                    MessageBoxE.Show(this, ResourceUtility.GetString("RtInvalidPassword2"), ResourceUtility.GetString("RtInvalidPassword"));
                     return false;
                 }
             }
@@ -1619,7 +1619,7 @@ namespace VisionControl
                             }
                             catch (Cognex.VisionPro.Exceptions.CogException ex)
                             {
-                                MessageBox.Show(ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
+                                MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                                                 mApplicationName);
                             }
                         }
@@ -1630,13 +1630,13 @@ namespace VisionControl
 
         public void PromptToSaveSettings(string promptString)
         {
-            DialogResult result = MessageBox.Show(this, promptString, ResourceUtility.GetString("RtSaveSettingsTitle"),
+            DialogResult result = MessageBoxE.Show(this, promptString, ResourceUtility.GetString("RtSaveSettingsTitle"),
               MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
             {
                 if (mJM.JobsRunningState != CogJobsRunningStateConstants.None)
                 {
-                    MessageBox.Show(ResourceUtility.GetString("RtErrorSavingVpp_Running"), mApplicationName);
+                    MessageBoxE.Show(this, ResourceUtility.GetString("RtErrorSavingVpp_Running"), mApplicationName);
                     return;
                 }
 
@@ -1655,7 +1655,7 @@ namespace VisionControl
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ResourceUtility.FormatString("RtErrorSavingVpp", vpp) + ex.Message,
+                        MessageBoxE.Show(this, ResourceUtility.FormatString("RtErrorSavingVpp", vpp) + ex.Message,
                           mApplicationName);
                     }
 
@@ -1664,7 +1664,7 @@ namespace VisionControl
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ResourceUtility.FormatString("RtErrorSavingVpp", vpp) + ex.Message,
+                    MessageBoxE.Show(this, ResourceUtility.FormatString("RtErrorSavingVpp", vpp) + ex.Message,
                       mApplicationName);
                 }
             }
@@ -1675,7 +1675,7 @@ namespace VisionControl
 
             if (mJM.JobsRunningState != CogJobsRunningStateConstants.None)
             {
-                MessageBox.Show(ResourceUtility.GetString("RtErrorSavingVpp_Running"), mApplicationName);
+                MessageBoxE.Show(this, ResourceUtility.GetString("RtErrorSavingVpp_Running"), mApplicationName);
                 return;
             }
 
@@ -1694,7 +1694,7 @@ namespace VisionControl
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ResourceUtility.FormatString("RtErrorSavingVpp", vpp) + ex.Message,
+                    MessageBoxE.Show(this, ResourceUtility.FormatString("RtErrorSavingVpp", vpp) + ex.Message,
                       mApplicationName);
                 }
 
@@ -1703,7 +1703,7 @@ namespace VisionControl
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ResourceUtility.FormatString("RtErrorSavingVpp", vpp) + ex.Message,
+                MessageBoxE.Show(this, ResourceUtility.FormatString("RtErrorSavingVpp", vpp) + ex.Message,
                   mApplicationName);
             }
         }
@@ -2027,7 +2027,7 @@ namespace VisionControl
         {
             if (JobManager == null)
             {
-                MessageBox.Show(this, "CobJob 未初始化。" + jobError, "错误");
+                MessageBoxE.Show(this, "CobJob 未初始化。" + jobError, "错误");
                 return false;
             }
             return true;

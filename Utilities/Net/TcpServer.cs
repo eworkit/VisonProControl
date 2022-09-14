@@ -39,6 +39,7 @@ namespace Utilities.Net
 
         public event tcpServerConnectionChanged OnConnect = null;
         public event tcpServerConnectionChanged OnDataAvailable = null;
+        public event tcpServerConnectionChanged OnLostConnect;
         public event tcpServerError OnError = null;
 
         public TcpServer()
@@ -254,6 +255,16 @@ namespace Utilities.Net
                     else
                     {
                         System.Threading.Thread.Sleep(m_idleTime);
+                    }
+                    for (int i= connections.Count-1;i>=0; i-- )
+                    {
+                        var conn = connections[i];
+                        var client = conn.Socket;
+                        if (((client.Client.Poll(1000, SelectMode.SelectRead) && (client.Available == 0)) || !client.Connected))
+                        {
+                            OnLostConnect?.Invoke(conn);
+                            connections.RemoveAt(i);
+                        }
                     }
                 }
                 catch (ThreadInterruptedException) { } //thread is interrupted when we quit
