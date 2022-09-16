@@ -25,6 +25,8 @@ using File = System.IO.File;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Device.Gpio;
+using Utilities.UI.ExMethod;
 
 namespace VisionControl
 {
@@ -36,12 +38,13 @@ namespace VisionControl
     {
         //==20220718
         private CogToolGroup myTG = new CogToolGroup();
-      //  private CogToolBlock MyToolBlock = new CogToolBlock();
+        //  private CogToolBlock MyToolBlock = new CogToolBlock();
         //==20220718
 
         public CogAcqInfo acqInfo = new CogAcqInfo();
         private CogAcqFifoTool AcqFifoTool = new CogAcqFifoTool();
-
+        CheckBox checkBox_LiveDisplay = new CheckBox();
+        CogJobResultHistoryCollectionEdit cogJobResultHistoryCollectionEdit1 = new CogJobResultHistoryCollectionEdit();
         ToolTip toolTip = new ToolTip();
         #region Private data
         private const int MaximumPeriodMs = 500;
@@ -67,7 +70,7 @@ namespace VisionControl
         private int mSelectedJob = 0;
         private AccessLevel mCurrentAccessLevel;
         private CogJobResultHistoryCollection mHistoryCollection = new CogJobResultHistoryCollection();
-        bool _IsAllRun=false;
+        bool _IsAllRun = false;
         bool _IsPreview = false;
         private RunState mCurrentRunState = RunState.Stopped;
         private JobData[] mJobData = null;
@@ -139,10 +142,25 @@ namespace VisionControl
             get { return mGeneratedByVersion; }
         }
 
+        public bool AutoRunMode
+        {
+            get
+            {
+                return autoRunMode;
+            }
+            set
+            {
+                if (autoRunMode != value)
+                {
+                    autoRunMode = value;
+                    AutoRunModeChanged?.Invoke(value);
+                }
+            }
+        }
         public int SelectedTab => tabControl_JobTabs.SelectedIndex;
         public bool IsAutoRun => _IsAllRun;
         public bool InitError => mInitError;
-         
+        public event Action<bool> AutoRunModeChanged;
         /// <summary>
         /// Event fired for every user result produced by a job in the QuickBuild application (.vpp
         /// file).  The event is fired by the job thread itself, so any subscribers must handle this
@@ -174,7 +192,7 @@ namespace VisionControl
         /// Therefore this method should be called only at closing the Vision Application.
         /// </summary>
         public void Close()
-        { 
+        {
             mMinimumGuiPeriodTimer?.Dispose();
             mMaximumGuiPeriodTimer?.Dispose();
             mMinimumGuiPeriodTimer = null;
@@ -184,7 +202,7 @@ namespace VisionControl
             mIsClosing = true;
             if (mJM != null)
             {
-                mJM.Shutdown(); 
+                mJM.Shutdown();
                 mJM = null;
             }
         }
@@ -205,6 +223,9 @@ namespace VisionControl
         public VisionUC()
         {
             InitializeComponent();
+            SizeChanged += VisionUC_SizeChanged;
+            //GpioController controller = new GpioController();
+            //controller.OpenPin(pin, PinMode.Output);
             //if (!DesignMode)
             //    this.tabPage1.Controls.Add(new UCOneJob() { Dock = DockStyle.Fill });
             this.uiTabControl1.TabVisible = false;
@@ -213,12 +234,18 @@ namespace VisionControl
 #endif
         }
 
-#if Test  
+        private void VisionUC_SizeChanged(object sender, EventArgs e)
+        {
+            uiNavBar1.Width = uiSplitContainer1.Panel2.Width;
+            uiTabControl1.Width = uiNavBar1.Width;
+        }
+
+#if Test
         void FillJobTabs()
         {
-            for (int i = tabControl_JobTabs.TabCount;  i < 4;i++)
-            { 
-                TabPage tp = new TabPage("未配置") ;
+            for (int i = tabControl_JobTabs.TabCount; i < 4; i++)
+            {
+                TabPage tp = new TabPage("未配置");
                 tabControl_JobTabs.TabPages.Add(tp);
                 tp.Controls.Add(new UCOneJob(null) { Left = 3, Top = 3, Dock = DockStyle.Fill });
             }
@@ -228,7 +255,7 @@ namespace VisionControl
         public event Action<bool> PreviewChanged;
         public void Preview(bool isPreview)
         {
-            if(isPreview)
+            if (isPreview)
             {
                 var jobs = UCJobs.ToArray();
                 TableLayoutPanel tlp = tabControl_JobTabs.Parent.Controls.OfType<TableLayoutPanel>().FirstOrDefault();
@@ -271,7 +298,7 @@ namespace VisionControl
             this._IsPreview = isPreview;
             PreviewChanged?.Invoke(isPreview);
         }
- 
+
 
         private static string ResolveVppFilename()
         {
@@ -282,19 +309,18 @@ namespace VisionControl
             {
                 // if not, then try the filename in the same directory as this executable
                 //string justFilename = System.IO.Path.GetFileName(fname);
-               // fname = Utility.GetThisExecutableDirectory() + justFilename;
+                // fname = Utility.GetThisExecutableDirectory() + justFilename;
                 //return null;
             }
 
             return fname;
         }
 
-  
+
         IEnumerable<UCOneJob> UCJobs
         {
             get
             {
-                var jobs = new List<UCOneJob>();
                 if (_IsPreview)
                 {
                     foreach (var c in tabControl_JobTabs.Parent.Controls.OfType<TableLayoutPanel>().First().Controls.Cast<UCOneJob>())
@@ -305,15 +331,14 @@ namespace VisionControl
                     var c = tabControl_JobTabs.TabPages[i].Controls;
                     if (c.Count == 0)
                         continue;
-                     var job = (UCOneJob)c[0];
+                    var job = (UCOneJob)c[0];
                     yield return job;
-                    //jobs.Add(job);
                 }
-               // return jobs;
             }
         }
+
         UCOneJob SelectedUcJob => GetUCJob(SelectedTab);
-        UCOneJob GetUCJob(int i)=>UCJobs.ElementAt(i);
+        UCOneJob GetUCJob(int i) => UCJobs.ElementAt(i);
 
         public event Action<string> ErrorMsgRcv;
         void SetErrorMsg(string text)
@@ -333,7 +358,7 @@ namespace VisionControl
             if (!File.Exists(vppFileToLoad) && !File.Exists(mVppFilename))
             {
                 // vpp file does not exist in either developer location or current dir
-                SetErrorMsg( ResourceUtility.FormatString("RtVppNotFound", vppFileToLoad, mVppFilename));
+                SetErrorMsg(ResourceUtility.FormatString("RtVppNotFound", vppFileToLoad, mVppFilename));
                 return false;
             }
 
@@ -343,7 +368,7 @@ namespace VisionControl
             if (mCurrentPasswordFile.PasswordFileFound && !mCurrentPasswordFile.PasswordFileValid)
             {
                 string quoted = "\"" + mCurrentPasswordFile.PasswordFilename + "\"";
-               SetErrorMsg(ResourceUtility.FormatString("RtInvalidPasswordFile", quoted));
+                SetErrorMsg(ResourceUtility.FormatString("RtInvalidPasswordFile", quoted));
                 return false;
             }
             mCurrentPasswordFile.SetDefaultPassword(AccessLevel.Administrator, mDefaultAdministratorPassword);
@@ -383,12 +408,12 @@ namespace VisionControl
         }
 
         private void AcquisitionProcessThread_Disposed(object sender, EventArgs e)
-        { 
+        {
         }
- 
-      
+
+
         void HideCogRecords() => UCJobs.ToList().ForEach(x => x.cogRecordsDisplay1.Hide());
-       
+
 
         private void StartApplication()
         {
@@ -400,8 +425,8 @@ namespace VisionControl
             mInitError = !PerformRequiredInit();
             if (mInitError)
             {
-                 HideCogRecords();
-              //panel6.Hide();
+                HideCogRecords();
+                //panel6.Hide();
                 UpdateControlsEnabled();
                 return;
             }
@@ -420,7 +445,7 @@ namespace VisionControl
             // Set up stats
             for (int i = 0; i < mJM.JobCount; i++)
                 mJM.Job(i).ThroughputAlgorithm = CogJobThroughputAlgorithmConstants.MovingAverage;
-            ResetStatisticsForAllJobs(); 
+            ResetStatisticsForAllJobs();
             try
             {
                 Wizard_FormLoad();
@@ -433,7 +458,7 @@ namespace VisionControl
 
             try
             {
-              
+
             }
             catch (System.ArgumentException)
             {
@@ -454,7 +479,7 @@ namespace VisionControl
             const int maxJobsToSizeTo = 8;
             int rowHeight = cogJobResultHistoryCollectionEdit1.SelectorControlHeight;
             int totalHeight = rowHeight * (mJM.JobCount > maxJobsToSizeTo ? maxJobsToSizeTo : mJM.JobCount) + 8;
-            
+
             if (mJM.JobCount > maxJobsToSizeTo)
             {
                 // scale height of each row to fit remaining jobs (up to 10)
@@ -463,7 +488,7 @@ namespace VisionControl
                 int controlSpace = cogJobResultHistoryCollectionEdit1.Height - 4;
                 cogJobResultHistoryCollectionEdit1.SelectorControlHeight = controlSpace / scaleToFit;
             }
-            
+
             // setup the gui update timers
             mMaximumGuiPeriodTimer = new System.Threading.Timer(new System.Threading.TimerCallback(mMaximumGuiPeriodTimer_Elapsed), null,
               MaximumPeriodMs, MaximumPeriodMs);
@@ -499,22 +524,21 @@ namespace VisionControl
             else
             {
                 mCurrentAccessLevel = AccessLevel.Administrator;
-                this.label_Login.Visible = false;
-                this.comboBox_Login.Visible = false;
+      
             }
 
-            this.button_About.Text = ResourceUtility.GetString("RtAboutButton");
-            this.button_Chose.Text = ResourceUtility.GetString("RtChoseButton");
-            this.button_Configuration.Text = ResourceUtility.GetString("RtConfigurationButton");
-            this.checkBox_LiveDisplay.Text = ResourceUtility.GetString("RtLiveImageButton");
-            this.button_SaveSettings.Text = ResourceUtility.GetString("RtSaveSettingsButton");
+            //this.button_About.Text = ResourceUtility.GetString("RtAboutButton");
+            //this.button_Chose.Text = ResourceUtility.GetString("RtChoseButton");
+            //this.button_Configuration.Text = ResourceUtility.GetString("RtConfigurationButton");
+            //this.checkBox_LiveDisplay.Text = ResourceUtility.GetString("RtLiveImageButton");
+            //this.button_SaveSettings.Text = ResourceUtility.GetString("RtSaveSettingsButton");
 
-            this.label_Login.Text = ResourceUtility.GetString("RtCurrentLogin");
+            //this.label_Login.Text = ResourceUtility.GetString("RtCurrentLogin");
 
-            comboBox_Login.Items.Add(new AccessLevel_Localized(AccessLevel.Operator, ResourceUtility.GetString("RtOperator")));
-            comboBox_Login.Items.Add(new AccessLevel_Localized(AccessLevel.Supervisor, ResourceUtility.GetString("RtSupervisor")));
-            comboBox_Login.Items.Add(new AccessLevel_Localized(AccessLevel.Administrator, ResourceUtility.GetString("RtAdministrator")));
-            comboBox_Login.SelectedIndex = 0;
+            //comboBox_Login.Items.Add(new AccessLevel_Localized(AccessLevel.Operator, ResourceUtility.GetString("RtOperator")));
+            //comboBox_Login.Items.Add(new AccessLevel_Localized(AccessLevel.Supervisor, ResourceUtility.GetString("RtSupervisor")));
+            //comboBox_Login.Items.Add(new AccessLevel_Localized(AccessLevel.Administrator, ResourceUtility.GetString("RtAdministrator")));
+            //comboBox_Login.SelectedIndex = 0;
 
 
             this.mResultTextHash = new Hashtable();
@@ -589,6 +613,7 @@ namespace VisionControl
                 {
                     mJM.Job(i).Running += new CogJob.CogJobRunningEventHandler(Job_Running);
                     mJM.Job(i).ImageQueueOverflowed += new CogJob.CogImageQueueOverflowedEventHandler(Job_ImageQueueOverflowed);
+                    mJM.Job(i).Stopped += CogJob_Stopped;
                 }
 
                 // pull off and handle any items currently in the UserQueue
@@ -621,17 +646,25 @@ namespace VisionControl
                 {
                     mJM.Job(i).Running -= new CogJob.CogJobRunningEventHandler(Job_Running);
                     mJM.Job(i).ImageQueueOverflowed -= new CogJob.CogImageQueueOverflowedEventHandler(Job_ImageQueueOverflowed);
+                    mJM.Job(i).Stopped -= CogJob_Stopped;
                 }
             }
+        }
+
+        private void CogJob_Stopped(object sender, CogJobActionEventArgs e)
+        {
+            stopWatch.Stop();
+            SetElapseText(true);
+            stopWatch.Reset();
         }
         #endregion
 
         #region Runtime implementation
         //ILog log => LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-   
+
         public void RunOnce()
         {
-            if(!CheckJob())
+            if (!CheckJob())
             {
                 return;
             }
@@ -646,21 +679,22 @@ namespace VisionControl
             {
                 var job = mJM.Job(SelectedTab);
                 var tools = (job.VisionTool as CogToolGroup)?.Tools;
-                if(tools != null)
+                if (tools != null)
                 {
-                    foreach(var tool in tools)
+                    foreach (var tool in tools)
                     {
-                        if(tool is CogAcqFifoTool)
+                        if (tool is CogAcqFifoTool)
                         {
-                           // var fifoTool = ((CogAcqFifoTool)tool); 
-                           // fifoTool.Ran += FifoTool_Ran;
-                           //fifoTool.Running += (_,__)=>Job_Running(sender, new CogJobActionEventArgs( CogActionConstants.RunningSingle)); ;
-                           // fifoTool.Run();
+                            // var fifoTool = ((CogAcqFifoTool)tool); 
+                            // fifoTool.Ran += FifoTool_Ran;
+                            //fifoTool.Running += (_,__)=>Job_Running(sender, new CogJobActionEventArgs( CogActionConstants.RunningSingle)); ;
+                            // fifoTool.Run();
                             //mJM.Job(0).RunMode = CogJobRunModeConstants.ImageProcessingOnly;
-                         // return;
+                            // return;
                         }
                     }
                 }
+                stopWatch.Start();
                 mJM.Run();
 
                 // note that mJM_Stopped will be called when run is complete
@@ -682,9 +716,9 @@ namespace VisionControl
         private void FifoTool_Ran(object sender, EventArgs e)
         {
             ICogTool tool = (ICogTool)sender;
-           SelectedUcJob.cogRecordDisplay1.Record = tool. CreateLastRunRecord().SubRecords[0];
+            SelectedUcJob.cogRecordDisplay1.Record = tool.CreateLastRunRecord().SubRecords[0];
         }
-    
+
         public void RunCont()
         {
             if (!CheckJob())
@@ -751,10 +785,10 @@ namespace VisionControl
                 return;
             }
             var job = mJM.Job(i);
-            if (job.State != CogJobStateConstants.Stopped  )
+            if (job.State != CogJobStateConstants.Stopped)
             {
                 // Stop continuous
-               job.Stop();
+                job.Stop();
 
                 // note that mJM_Stopped will be called when job manager has completed this stop
                 // request
@@ -811,7 +845,7 @@ namespace VisionControl
             bool canConfig = !running && mCurrentAccessLevel == AccessLevel.Administrator;
             bool canSaveSettings = !running && mCurrentAccessLevel >= AccessLevel.Supervisor;
             RunStateUpdated?.Invoke(mCurrentRunState);
-         
+
 
             // live display button is enabled if the current job can run live and either
             //   we're not running and the live display button is "up" or
@@ -820,7 +854,7 @@ namespace VisionControl
               ((mCurrentRunState == RunState.Stopped && checkBox_LiveDisplay.Checked == false) ||
                (mCurrentRunState == RunState.RunningLive && checkBox_LiveDisplay.Checked == true));
 
-          
+
 
             //button_ResetStatistics.Enabled = !mInitError && !runningLive;
             //button_ResetStatisticsForAllJobs.Enabled = !mInitError && !runningLive;
@@ -891,34 +925,34 @@ namespace VisionControl
                 this.Invoke(new Action(() =>
                 {
                     myTG = mJM.Job(jobIndex).VisionTool as Cognex.VisionPro.ToolGroup.CogToolGroup;
-                 
+
                     var MyToolBlock = myTG.Tools["CogToolBlock1"] as Cognex.VisionPro.ToolBlock.CogToolBlock;
-                 
+
                     //   var MyToolBlock = myTG.Tools["CogToolBlock1"] as CogToolGroup;  //NG显示
                     //var t2 = myTG.Tools["CogResultsAnalysisTool1"] as CogResultsAnalysisTool;
                     var records = myTG.CreateLastRunRecord().SubRecords;
                     var cogDisp = GetUCJob(jobIndex).cogRecordDisplay1;
-                   cogDisp.Record = records[0];
-                  /* var img= records[0].Content as ICogImage;
-                     if(img!= null)
-                        pictureBox1.Image= img.ToBitmap();
-*/
+                    cogDisp.Record = records[0];
+                    /* var img= records[0].Content as ICogImage;
+                       if(img!= null)
+                          pictureBox1.Image= img.ToBitmap();
+  */
                     if (MyToolBlock == null)
                         return;
                     if (MyToolBlock.Outputs["Output"] == null)
                         return;
-                  if ("False".Equals(MyToolBlock.Outputs["Output"].Value.ToString()))
-                {
-                         //Fit()将缩放图像及其图形以适应显示控件。
-                        cogDisp.Fit();
-                    }
-                else
-                {
-                        pushDO("0x01");
-                } 
-                //延迟1mm
-                Thread.Sleep(1);
-                pushDO("0x00");
+                    //if ("False".Equals(MyToolBlock.Outputs["Output"].Value.ToString()))
+                    //{
+                    //    //Fit()将缩放图像及其图形以适应显示控件。
+                    //    cogDisp.Fit();
+                    //}
+                    //else
+                    //{
+                    //    pushDO("0x01");
+                    //}
+                    //延迟1mm
+                    Thread.Sleep(1);
+                    pushDO("0x00");
 
                 }));
                 //====================
@@ -1024,7 +1058,7 @@ namespace VisionControl
 
         private void mJM_UserResultAvailable(object sender, CogJobManagerActionEventArgs e)
         {
-            HandleUserResults(  sender,   e);
+            HandleUserResults(sender, e);
             UpdateGuiIfNeeded();
         }
 
@@ -1117,13 +1151,13 @@ namespace VisionControl
                 }
 
                 bool stoppingLive = mCurrentRunState == RunState.RunningLive || checkBox_LiveDisplay.Checked;
-        
-                mCurrentRunState = RunState.Stopped; 
-                _IsAllRun=false; 
-                stopWatch.Stop();
-                SetElapseText(true);
-                
-                stopWatch.Reset();
+
+                mCurrentRunState = RunState.Stopped;
+                _IsAllRun = false;
+           //     stopWatch.Stop();
+               // SetElapseText(true);
+
+               // stopWatch.Reset();
                 log.Info("Job Stpoped");
                 if (stoppingLive)
                 {
@@ -1155,7 +1189,7 @@ namespace VisionControl
         void SetElapseText(bool milliseconds = false)
         {
             string fmt = @"hh\:mm\:ss" + (milliseconds ? @"\.fff" : string.Empty);
-            tbElapse.Text=stopWatch.Elapsed.ToString(fmt);
+            tbElapse.SafeInvoke(() => tbElapse.Text = stopWatch.Elapsed.ToString(fmt));
         }
         private void mJM_JobStopped(object sender, CogJobActionEventArgs e)
         {
@@ -1267,7 +1301,7 @@ namespace VisionControl
             //    if (page.Tag == null || Utility.AccessAllowed(page.Tag.ToString(), mCurrentAccessLevel))
             //        tabControl_JobTabs.Controls.Add(page);
             //}
-            if(mJM != null && mJM.JobCount > 0)
+            if (mJM != null && mJM.JobCount > 0)
             {
                 for (int i = 0; i < tabControl_JobTabs.TabCount; i++)
                     tabControl_JobTabs.TabPages[i].Dispose();
@@ -1277,7 +1311,7 @@ namespace VisionControl
                     var job = mJM.Job(i);
                     TabPage tp = new TabPage(job.Name) { Name = job.Name };
                     tabControl_JobTabs.TabPages.Add(tp);
-                    tp.Controls.Add(new UCOneJob(job) { Left = 3, Top = 3, Dock = DockStyle.Fill }) ;
+                    tp.Controls.Add(new UCOneJob(job) { Left = 3, Top = 3, Dock = DockStyle.Fill });
                 }
 #if Test
                 FillJobTabs();
@@ -1306,6 +1340,7 @@ namespace VisionControl
         }
 
         private static string[] _updateDisplayStrings = new string[] { "ShowLastRunRecordForUserQueue", "LastRun" };
+        private bool autoRunMode = true;
 
         private void UpdateGUIForSelectedJob(bool newSelectedJob)
         {
@@ -1453,7 +1488,7 @@ namespace VisionControl
                 // enable live
                 mCurrentRunState = RunState.RunningLive;
                 SetResultBarCurrent();
-                SelectedUcJob. cogRecordsDisplay1.Subject = null;
+                SelectedUcJob.cogRecordsDisplay1.Subject = null;
 
                 // save old modes & setup jobs for live
                 SetupForLive();
@@ -1520,20 +1555,7 @@ namespace VisionControl
         #endregion
 
         #region Login
-        private void comboBox_Login_SelectionChangeCommitted(object sender, System.EventArgs e)
-        {
-            AccessLevel newAccessLevel = ((AccessLevel_Localized)(comboBox_Login.SelectedItem)).val;
-
-            // prompt for a password - only update accessLevel if promt is successful
-            if (PromptForAccessLevelChange(newAccessLevel))
-                mCurrentAccessLevel = newAccessLevel;
-
-            // update gui to reflect current accessLevel
-            foreach (AccessLevel_Localized al in comboBox_Login.Items)
-                if (al.val == mCurrentAccessLevel)
-                    comboBox_Login.SelectedItem = al;
-            this.UpdateGUIForSelectedJobChange(-1);
-        }
+       
 
         private bool PromptForAccessLevelChange(AccessLevel newAccessLevel)
         {
@@ -1632,7 +1654,7 @@ namespace VisionControl
         {
             DialogResult result = MessageBoxE.Show(this, promptString, ResourceUtility.GetString("RtSaveSettingsTitle"),
               MessageBoxButtons.YesNo);
-            if (result == DialogResult.Yes)
+            if (result == DialogResult.Yes || result == DialogResult.OK)
             {
                 if (mJM.JobsRunningState != CogJobsRunningStateConstants.None)
                 {
@@ -1829,7 +1851,7 @@ namespace VisionControl
                 UpdateStatisticsForJob(mSelectedJob);
                 UpdateOnlineStatus();
 
-                this.Update();
+                //this.Update();
 
                 lock (mMinimumGuiPeriodTimer)
                 {
@@ -1942,28 +1964,28 @@ namespace VisionControl
                 percentStr = p.ToString("0.0");
             }
 
-          /* textBox_JobN_TotalAccept_Percent.Text = percentStr;
-            textBox_JobN_TotalReject.Text = j.TotalVisionToolRejects.ToString();
-            textBox_JobN_TotalWarning.Text = j.TotalVisionToolWarnings.ToString();
-            textBox_JobN_TotalError.Text = j.TotalVisionToolErrors.ToString();
+            /* textBox_JobN_TotalAccept_Percent.Text = percentStr;
+              textBox_JobN_TotalReject.Text = j.TotalVisionToolRejects.ToString();
+              textBox_JobN_TotalWarning.Text = j.TotalVisionToolWarnings.ToString();
+              textBox_JobN_TotalError.Text = j.TotalVisionToolErrors.ToString();
 
-            textBox_JobN_TotalAcquisitions.Text = j.TotalAcquisitions.ToString();
-            textBox_JobN_TotalAcquisitionErrors.Text = j.TotalAcquisitionErrors.ToString();
-            textBox_JobN_TotalAcquisitionOverruns.Text = j.TotalAcquisitionOverruns.ToString();
+              textBox_JobN_TotalAcquisitions.Text = j.TotalAcquisitions.ToString();
+              textBox_JobN_TotalAcquisitionErrors.Text = j.TotalAcquisitionErrors.ToString();
+              textBox_JobN_TotalAcquisitionOverruns.Text = j.TotalAcquisitionOverruns.ToString();
 
-            if (j.TotalJobThroughputMax != 0)
-            {
-                textBox_JobN_Throughput.Text = j.TotalJobThroughput.ToString("0.000");
-                textBox_JobN_MinThroughput.Text = j.TotalJobThroughputMin.ToString("0.000");
-                textBox_JobN_MaxThroughput.Text = j.TotalJobThroughputMax.ToString("0.000");
-            }
-            else
-            {
-                string waiting = ResourceUtility.GetString("RtStatsWaiting");
-                textBox_JobN_Throughput.Text = waiting;
-                textBox_JobN_MinThroughput.Text = waiting;
-                textBox_JobN_MaxThroughput.Text = waiting;
-            }*/
+              if (j.TotalJobThroughputMax != 0)
+              {
+                  textBox_JobN_Throughput.Text = j.TotalJobThroughput.ToString("0.000");
+                  textBox_JobN_MinThroughput.Text = j.TotalJobThroughputMin.ToString("0.000");
+                  textBox_JobN_MaxThroughput.Text = j.TotalJobThroughputMax.ToString("0.000");
+              }
+              else
+              {
+                  string waiting = ResourceUtility.GetString("RtStatsWaiting");
+                  textBox_JobN_Throughput.Text = waiting;
+                  textBox_JobN_MinThroughput.Text = waiting;
+                  textBox_JobN_MaxThroughput.Text = waiting;
+              }*/
 
             #region 获取当前作业组件中的所有非Output的输出值
             CogToolGroup ctg = (CogToolGroup)j.VisionTool;
@@ -1998,7 +2020,7 @@ namespace VisionControl
                     }
                 }
             }
-           // this.dataGridView1.DataSource = listData;          
+            // this.dataGridView1.DataSource = listData;          
 
 
 
@@ -2012,7 +2034,7 @@ namespace VisionControl
             //for (int i = 0; i < tabControl_JobTabs.TabCount; i++)
             //    tabControl_JobTabs.TabPages[i].Dispose();
             //tabControl_JobTabs.TabPages.Clear();
-            VisionControl_Load(null,  EventArgs.Empty);
+            VisionControl_Load(null, EventArgs.Empty);
 
             string vpp = mLoadedVppFilename;
             string quotedvpp = "\"" + vpp + "\"";
@@ -2040,8 +2062,20 @@ namespace VisionControl
 
         private void uiNavBar1_MenuItemClick(string itemText, int menuIndex, int pageIndex)
         {
-            this.uiTabControl1.SelectedIndex = menuIndex;
-         
+            switch (itemText)
+            {
+
+                case "TCP":
+                    this.uiTabControl1.SelectedTab = tpTcp;
+                    break;
+                case "串口":
+                    uiTabControl1.SelectedTab = tpSerPort;
+                    break;
+                default:
+                    uiTabControl1.SelectedIndex = 0;
+                    break;
+            }
+
         }
 
         private void uiNavBar1_NodeMouseClick(TreeNode node, int menuIndex, int pageIndex)

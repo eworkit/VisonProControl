@@ -156,4 +156,5 @@ namespace Utilities
     {
         log = 0, warning = 1, exception = 2, wrong = 3
     }
+     
 }

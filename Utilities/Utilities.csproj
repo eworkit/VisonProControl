@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConfig.cs" />
     <Compile Include="Common\DllInvoke.cs" />
     <Compile Include="Common\Ini.cs" />
     <Compile Include="Data\DataEx.cs" />

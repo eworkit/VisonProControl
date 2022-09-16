@@ -32,6 +32,7 @@ namespace VisionApplication
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnRun = new System.Windows.Forms.ToolStripButton();
+            this.btnRunOnce = new System.Windows.Forms.ToolStripButton();
             this.btnRunMannul = new System.Windows.Forms.ToolStripButton();
             this.btnPause = new System.Windows.Forms.ToolStripButton();
             this.btnPreview = new System.Windows.Forms.ToolStripButton();
@@ -42,11 +43,14 @@ namespace VisionApplication
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.uiContextMenuStrip1 = new Sunny.UI.UIContextMenuStrip();
+            this.miAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.uiFlowLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.visionControl1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.uiContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // uiFlowLayoutPanel1
@@ -75,6 +79,7 @@ namespace VisionApplication
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnOpen,
             this.btnRun,
+            this.btnRunOnce,
             this.btnRunMannul,
             this.btnPause,
             this.btnPreview,
@@ -98,6 +103,7 @@ namespace VisionApplication
             this.btnOpen.Padding = new System.Windows.Forms.Padding(3, 3, 8, 3);
             this.btnOpen.Size = new System.Drawing.Size(127, 43);
             this.btnOpen.Text = "打开工程";
+            this.btnOpen.ToolTipText = "打开工程  ";
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
             // btnRun
@@ -108,12 +114,27 @@ namespace VisionApplication
             this.btnRun.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRun.Name = "btnRun";
             this.btnRun.Padding = new System.Windows.Forms.Padding(3, 3, 8, 3);
-            this.btnRun.Size = new System.Drawing.Size(87, 43);
-            this.btnRun.Text = "运行";
+            this.btnRun.Size = new System.Drawing.Size(127, 43);
+            this.btnRun.Text = "持续运行";
+            this.btnRun.ToolTipText = "持续运行  ";
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            // 
+            // btnRunOnce
+            // 
+            this.btnRunOnce.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnRunOnce.ForeColor = System.Drawing.Color.MidnightBlue;
+            this.btnRunOnce.Image = global::VisionApplication.Properties.Resources.Run_Once;
+            this.btnRunOnce.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRunOnce.Name = "btnRunOnce";
+            this.btnRunOnce.Padding = new System.Windows.Forms.Padding(3, 3, 8, 3);
+            this.btnRunOnce.Size = new System.Drawing.Size(127, 43);
+            this.btnRunOnce.Text = "单次运行";
+            this.btnRunOnce.ToolTipText = "单次运行  ";
+            this.btnRunOnce.Click += new System.EventHandler(this.btnRunOnce_Click);
             // 
             // btnRunMannul
             // 
+            this.btnRunMannul.BackColor = System.Drawing.Color.Transparent;
             this.btnRunMannul.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnRunMannul.ForeColor = System.Drawing.Color.MidnightBlue;
             this.btnRunMannul.Image = global::VisionApplication.Properties.Resources.Manual;
@@ -122,6 +143,7 @@ namespace VisionApplication
             this.btnRunMannul.Padding = new System.Windows.Forms.Padding(3, 3, 8, 3);
             this.btnRunMannul.Size = new System.Drawing.Size(127, 43);
             this.btnRunMannul.Text = "手动运行";
+            this.btnRunMannul.ToolTipText = "手动运行  ";
             this.btnRunMannul.Click += new System.EventHandler(this.btnRunMannul_Click);
             // 
             // btnPause
@@ -134,6 +156,7 @@ namespace VisionApplication
             this.btnPause.Padding = new System.Windows.Forms.Padding(3, 3, 8, 3);
             this.btnPause.Size = new System.Drawing.Size(87, 43);
             this.btnPause.Text = "停止";
+            this.btnPause.ToolTipText = "停止  ";
             this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
             // 
             // btnPreview
@@ -146,6 +169,7 @@ namespace VisionApplication
             this.btnPreview.Padding = new System.Windows.Forms.Padding(3, 3, 8, 3);
             this.btnPreview.Size = new System.Drawing.Size(87, 43);
             this.btnPreview.Text = "预览";
+            this.btnPreview.ToolTipText = "预览  ";
             this.btnPreview.Click += new System.EventHandler(this.btnJob_Click);
             // 
             // button_Configuration
@@ -158,6 +182,7 @@ namespace VisionApplication
             this.button_Configuration.Padding = new System.Windows.Forms.Padding(3, 3, 8, 3);
             this.button_Configuration.Size = new System.Drawing.Size(87, 43);
             this.button_Configuration.Text = "配置";
+            this.button_Configuration.ToolTipText = "配置  ";
             this.button_Configuration.Click += new System.EventHandler(this.button_Configuration_Click);
             // 
             // btnTool
@@ -170,6 +195,7 @@ namespace VisionApplication
             this.btnTool.Padding = new System.Windows.Forms.Padding(3, 3, 8, 3);
             this.btnTool.Size = new System.Drawing.Size(87, 43);
             this.btnTool.Text = "工具";
+            this.btnTool.ToolTipText = "工具  ";
             // 
             // toolStripContainer1
             // 
@@ -188,11 +214,11 @@ namespace VisionApplication
             // 
             // visionControl1
             // 
-            this.visionControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.visionControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.visionControl1.AutoRunMode = true;
             this.visionControl1.Controls.Add(this.statusStrip1);
-            this.visionControl1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.visionControl1.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.visionControl1.Location = new System.Drawing.Point(-2, 89);
             this.visionControl1.Margin = new System.Windows.Forms.Padding(4);
             this.visionControl1.MinimumSize = new System.Drawing.Size(1, 1);
@@ -202,7 +228,6 @@ namespace VisionApplication
             this.visionControl1.Text = null;
             this.visionControl1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
             this.visionControl1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
-      
             // 
             // statusStrip1
             // 
@@ -229,6 +254,24 @@ namespace VisionApplication
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
             // 
+            // uiContextMenuStrip1
+            // 
+            this.uiContextMenuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(249)))), ((int)(((byte)(255)))));
+            this.uiContextMenuStrip1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiContextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.uiContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miAbout});
+            this.uiContextMenuStrip1.Name = "uiContextMenuStrip1";
+            this.uiContextMenuStrip1.Size = new System.Drawing.Size(125, 36);
+            this.uiContextMenuStrip1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.uiContextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.uiContextMenuStrip1_ItemClicked);
+            // 
+            // miAbout
+            // 
+            this.miAbout.Name = "miAbout";
+            this.miAbout.Size = new System.Drawing.Size(124, 32);
+            this.miAbout.Text = "关于";
+            // 
             // MainForm
             // 
             this.AllowAddControlOnTitle = true;
@@ -237,11 +280,14 @@ namespace VisionApplication
             this.Controls.Add(this.visionControl1);
             this.Controls.Add(this.toolStripContainer1);
             this.ExtendBox = true;
+            this.ExtendMenu = this.uiContextMenuStrip1;
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.Name = "MainForm";
             this.Padding = new System.Windows.Forms.Padding(2, 36, 2, 2);
             this.ShowDragStretch = true;
             this.ShowRadius = false;
             this.Text = "视觉检测系统";
+            this.TitleFont = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.ZoomScaleRect = new System.Drawing.Rectangle(19, 19, 1002, 656);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClosingHandler);
@@ -255,6 +301,7 @@ namespace VisionApplication
             this.visionControl1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.uiContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
     }
@@ -274,6 +321,9 @@ namespace VisionApplication
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private Sunny.UI.UIContextMenuStrip uiContextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem miAbout;
+        private System.Windows.Forms.ToolStripButton btnRunOnce;
     }
 }
 

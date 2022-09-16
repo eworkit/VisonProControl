@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using IteUtils;
 using Sunny.UI;
 using Utilities.ExMethod;
 using Utilities.Net;
@@ -27,7 +28,16 @@ namespace VisionControl
             tcpClient.OnReceive += TcpClient_OnReceive;
             this.Disposed += UcTcpClient_Disposed;
             btnDisCon.Enabled = false;
-
+            this.BackColor = Color.Transparent;
+            var cfg = AppConfig.TcpClientInfo;
+            if (cfg != null)
+            {
+                tbServer.Text = cfg.Server;
+                tbPort.Text = cfg.Port.ToString();
+                ckRcvHex.Checked = cfg.HexReceive;
+                ckSentHex.Checked = cfg.HexSend;
+                ckAutoConn.Checked = cfg.AutoConn;
+            }
         }
 
         private void UcTcpClient_Disposed(object sender, EventArgs e)
@@ -87,10 +97,6 @@ namespace VisionControl
                     {
                         btnConnect_Click(sender, e);
                     }
-                    else
-                    {
-                        MessageBoxE.Show(this, "TCP未连接");
-                    }
                 }
                 var data = ByteConverter.ToSocketBytes(tbSentData.Text, ckSentHex.Checked);
                 if(!tcpClient.client.Connected)
@@ -104,6 +110,11 @@ namespace VisionControl
             {
                 MessageBoxE.Show(this, ex.Message);
             }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            tbRcvData.Clear();
         }
     }
 }

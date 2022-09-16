@@ -45,17 +45,19 @@
             this.ckSentHex = new Sunny.UI.UICheckBox();
             this.ckRcvHex = new Sunny.UI.UICheckBox();
             this.ckAutoConn = new Sunny.UI.UICheckBox();
+            this.btnClear = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // uiLabel5
             // 
             this.uiLabel5.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel5.Location = new System.Drawing.Point(18, 44);
+            this.uiLabel5.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.uiLabel5.Location = new System.Drawing.Point(6, 44);
             this.uiLabel5.Name = "uiLabel5";
-            this.uiLabel5.Size = new System.Drawing.Size(100, 23);
+            this.uiLabel5.Size = new System.Drawing.Size(71, 23);
             this.uiLabel5.TabIndex = 1;
             this.uiLabel5.Text = "端口";
-            this.uiLabel5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.uiLabel5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.uiLabel5.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // tbPort
@@ -64,7 +66,7 @@
             this.tbPort.DoubleValue = 3000D;
             this.tbPort.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tbPort.IntValue = 3000;
-            this.tbPort.Location = new System.Drawing.Point(76, 43);
+            this.tbPort.Location = new System.Drawing.Point(80, 43);
             this.tbPort.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbPort.MinimumSize = new System.Drawing.Size(1, 16);
             this.tbPort.Name = "tbPort";
@@ -79,7 +81,7 @@
             // btnConnect
             // 
             this.btnConnect.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnConnect.Location = new System.Drawing.Point(245, 42);
+            this.btnConnect.Location = new System.Drawing.Point(282, 42);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(81, 29);
             this.btnConnect.TabIndex = 3;
@@ -90,19 +92,20 @@
             // uiLabel1
             // 
             this.uiLabel1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel1.Location = new System.Drawing.Point(4, 5);
+            this.uiLabel1.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.uiLabel1.Location = new System.Drawing.Point(2, 5);
             this.uiLabel1.Name = "uiLabel1";
-            this.uiLabel1.Size = new System.Drawing.Size(100, 23);
+            this.uiLabel1.Size = new System.Drawing.Size(75, 23);
             this.uiLabel1.TabIndex = 1;
             this.uiLabel1.Text = "客户端";
-            this.uiLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.uiLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.uiLabel1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // tbServer
             // 
             this.tbServer.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.tbServer.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbServer.Location = new System.Drawing.Point(76, 5);
+            this.tbServer.Location = new System.Drawing.Point(80, 5);
             this.tbServer.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbServer.MinimumSize = new System.Drawing.Size(1, 16);
             this.tbServer.Name = "tbServer";
@@ -117,7 +120,7 @@
             // uiLabel3
             // 
             this.uiLabel3.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel3.Location = new System.Drawing.Point(18, 113);
+            this.uiLabel3.Location = new System.Drawing.Point(4, 113);
             this.uiLabel3.Name = "uiLabel3";
             this.uiLabel3.Size = new System.Drawing.Size(128, 23);
             this.uiLabel3.TabIndex = 1;
@@ -128,14 +131,14 @@
             // tbRcvData
             // 
             this.tbRcvData.FillColor = System.Drawing.Color.White;
-            this.tbRcvData.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbRcvData.Location = new System.Drawing.Point(23, 141);
+            this.tbRcvData.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tbRcvData.Location = new System.Drawing.Point(9, 141);
             this.tbRcvData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbRcvData.MinimumSize = new System.Drawing.Size(1, 1);
             this.tbRcvData.Name = "tbRcvData";
             this.tbRcvData.Padding = new System.Windows.Forms.Padding(2);
             this.tbRcvData.ShowText = false;
-            this.tbRcvData.Size = new System.Drawing.Size(391, 174);
+            this.tbRcvData.Size = new System.Drawing.Size(446, 174);
             this.tbRcvData.Style = Sunny.UI.UIStyle.Custom;
             this.tbRcvData.TabIndex = 5;
             this.tbRcvData.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
@@ -144,7 +147,7 @@
             // uiLabel4
             // 
             this.uiLabel4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel4.Location = new System.Drawing.Point(18, 329);
+            this.uiLabel4.Location = new System.Drawing.Point(4, 329);
             this.uiLabel4.Name = "uiLabel4";
             this.uiLabel4.Size = new System.Drawing.Size(128, 23);
             this.uiLabel4.TabIndex = 1;
@@ -155,14 +158,14 @@
             // tbSentData
             // 
             this.tbSentData.FillColor = System.Drawing.Color.White;
-            this.tbSentData.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbSentData.Location = new System.Drawing.Point(23, 357);
+            this.tbSentData.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tbSentData.Location = new System.Drawing.Point(9, 357);
             this.tbSentData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbSentData.MinimumSize = new System.Drawing.Size(1, 1);
             this.tbSentData.Name = "tbSentData";
             this.tbSentData.Padding = new System.Windows.Forms.Padding(2);
             this.tbSentData.ShowText = false;
-            this.tbSentData.Size = new System.Drawing.Size(391, 174);
+            this.tbSentData.Size = new System.Drawing.Size(446, 174);
             this.tbSentData.Style = Sunny.UI.UIStyle.Custom;
             this.tbSentData.TabIndex = 5;
             this.tbSentData.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
@@ -171,7 +174,7 @@
             // btnSend
             // 
             this.btnSend.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnSend.Location = new System.Drawing.Point(23, 539);
+            this.btnSend.Location = new System.Drawing.Point(9, 539);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(81, 29);
             this.btnSend.TabIndex = 6;
@@ -223,7 +226,7 @@
             // btnDisCon
             // 
             this.btnDisCon.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnDisCon.Location = new System.Drawing.Point(333, 42);
+            this.btnDisCon.Location = new System.Drawing.Point(370, 42);
             this.btnDisCon.Name = "btnDisCon";
             this.btnDisCon.Size = new System.Drawing.Size(81, 29);
             this.btnDisCon.TabIndex = 3;
@@ -235,7 +238,7 @@
             // 
             this.ckSentHex.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ckSentHex.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.ckSentHex.Location = new System.Drawing.Point(152, 332);
+            this.ckSentHex.Location = new System.Drawing.Point(138, 329);
             this.ckSentHex.MinimumSize = new System.Drawing.Size(1, 1);
             this.ckSentHex.Name = "ckSentHex";
             this.ckSentHex.Padding = new System.Windows.Forms.Padding(22, 0, 0, 0);
@@ -248,7 +251,7 @@
             // 
             this.ckRcvHex.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ckRcvHex.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.ckRcvHex.Location = new System.Drawing.Point(152, 113);
+            this.ckRcvHex.Location = new System.Drawing.Point(138, 113);
             this.ckRcvHex.MinimumSize = new System.Drawing.Size(1, 1);
             this.ckRcvHex.Name = "ckRcvHex";
             this.ckRcvHex.Padding = new System.Windows.Forms.Padding(22, 0, 0, 0);
@@ -262,7 +265,7 @@
             this.ckAutoConn.Checked = true;
             this.ckAutoConn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ckAutoConn.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.ckAutoConn.Location = new System.Drawing.Point(23, 80);
+            this.ckAutoConn.Location = new System.Drawing.Point(9, 80);
             this.ckAutoConn.MinimumSize = new System.Drawing.Size(1, 1);
             this.ckAutoConn.Name = "ckAutoConn";
             this.ckAutoConn.Padding = new System.Windows.Forms.Padding(22, 0, 0, 0);
@@ -271,11 +274,24 @@
             this.ckAutoConn.Text = "断开后自动连接";
             this.ckAutoConn.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
+            // btnClear
+            // 
+            this.btnClear.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnClear.Location = new System.Drawing.Point(372, 107);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(81, 29);
+            this.btnClear.TabIndex = 12;
+            this.btnClear.Text = "清空";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
             // UcTcpClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.Controls.Add(this.btnClear);
             this.Controls.Add(this.ckAutoConn);
             this.Controls.Add(this.ckRcvHex);
             this.Controls.Add(this.uiLabel2);
@@ -294,7 +310,7 @@
             this.Controls.Add(this.uiLabel1);
             this.Controls.Add(this.uiLabel5);
             this.Name = "UcTcpClient";
-            this.Size = new System.Drawing.Size(442, 580);
+            this.Size = new System.Drawing.Size(470, 580);
             this.ResumeLayout(false);
 
         }
@@ -318,5 +334,6 @@
         private Sunny.UI.UICheckBox ckSentHex;
         private Sunny.UI.UICheckBox ckRcvHex;
         private Sunny.UI.UICheckBox ckAutoConn;
+        private System.Windows.Forms.Button btnClear;
     }
 }

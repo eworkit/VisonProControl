@@ -6,13 +6,13 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.IO;
 
-namespace Utilities.IteLicense
+namespace Utilities.EzLicense
 {
-    public class IteLicense : License
+    public class EzLicense : License
     {
         private String mLicenseKey = null;
         private IteLicenseProvider mProvider = null;
-        public IteLicense(IteLicenseProvider provider, String key)
+        public EzLicense(IteLicenseProvider provider, String key)
         {
             this.mProvider = provider;
             this.mLicenseKey = key;
@@ -46,7 +46,7 @@ namespace Utilities.IteLicense
        }
        public override License GetLicense(LicenseContext context, Type type, object instance, bool allowExceptions)
        {
-           IteLicense license = null;
+           EzLicense license = null;
 
            if (context != null)
            {
@@ -58,7 +58,7 @@ namespace Utilities.IteLicense
                  
                    if (encrypt  .Equals(savedLicenseKey))
                    {
-                       return new IteLicense(this, encrypt);
+                       return new EzLicense(this, encrypt);
                    }
                }
                if (license != null)
@@ -66,7 +66,7 @@ namespace Utilities.IteLicense
                    return license;
                } 
                if(SignVerifyEnvelope.VerifyXmlFile(encrypt))
-                   license = new IteLicense(this, encrypt);
+                   license = new EzLicense(this, encrypt);
 
                if (license != null)
                {
@@ -81,10 +81,10 @@ namespace Utilities.IteLicense
                {
                    s = Utilities.Security.DESEncrypt.Decode(s);
                    if (DateTime.Today - DateTime.Parse(s) <=  TimeSpan.FromDays(30))
-                        return new IteLicense(this, "Full");
+                        return new EzLicense(this, "Full");
                }
                catch { }
-               return new IteLicense(this, "evaluate");
+               return new EzLicense(this, "evaluate");
            }
            return license;
        }

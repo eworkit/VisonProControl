@@ -4,10 +4,13 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Text;
+using System.Linq;
+using System.Text; 
 using System.Windows.Forms;
 using log4net;
 using VisionControl;
+using Utilities.ExMethod;
+using Sunny.UI;
 
 namespace VisionApplication
 {
@@ -18,12 +21,54 @@ namespace VisionApplication
         public MainForm()
         {
             InitializeComponent();
+            this.Text = Program.Title;
+            this.DoubleBuffered=true;
+            this.MinimumSize = new Size(900, 600);
             visionControl1.RunStateUpdated += VisionControl1_RunStateUpdated;
             visionControl1.ErrorMsgRcv += x => toolStripStatusLabel2.Text = x;
+            visionControl1.AutoRunModeChanged += VisionControl1_AutoRunModeChanged;
             visionControl1.PreviewChanged += VisionControl1_PreviewChanged;
-            this.Text = "视觉检测系统";
-            this.DoubleBuffered=true;  
+            this.SizeChanged += MainForm_SizeChanged;
+            foreach(var tsb in toolStrip1.Items.OfType<ToolStripButton>())
+                tsb.Paint += ToolStripButton_Paint;
         }
+
+        private void ToolStripButton_Paint(object sender, PaintEventArgs e)
+        {
+            return;
+            var t = sender as ToolStripButton;
+            var bcolor = t.BackColor;
+            if (bcolor == Color.Transparent)
+                bcolor = toolStrip1.Parent.BackColor;
+            var fillRect = t.Checked ? new Rectangle(0, 0, t.Width, t.Height) : new Rectangle(1, 1, t.Width - 2, t.Height - 2);
+
+            e.Graphics.FillRectangle(new SolidBrush(bcolor), fillRect);
+            var textSize = e.Graphics.MeasureString(t.Text, t.Font);
+            if (t.Checked)
+                using (var pen = new Pen(Color.Blue))
+                    e.Graphics.DrawRectangle(pen, new Rectangle(Point.Empty, btnRunMannul.Size));
+
+            int imgW = (int)textSize.Height + 3;
+            var img = t.Enabled ? t.Image : t.Image.CreateDisabledImage(null);
+            e.Graphics.DrawImage(img, 3, (t.Height - imgW) / 2, imgW, imgW);
+            e.Graphics.DrawString(t.Text, t.Font, new SolidBrush(t.Enabled ? t.ForeColor : Color.DarkGray), imgW + 6, (t.Height - textSize.Height) / 2);
+        }
+
+        private void VisionControl1_AutoRunModeChanged(bool autoRun)
+        {
+            if (autoRun)
+                btnRunMannul.BackColor = Color.Transparent;
+            else
+                btnRunMannul.BackColor = Color.Orange;
+            toolStrip1.Refresh();
+        }
+ 
+
+        private void MainForm_SizeChanged(object sender, EventArgs e)
+        {
+            visionControl1.Width = visionControl1.Parent.Width - visionControl1.Parent.Padding.Left;
+        }
+
         /// <param name="e"></param>
         //protected override void OnPaint(PaintEventArgs e)
         //{
@@ -56,10 +101,10 @@ namespace VisionApplication
             bool canConfig = !running && mCurrentAccessLevel == AccessLevel.Administrator;
             bool canSaveSettings = !running && mCurrentAccessLevel >= AccessLevel.Supervisor;
         
-            btnRun.Enabled = btnRunMannul.Enabled = !visionControl1.InitError && !running;
+            btnRun.Enabled = btnRunOnce.Enabled = !visionControl1.InitError && !running;
             btnPause.Enabled = !visionControl1.InitError && running;
             btnPreview.Enabled= !visionControl1.InitError;
-            button_Configuration.Enabled = !visionControl1.InitError && canConfig;
+            button_Configuration.Enabled = /*!visionControl1.InitError &&*/ !string.IsNullOrEmpty(visionControl1.LoadedVppFilename) && File.Exists(visionControl1.LoadedVppFilename) && canConfig;
             //button_SaveSettings.Enabled = !visionControl1.InitError && canSaveSettings;
             //button_About.Enabled = !running;
             //checkBox_LiveDisplay.Enabled = !mInitError && currentJobCanLive &&
@@ -134,7 +179,9 @@ namespace VisionApplication
 
         private void btnRunMannul_Click(object sender, EventArgs e)
         {
-            visionControl1.RunJobCont(visionControl1.SelectedTab);
+            //visionControl1.RunJobCont(visionControl1.SelectedTab);
+            btnRunMannul.Checked = !btnRunMannul.Checked;
+            visionControl1.AutoRunMode = !btnRunMannul.Checked;
         }
         bool IsPreView => 1.Equals(btnPreview.Tag);
         private void btnJob_Click(object sender, EventArgs e)
@@ -150,8 +197,8 @@ namespace VisionApplication
 
             // put up a new dialog containing QB editor
             FormQB frm = new FormQB(visionControl1.JobManager);
-            frm.ShowDialog(this);
-            frm.Dispose();
+            frm.Show();
+            //frm.Dispose();
 
             // prompt for save of vpp file
             string vpp = visionControl1.LoadedVppFilename;
@@ -159,7 +206,7 @@ namespace VisionApplication
             string saveButtonName = ResourceUtility.GetString("RtSaveSettingsButton");
             string quotedSaveButtonName = "\"" + saveButtonName + "\"";
             string promptStr = ResourceUtility.FormatString("RtSaveSettingsTextAfterConfig", quotedvpp, quotedSaveButtonName);
-            visionControl1.PromptToSaveSettings(promptStr);
+            frm.FormClosing+=(_,__)=>  visionControl1.PromptToSaveSettings(promptStr);
 
             // re-attach
             visionControl1.AttachToJobManager(true);
@@ -173,6 +220,18 @@ namespace VisionApplication
                 visionControl1.RunJobCont(visionControl1.SelectedTab);
         }
 
-       
+        private void uiContextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+           if( e.ClickedItem ==   miAbout)
+            {
+                new FormAbout("版本 "+Program.Version, visionControl1) { Text= "关于 " + Program.Title}.ShowDialog(this);
+            }
+        }
+
+        private void btnRunOnce_Click(object sender, EventArgs e)
+        {
+            visionControl1.RunOnce();
+        }
     }
+    
 }

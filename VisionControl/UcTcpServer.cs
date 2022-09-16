@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using IteUtils;
 using Sunny.UI;
 using Utilities.ExMethod;
 using Utilities.Net;
@@ -25,9 +26,21 @@ namespace VisionControl
             _tcpServer.OnDataAvailable += _tcpServer_OnDataAvailable;
             _tcpServer.OnError += _tcpServer_OnError;
             _tcpServer.OnLostConnect += _tcpServer_OnLostConnect;
+
             this.Disposed += UcTcpServer_Disposed;
             tbIP.Text = Utilities.Net.TcpHelper.GetInnerIP(); 
             btnClose.Enabled=false;
+            var cfg=AppConfig.TcpServerInfo;
+            if(cfg!=null)
+            {
+                tbPort.Text = cfg.Port.ToString();
+                ckSentHex.Checked = cfg.HexSend;
+                ckRcvHex.Checked = cfg.HexReceive;
+                if(cfg.AutoStart)
+                {
+                    btnTcpSvrOpen_Click(null, EventArgs.Empty);
+                }
+            }
         }
 
         private void _tcpServer_OnLostConnect(TcpServerConnection connection)

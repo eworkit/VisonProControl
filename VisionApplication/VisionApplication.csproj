@@ -120,9 +120,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{cadec15a-bb9d-4352-ac44-276aa27cc445}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VisionControl\VisionControl.csproj">
       <Project>{29E47515-CE28-4D06-87F4-0DC52F6AD67E}</Project>
-      <Name>VisionControl2010</Name>
+      <Name>VisionControl</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +167,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="img\UnPreview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\RunOnce.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\Run_Once.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

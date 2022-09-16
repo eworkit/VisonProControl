@@ -11,7 +11,7 @@ namespace VisionControl
   /// <summary>
   /// Summary description for FormQB.
   /// </summary>
-  public class FormQB : System.Windows.Forms.Form
+  public class FormQB : Sunny.UI.UIForm
   {
     private CogJobManager mJM = null;
 
@@ -26,8 +26,8 @@ namespace VisionControl
       //
       // Required for Windows Form Designer support
       //
-      InitializeComponent();
-
+      InitializeComponent();    
+      this.ShowDragStretch = true;
       mJM = jm;
     }
 
@@ -58,32 +58,37 @@ namespace VisionControl
             // 
             // cogJobManagerEdit1
             // 
+            this.cogJobManagerEdit1.AutoSize = true;
             this.cogJobManagerEdit1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cogJobManagerEdit1.Location = new System.Drawing.Point(0, 0);
+            this.cogJobManagerEdit1.Location = new System.Drawing.Point(0, 35);
             this.cogJobManagerEdit1.Name = "cogJobManagerEdit1";
             this.cogJobManagerEdit1.ShowLocalizationTab = false;
-            this.cogJobManagerEdit1.Size = new System.Drawing.Size(728, 454);
+            this.cogJobManagerEdit1.Size = new System.Drawing.Size(728, 419);
             this.cogJobManagerEdit1.Subject = null;
             this.cogJobManagerEdit1.TabIndex = 0;
             // 
             // FormQB
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(6, 14);
             this.ClientSize = new System.Drawing.Size(728, 454);
-            this.Controls.Add(this.cogJobManagerEdit1);
+            this.Font = new System.Drawing.Font("ËÎÌו", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.MaximumSize = new System.Drawing.Size(2640, 1563);
             this.Name = "FormQB";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Configuration";
+            this.ZoomScaleRect = new System.Drawing.Rectangle(19, 19, 728, 454);
             this.Closing += new System.ComponentModel.CancelEventHandler(this.FormQB_Closing);
             this.Load += new System.EventHandler(this.FormQB_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
     }
     #endregion
 
     private void FormQB_Load(object sender, System.EventArgs e)
-    {
-      this.Text = ResourceUtility.GetString("RtQuickBuildTitle");
+        {
+
+            this.Controls.Add(this.cogJobManagerEdit1);
+            this.Text = ResourceUtility.GetString("RtQuickBuildTitle");
       cogJobManagerEdit1.Subject = mJM;   
     }
 

@@ -52,12 +52,12 @@
             // uiLabel5
             // 
             this.uiLabel5.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel5.Location = new System.Drawing.Point(18, 12);
+            this.uiLabel5.Location = new System.Drawing.Point(3, 12);
             this.uiLabel5.Name = "uiLabel5";
-            this.uiLabel5.Size = new System.Drawing.Size(100, 23);
+            this.uiLabel5.Size = new System.Drawing.Size(76, 23);
             this.uiLabel5.TabIndex = 1;
             this.uiLabel5.Text = "端口";
-            this.uiLabel5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.uiLabel5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.uiLabel5.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // tbPort
@@ -92,12 +92,12 @@
             // uiLabel1
             // 
             this.uiLabel1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel1.Location = new System.Drawing.Point(5, 49);
+            this.uiLabel1.Location = new System.Drawing.Point(-4, 49);
             this.uiLabel1.Name = "uiLabel1";
-            this.uiLabel1.Size = new System.Drawing.Size(100, 23);
+            this.uiLabel1.Size = new System.Drawing.Size(83, 23);
             this.uiLabel1.TabIndex = 1;
             this.uiLabel1.Text = "本机IP";
-            this.uiLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.uiLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.uiLabel1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // tbIP
@@ -119,7 +119,7 @@
             // uiLabel2
             // 
             this.uiLabel2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel2.Location = new System.Drawing.Point(18, 82);
+            this.uiLabel2.Location = new System.Drawing.Point(5, 82);
             this.uiLabel2.Name = "uiLabel2";
             this.uiLabel2.Size = new System.Drawing.Size(128, 23);
             this.uiLabel2.TabIndex = 1;
@@ -129,16 +129,16 @@
             // 
             // lbRcvClients
             // 
-            this.lbRcvClients.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lbRcvClients.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lbRcvClients.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(200)))), ((int)(((byte)(255)))));
             this.lbRcvClients.ItemSelectForeColor = System.Drawing.Color.White;
-            this.lbRcvClients.Location = new System.Drawing.Point(23, 110);
+            this.lbRcvClients.Location = new System.Drawing.Point(10, 110);
             this.lbRcvClients.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lbRcvClients.MinimumSize = new System.Drawing.Size(1, 1);
             this.lbRcvClients.Name = "lbRcvClients";
             this.lbRcvClients.Padding = new System.Windows.Forms.Padding(2);
             this.lbRcvClients.ShowText = false;
-            this.lbRcvClients.Size = new System.Drawing.Size(391, 164);
+            this.lbRcvClients.Size = new System.Drawing.Size(446, 164);
             this.lbRcvClients.Style = Sunny.UI.UIStyle.Custom;
             this.lbRcvClients.TabIndex = 4;
             this.lbRcvClients.Text = "uiListBox1";
@@ -147,7 +147,7 @@
             // uiLabel3
             // 
             this.uiLabel3.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel3.Location = new System.Drawing.Point(18, 278);
+            this.uiLabel3.Location = new System.Drawing.Point(5, 276);
             this.uiLabel3.Name = "uiLabel3";
             this.uiLabel3.Size = new System.Drawing.Size(128, 23);
             this.uiLabel3.TabIndex = 1;
@@ -158,14 +158,14 @@
             // tbRcvData
             // 
             this.tbRcvData.FillColor = System.Drawing.Color.White;
-            this.tbRcvData.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbRcvData.Location = new System.Drawing.Point(23, 306);
+            this.tbRcvData.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tbRcvData.Location = new System.Drawing.Point(10, 306);
             this.tbRcvData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbRcvData.MinimumSize = new System.Drawing.Size(1, 1);
             this.tbRcvData.Name = "tbRcvData";
             this.tbRcvData.Padding = new System.Windows.Forms.Padding(2);
             this.tbRcvData.ShowText = false;
-            this.tbRcvData.Size = new System.Drawing.Size(391, 174);
+            this.tbRcvData.Size = new System.Drawing.Size(446, 174);
             this.tbRcvData.Style = Sunny.UI.UIStyle.Custom;
             this.tbRcvData.TabIndex = 5;
             this.tbRcvData.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
@@ -185,14 +185,14 @@
             // tbSendData
             // 
             this.tbSendData.FillColor = System.Drawing.Color.White;
-            this.tbSendData.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbSendData.Location = new System.Drawing.Point(23, 513);
+            this.tbSendData.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tbSendData.Location = new System.Drawing.Point(10, 513);
             this.tbSendData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbSendData.MinimumSize = new System.Drawing.Size(1, 1);
             this.tbSendData.Name = "tbSendData";
             this.tbSendData.Padding = new System.Windows.Forms.Padding(2);
             this.tbSendData.ShowText = false;
-            this.tbSendData.Size = new System.Drawing.Size(391, 174);
+            this.tbSendData.Size = new System.Drawing.Size(446, 174);
             this.tbSendData.Style = Sunny.UI.UIStyle.Custom;
             this.tbSendData.TabIndex = 5;
             this.tbSendData.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
@@ -200,8 +200,10 @@
             // 
             // btnTcpSvrRcvClear
             // 
+            this.btnTcpSvrRcvClear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnTcpSvrRcvClear.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnTcpSvrRcvClear.Location = new System.Drawing.Point(328, 276);
+            this.btnTcpSvrRcvClear.Location = new System.Drawing.Point(365, 276);
             this.btnTcpSvrRcvClear.Name = "btnTcpSvrRcvClear";
             this.btnTcpSvrRcvClear.Size = new System.Drawing.Size(81, 29);
             this.btnTcpSvrRcvClear.TabIndex = 3;
@@ -302,6 +304,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.uiLabel6);
             this.Controls.Add(this.uiDoubleUpDown1);
             this.Controls.Add(this.ckTimeToSent);
@@ -321,8 +324,9 @@
             this.Controls.Add(this.uiLabel2);
             this.Controls.Add(this.uiLabel1);
             this.Controls.Add(this.uiLabel5);
+            this.MinimumSize = new System.Drawing.Size(400, 0);
             this.Name = "UcTcpServer";
-            this.Size = new System.Drawing.Size(471, 567);
+            this.Size = new System.Drawing.Size(470, 747);
             this.ResumeLayout(false);
 
         }

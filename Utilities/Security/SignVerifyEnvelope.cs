@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using Microsoft.Win32;
 using System.IO;
 
-namespace Utilities.IteLicense
+namespace Utilities.EzLicense
 {
     public class SignVerifyEnvelope
     { 

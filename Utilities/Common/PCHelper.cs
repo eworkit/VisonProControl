@@ -130,7 +130,7 @@ namespace Utilities
 }
 
 
-namespace Utilities.IteLicense
+namespace Utilities.EzLicense
 {
     public class IteRegist
     { 

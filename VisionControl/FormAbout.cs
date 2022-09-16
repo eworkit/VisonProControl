@@ -10,7 +10,7 @@ namespace VisionControl
   /// <summary>
   /// Summary description for FormAbout.
   /// </summary>
-  public class FormAbout : System.Windows.Forms.Form
+  public class FormAbout : Sunny.UI.UIForm
   {
     /// <summary>
     /// Required designer variable.
@@ -35,8 +35,7 @@ namespace VisionControl
       //
       // Required for Windows Form Designer support
       //
-      InitializeComponent();
-
+      InitializeComponent(); 
       mAboutFilename = fname;
       mVisionControl = ctl;
     }
@@ -81,12 +80,12 @@ namespace VisionControl
             this.textBox_aboutText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_aboutText.Location = new System.Drawing.Point(19, 215);
+            this.textBox_aboutText.Location = new System.Drawing.Point(34, 414);
             this.textBox_aboutText.Multiline = true;
             this.textBox_aboutText.Name = "textBox_aboutText";
             this.textBox_aboutText.ReadOnly = true;
             this.textBox_aboutText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_aboutText.Size = new System.Drawing.Size(529, 133);
+            this.textBox_aboutText.Size = new System.Drawing.Size(498, 115);
             this.textBox_aboutText.TabIndex = 2;
             this.textBox_aboutText.Text = "textBox1";
             // 
@@ -94,9 +93,9 @@ namespace VisionControl
             // 
             this.button_OK.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.button_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button_OK.Location = new System.Drawing.Point(212, 357);
+            this.button_OK.Location = new System.Drawing.Point(154, 547);
             this.button_OK.Name = "button_OK";
-            this.button_OK.Size = new System.Drawing.Size(125, 26);
+            this.button_OK.Size = new System.Drawing.Size(228, 49);
             this.button_OK.TabIndex = 0;
             this.button_OK.Text = "OK";
             // 
@@ -111,9 +110,9 @@ namespace VisionControl
             this.groupBox1.Controls.Add(this.label_Password);
             this.groupBox1.Controls.Add(this.textBox_VppFilename);
             this.groupBox1.Controls.Add(this.label_Vpp);
-            this.groupBox1.Location = new System.Drawing.Point(19, 17);
+            this.groupBox1.Location = new System.Drawing.Point(34, 52);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(529, 181);
+            this.groupBox1.Size = new System.Drawing.Size(498, 350);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             // 
@@ -121,18 +120,18 @@ namespace VisionControl
             // 
             this.textBox_AboutFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_AboutFile.Location = new System.Drawing.Point(182, 138);
+            this.textBox_AboutFile.Location = new System.Drawing.Point(334, 266);
             this.textBox_AboutFile.Name = "textBox_AboutFile";
             this.textBox_AboutFile.ReadOnly = true;
-            this.textBox_AboutFile.Size = new System.Drawing.Size(318, 21);
+            this.textBox_AboutFile.Size = new System.Drawing.Size(110, 34);
             this.textBox_AboutFile.TabIndex = 3;
             this.textBox_AboutFile.Text = "textBox1";
             // 
             // label_About
             // 
-            this.label_About.Location = new System.Drawing.Point(29, 138);
+            this.label_About.Location = new System.Drawing.Point(54, 266);
             this.label_About.Name = "label_About";
-            this.label_About.Size = new System.Drawing.Size(153, 17);
+            this.label_About.Size = new System.Drawing.Size(280, 32);
             this.label_About.TabIndex = 5;
             this.label_About.Text = "Using about.txt file:";
             // 
@@ -140,12 +139,12 @@ namespace VisionControl
             // 
             this.textBox_AppInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_AppInfo.Location = new System.Drawing.Point(29, 26);
+            this.textBox_AppInfo.Location = new System.Drawing.Point(54, 50);
             this.textBox_AppInfo.Multiline = true;
             this.textBox_AppInfo.Name = "textBox_AppInfo";
             this.textBox_AppInfo.ReadOnly = true;
             this.textBox_AppInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_AppInfo.Size = new System.Drawing.Size(471, 43);
+            this.textBox_AppInfo.Size = new System.Drawing.Size(390, 84);
             this.textBox_AppInfo.TabIndex = 0;
             this.textBox_AppInfo.Text = "textBox";
             // 
@@ -153,18 +152,18 @@ namespace VisionControl
             // 
             this.textBox_PasswordFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_PasswordFile.Location = new System.Drawing.Point(182, 112);
+            this.textBox_PasswordFile.Location = new System.Drawing.Point(334, 216);
             this.textBox_PasswordFile.Name = "textBox_PasswordFile";
             this.textBox_PasswordFile.ReadOnly = true;
-            this.textBox_PasswordFile.Size = new System.Drawing.Size(318, 21);
+            this.textBox_PasswordFile.Size = new System.Drawing.Size(110, 34);
             this.textBox_PasswordFile.TabIndex = 2;
             this.textBox_PasswordFile.Text = "textBox1";
             // 
             // label_Password
             // 
-            this.label_Password.Location = new System.Drawing.Point(29, 112);
+            this.label_Password.Location = new System.Drawing.Point(54, 216);
             this.label_Password.Name = "label_Password";
-            this.label_Password.Size = new System.Drawing.Size(153, 17);
+            this.label_Password.Size = new System.Drawing.Size(280, 33);
             this.label_Password.TabIndex = 2;
             this.label_Password.Text = "Using password file:";
             // 
@@ -172,33 +171,34 @@ namespace VisionControl
             // 
             this.textBox_VppFilename.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_VppFilename.Location = new System.Drawing.Point(182, 86);
+            this.textBox_VppFilename.Location = new System.Drawing.Point(334, 166);
             this.textBox_VppFilename.Name = "textBox_VppFilename";
             this.textBox_VppFilename.ReadOnly = true;
-            this.textBox_VppFilename.Size = new System.Drawing.Size(318, 21);
+            this.textBox_VppFilename.Size = new System.Drawing.Size(110, 34);
             this.textBox_VppFilename.TabIndex = 1;
             this.textBox_VppFilename.Text = "textBox1";
             // 
             // label_Vpp
             // 
-            this.label_Vpp.Location = new System.Drawing.Point(29, 86);
+            this.label_Vpp.Location = new System.Drawing.Point(54, 166);
             this.label_Vpp.Name = "label_Vpp";
-            this.label_Vpp.Size = new System.Drawing.Size(153, 17);
+            this.label_Vpp.Size = new System.Drawing.Size(280, 32);
             this.label_Vpp.TabIndex = 0;
             this.label_Vpp.Text = "Using .vpp file:";
             // 
             // FormAbout
             // 
             this.AcceptButton = this.button_OK;
-            this.AutoScaleBaseSize = new System.Drawing.Size(6, 14);
             this.CancelButton = this.button_OK;
-            this.ClientSize = new System.Drawing.Size(568, 398);
+            this.ClientSize = new System.Drawing.Size(568, 626);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button_OK);
             this.Controls.Add(this.textBox_aboutText);
+            this.MaximumSize = new System.Drawing.Size(2640, 1563);
             this.Name = "FormAbout";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormAbout";
+            this.ZoomScaleRect = new System.Drawing.Rectangle(19, 19, 568, 398);
             this.Load += new System.EventHandler(this.FormAbout_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -240,7 +240,7 @@ namespace VisionControl
 
       if (!File.Exists(mAboutFilename))
       {
-        aboutText = ResourceUtility.GetString("RtNoDetails");
+        aboutText = mAboutFilename;
         textBox_AboutFile.Text = ResourceUtility.GetString("RtNoFile");
       }
       else
