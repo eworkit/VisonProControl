@@ -41,6 +41,7 @@ namespace VisionControl
         //  private CogToolBlock MyToolBlock = new CogToolBlock();
         //==20220718
 
+        private readonly object _jobsLock = new object();
         public CogAcqInfo acqInfo = new CogAcqInfo();
         private CogAcqFifoTool AcqFifoTool = new CogAcqFifoTool();
         CheckBox checkBox_LiveDisplay = new CheckBox();
@@ -157,8 +158,9 @@ namespace VisionControl
                 }
             }
         }
+        public RunState CurrentRunState => mCurrentRunState;
         public int SelectedTab => tabControl_JobTabs.SelectedIndex;
-        public bool IsAutoRun => _IsAllRun;
+ 
         public bool InitError => mInitError;
         public event Action<bool> AutoRunModeChanged;
         /// <summary>
@@ -229,6 +231,7 @@ namespace VisionControl
             //if (!DesignMode)
             //    this.tabPage1.Controls.Add(new UCOneJob() { Dock = DockStyle.Fill });
             this.uiTabControl1.TabVisible = false;
+            tpStat.BackColor = Color.FromArgb(224, 234, 254);
 #if Test
             FillJobTabs();
 #endif
@@ -236,8 +239,12 @@ namespace VisionControl
 
         private void VisionUC_SizeChanged(object sender, EventArgs e)
         {
+            uiSplitContainer1.Height = this.Height - 6;
             uiNavBar1.Width = uiSplitContainer1.Panel2.Width;
             uiTabControl1.Width = uiNavBar1.Width;
+            uiTabControl1.Height = uiSplitContainer1.Panel2.Height - 6 - uiNavBar1.Bottom;
+            flowLayoutPanel1.Width = uiTabControl1.Width - flowLayoutPanel1.Left - 3;
+            flowLayoutPanel1.Height = uiTabControl1.Bottom - flowLayoutPanel1.Top - 3;
         }
 
 #if Test
@@ -245,10 +252,13 @@ namespace VisionControl
         {
             for (int i = tabControl_JobTabs.TabCount; i < 4; i++)
             {
-                TabPage tp = new TabPage("Œ¥≈‰÷√");
+                TabPage tp = new TabPage("Job (Œ¥…Ë÷√)");
                 tabControl_JobTabs.TabPages.Add(tp);
                 tp.Controls.Add(new UCOneJob(null) { Left = 3, Top = 3, Dock = DockStyle.Fill });
+                flowLayoutPanel1.Controls.Add(new UCJobStat() { JobName = tp.Text, BackColor= Color.FromArgb(224, 234, 254) });
             }
+            //flowLayoutPanel1.Controls.Add(new UCJobStat() { JobName = "Job (Œ¥…Ë÷√)", BackColor = Color.FromArgb(224, 234, 254) });
+            
         }
 #endif
 
@@ -336,7 +346,15 @@ namespace VisionControl
                 }
             }
         }
-
+        IEnumerable<UCJobStat> UCJobsStat
+        {
+            get
+            {
+                foreach (var stat in flowLayoutPanel1.Controls)
+                    if (stat is UCJobStat)
+                        yield return (UCJobStat)stat;
+            }
+        }
         UCOneJob SelectedUcJob => GetUCJob(SelectedTab);
         UCOneJob GetUCJob(int i) => UCJobs.ElementAt(i);
 
@@ -653,12 +671,34 @@ namespace VisionControl
 
         private void CogJob_Stopped(object sender, CogJobActionEventArgs e)
         {
-            stopWatch.Stop();
-            SetElapseText(true);
-            stopWatch.Reset();
+            // stopWatch.Stop();
+            CogJob job = (CogJob)sender;
+            int i = Utility.GetJobIndexFromName(mJM, job.Name);
+            var stat = UCJobsStat.ElementAt(i);
+            stat.Stop();
+            var ucJob = GetUCJob(i);
+            ucJob.SafeInvoke(() => ucJob.UpdateUIStat(job.State));
+            SetElapseText(i, true);
+            stat.Reset();
+           if(AllJobsStop())
+            {
+                var cc = mCurrentRunState == RunState.RunningContinuous ? CogActionConstants.StoppedContinuous : CogActionConstants.StoppedSingle;
+                mJM_Stopped(mJM, new CogJobManagerActionEventArgs(job, cc));
+            }
         }
         #endregion
-
+        bool AllJobsStop()
+        {
+            if (mJM == null)
+                return false;
+            //for(int i = 0; i < mJM.JobCount; ++i)
+            //{
+            //    if(mJM.Job(i).State != CogJobStateConstants.Stopped)
+            //        return false;
+            //}
+          return  mJM.JobsRunningState == CogJobsRunningStateConstants.None;
+            
+        }
         #region Runtime implementation
         //ILog log => LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -673,7 +713,7 @@ namespace VisionControl
 
             // update control state here to prevent an error from a quick button doubleclick
             mCurrentRunState = RunState.RunningOnce;
-            UpdateControlsEnabled();
+            UpdateControlsEnabled(false);
 
             try
             {
@@ -695,6 +735,8 @@ namespace VisionControl
                     }
                 }
                 stopWatch.Start();
+                foreach (var sta in UCJobsStat)
+                    sta.Start();
                 mJM.Run();
 
                 // note that mJM_Stopped will be called when run is complete
@@ -706,7 +748,7 @@ namespace VisionControl
             catch (Cognex.VisionPro.Exceptions.CogException ex)
             {
                 mCurrentRunState = RunState.Stopped;
-                UpdateControlsEnabled();
+                UpdateControlsEnabled(true);
                 log.Error(ex);
                 MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                   mApplicationName);
@@ -735,7 +777,7 @@ namespace VisionControl
             {
                 // update control state here to prevent an error from a quick button doubleclick
                 mCurrentRunState = RunState.RunningContinuous;
-                UpdateControlsEnabled();
+                UpdateControlsEnabled(true);
 
                 try
                 {
@@ -757,7 +799,9 @@ namespace VisionControl
                             }
                         }
                     }
-                    stopWatch.Start();
+                    stopWatch.Start(); 
+                    foreach (var sta in UCJobsStat)
+                        sta.Start();
                     mJM.RunContinuous();
                     _IsAllRun = true;
                 }
@@ -768,14 +812,14 @@ namespace VisionControl
                 catch (Cognex.VisionPro.Exceptions.CogException ex)
                 {
                     mCurrentRunState = RunState.Stopped;
-                    UpdateControlsEnabled();
+                    UpdateControlsEnabled(true);
                     log.Error(ex);
                     MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                       mApplicationName);
                 }
             }
         }
-        public void RunJobCont(int i)
+        public void RunJob(int i, bool once=true)
         {
             if (!CheckJob())
                 return;
@@ -795,9 +839,10 @@ namespace VisionControl
             }
             else
             {
+                var oldState = mCurrentRunState;
                 // update control state here to prevent an error from a quick button doubleclick
-                mCurrentRunState = RunState.RunningContinuous;
-                UpdateControlsEnabled();
+                if(mCurrentRunState == RunState.Stopped || AllJobsStop())
+                       mCurrentRunState = once ? RunState.RunningOnce : RunState.RunningContinuous;
 
                 try
                 {
@@ -816,8 +861,15 @@ namespace VisionControl
                             }
                         }
                     }
-                    stopWatch.Start();
-                    job.RunContinuous();
+                    if (oldState == RunState.Stopped)
+                    { 
+                        stopWatch.Start();
+                    }
+                    UCJobsStat.ElementAt(i).Start();
+                    if (once)
+                        job.Run();
+                    else
+                        job.RunContinuous();
                 }
                 catch (Cognex.VisionPro.Exceptions.CogNotStoppedException)
                 {
@@ -826,15 +878,18 @@ namespace VisionControl
                 catch (Cognex.VisionPro.Exceptions.CogException ex)
                 {
                     mCurrentRunState = RunState.Stopped;
-                    UpdateControlsEnabled();
+                    //UpdateControlsEnabled();
                     log.Error(ex);
                     MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                       mApplicationName);
                 }
             }
+            SetElapseText(i, true);
+
+            UpdateControlsEnabled();
         }
         public event Action<RunState> RunStateUpdated;
-        private void UpdateControlsEnabled()
+        private void UpdateControlsEnabled(bool force = false)
         {
             // Enable or disable controls based on our current run state
             bool running = mCurrentRunState != RunState.Stopped;
@@ -853,8 +908,7 @@ namespace VisionControl
             checkBox_LiveDisplay.Enabled = !mInitError && currentJobCanLive &&
               ((mCurrentRunState == RunState.Stopped && checkBox_LiveDisplay.Checked == false) ||
                (mCurrentRunState == RunState.RunningLive && checkBox_LiveDisplay.Checked == true));
-
-
+ 
 
             //button_ResetStatistics.Enabled = !mInitError && !runningLive;
             //button_ResetStatisticsForAllJobs.Enabled = !mInitError && !runningLive;
@@ -877,6 +931,12 @@ namespace VisionControl
                     else
                         ctl.Enabled = true;
                 }
+                var ucjob = UCJobs.ElementAt(j);
+                var state = force ? 
+                    (running? 
+                    (runningContinuous? CogJobStateConstants.RunningContinuous: CogJobStateConstants.RunningSingle): CogJobStateConstants.Stopped)
+                   : mJM.Job(j).State;
+                ucjob.SafeInvoke(() => ucjob.UpdateUIStat(state));
             }
         }
 
@@ -1151,14 +1211,17 @@ namespace VisionControl
                 }
 
                 bool stoppingLive = mCurrentRunState == RunState.RunningLive || checkBox_LiveDisplay.Checked;
-
+                
                 mCurrentRunState = RunState.Stopped;
                 _IsAllRun = false;
-           //     stopWatch.Stop();
-               // SetElapseText(true);
+                if (stopWatch.IsRunning)
+                {
+                    stopWatch.Stop();
+                    SetElapseText(null, true);
 
-               // stopWatch.Reset();
-                log.Info("Job Stpoped");
+                    stopWatch.Reset();
+                    log.Info("Job Stpoped");
+                }
                 if (stoppingLive)
                 {
                     RestoreJobStates();
@@ -1181,15 +1244,31 @@ namespace VisionControl
                 }
 
                 UpdateGui(null, null);
-                UpdateControlsEnabled();
+                UpdateControlsEnabled(true);
                 SetResultBarCurrent();
             }
             catch { }
         }
-        void SetElapseText(bool milliseconds = false)
+        void SetElapseText(int? i = null, bool milliseconds = false)
         {
             string fmt = @"hh\:mm\:ss" + (milliseconds ? @"\.fff" : string.Empty);
-            tbElapse.SafeInvoke(() => tbElapse.Text = stopWatch.Elapsed.ToString(fmt));
+            if (i.HasValue)
+            {
+                if (i == -1)
+                {
+                    foreach (var jobStat in UCJobsStat)
+                        jobStat.SafeInvoke(() => jobStat.ElapsedText = jobStat.Elapsed.ToString(fmt));
+                }
+                else
+                {
+                    var jobStat = UCJobsStat.ElementAt(i.Value);
+                    jobStat.SafeInvoke(() => jobStat.ElapsedText = jobStat.Elapsed.ToString(fmt));
+                }
+            }
+            else
+            {
+                tbElapse.SafeInvoke(() => tbElapse.Text = stopWatch.Elapsed.ToString(fmt));
+            }
         }
         private void mJM_JobStopped(object sender, CogJobActionEventArgs e)
         {
@@ -1292,7 +1371,8 @@ namespace VisionControl
             Wizard_AddJobTabs(newPagesList);
 
             // remove all the tabs
-            tabControl_JobTabs.Controls.Clear();
+            tabControl_JobTabs.Controls.ClearAndDispose();
+            flowLayoutPanel1.Controls.ClearAndDispose();
 
             // add in the tabs available at current access level
             //ÃÌº”Job Tab“≥√Ê
@@ -1306,13 +1386,18 @@ namespace VisionControl
                 for (int i = 0; i < tabControl_JobTabs.TabCount; i++)
                     tabControl_JobTabs.TabPages[i].Dispose();
                 tabControl_JobTabs.TabPages.Clear();
+                flowLayoutPanel1.Controls.ClearAndDispose();
                 for (int i = 0; i < mJM.JobCount; i++)
                 {
                     var job = mJM.Job(i);
                     TabPage tp = new TabPage(job.Name) { Name = job.Name };
                     tabControl_JobTabs.TabPages.Add(tp);
-                    tp.Controls.Add(new UCOneJob(job) { Left = 3, Top = 3, Dock = DockStyle.Fill });
+                    var ucJob = new UCOneJob(job) { Index = i, Left = 3, Top = 3, Dock = DockStyle.Fill };
+                    ucJob.RunClicked += () => RunJob(ucJob.Index);
+                    tp.Controls.Add(ucJob);
+                    flowLayoutPanel1.Controls.Add(new UCJobStat() { JobName = job.Name, BackColor = Color.FromArgb(224, 234, 254) });
                 }
+                flowLayoutPanel1.Controls.Add(new Panel() { Height = 100, BackColor = Color.Transparent });
 #if Test
                 FillJobTabs();
 #endif
@@ -1832,8 +1917,9 @@ namespace VisionControl
                 ResetMinimumGuiUpdateTimer();
                 if (mCurrentRunState != RunState.Stopped)
                 {
-                    SetElapseText();
-                    tbElapse.Text += ".000";
+                    SetElapseText(-1);
+                    SetElapseText(null);
+                    //tbElapse.Text += ".000";
                 }
                 // update everything we can on the gui from here
 
@@ -1863,11 +1949,11 @@ namespace VisionControl
 
         private void ResetMaximumGuiUpdateTimer()
         {
-            mMaximumGuiPeriodTimer.Change(MaximumPeriodMs, MaximumPeriodMs);
+            mMaximumGuiPeriodTimer?.Change(MaximumPeriodMs, MaximumPeriodMs);
         }
         private void ResetMinimumGuiUpdateTimer()
         {
-            mMinimumGuiPeriodTimer.Change(MinimumPeriodMs, MinimumPeriodMs);
+            mMinimumGuiPeriodTimer?.Change(MinimumPeriodMs, MinimumPeriodMs);
         }
 
         private void UpdateGuiIfNeeded()
@@ -1889,7 +1975,8 @@ namespace VisionControl
             // the minimum amount of time between paints has elapsed.  if we have any unpainted
             // results, then indicate that the next generated user result should perform a paint.
             bool updateNow = false;
-
+            if (obj == null) 
+                return;
             lock (mMinimumGuiPeriodTimer)
             {
                 if (!mMinimumGuiUpdateNeeded && !mHaveUnpaintedResults)

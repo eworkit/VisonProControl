@@ -53,6 +53,17 @@ namespace VisionControl
       }
       return -1;
     }
+        public static int GetJobIndex(CogJobManager mgr, CogJob job)
+        {
+
+            if (mgr != null)
+            {
+                for (int i = 0; i < mgr.JobCount; ++i)
+                    if (mgr.Job(i)==job)
+                        return i;
+            }
+            return -1;
+        }
 
     static public bool AddRecordToDisplay(CogRecordsDisplay disp, ICogRecord r, string[] subs,
       bool pickBestImage)

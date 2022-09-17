@@ -833,5 +833,15 @@ namespace VisionControl {
                 return ResourceManager.GetString("RtWarning", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap Run_Once {
+            get {
+                object obj = ResourceManager.GetObject("Run_Once", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

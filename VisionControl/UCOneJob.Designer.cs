@@ -32,7 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UCOneJob));
             this.cogRecordDisplay1 = new Cognex.VisionPro.CogRecordDisplay();
             this.cogRecordsDisplay1 = new Cognex.VisionPro.CogRecordsDisplay();
+            this.button1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.cogRecordDisplay1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.button1)).BeginInit();
             this.SuspendLayout();
             // 
             // cogRecordDisplay1
@@ -65,14 +67,27 @@
             this.cogRecordsDisplay1.Subject = null;
             this.cogRecordsDisplay1.TabIndex = 41;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.BackColor = System.Drawing.Color.Transparent;
+            this.button1.Location = new System.Drawing.Point(687, 42);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(32, 32);
+            this.button1.TabIndex = 42;
+            this.button1.TabStop = false;
+            this.button1.Text = "button1";
+            // 
             // UCOneJob
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.cogRecordsDisplay1);
             this.Controls.Add(this.cogRecordDisplay1);
             this.Name = "UCOneJob";
             this.Size = new System.Drawing.Size(749, 525);
             ((System.ComponentModel.ISupportInitialize)(this.cogRecordDisplay1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.button1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -81,5 +96,6 @@
 
         internal Cognex.VisionPro.CogRecordDisplay cogRecordDisplay1;
         internal Cognex.VisionPro.CogRecordsDisplay cogRecordsDisplay1;
+        private System.Windows.Forms.PictureBox button1;
     }
 }

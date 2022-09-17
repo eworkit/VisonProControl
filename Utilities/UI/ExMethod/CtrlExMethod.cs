@@ -153,6 +153,14 @@ namespace Utilities.UI.ExMethod
                 }
             }
         }
+        public static void ClearAndDispose(this System.Windows.Forms.Control. ControlCollection controls)
+        {
+            foreach(Control c in controls)
+            {
+                c.Dispose();
+            }
+            controls.Clear();
+        }
         public const int WM_USER = 0x0400;
         public const int EM_GETPARAFORMAT = WM_USER + 61;
         public const int EM_SETPARAFORMAT = WM_USER + 71;

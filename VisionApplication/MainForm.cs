@@ -103,6 +103,7 @@ namespace VisionApplication
         
             btnRun.Enabled = btnRunOnce.Enabled = !visionControl1.InitError && !running;
             btnPause.Enabled = !visionControl1.InitError && running;
+            btnOpen.Enabled = !running;
             btnPreview.Enabled= !visionControl1.InitError;
             button_Configuration.Enabled = /*!visionControl1.InitError &&*/ !string.IsNullOrEmpty(visionControl1.LoadedVppFilename) && File.Exists(visionControl1.LoadedVppFilename) && canConfig;
             //button_SaveSettings.Enabled = !visionControl1.InitError && canSaveSettings;
@@ -197,27 +198,27 @@ namespace VisionApplication
 
             // put up a new dialog containing QB editor
             FormQB frm = new FormQB(visionControl1.JobManager);
-            frm.Show();
-            //frm.Dispose();
-
+            frm.Show(this);
             // prompt for save of vpp file
             string vpp = visionControl1.LoadedVppFilename;
             string quotedvpp = "\"" + vpp + "\"";
             string saveButtonName = ResourceUtility.GetString("RtSaveSettingsButton");
             string quotedSaveButtonName = "\"" + saveButtonName + "\"";
             string promptStr = ResourceUtility.FormatString("RtSaveSettingsTextAfterConfig", quotedvpp, quotedSaveButtonName);
-            frm.FormClosing+=(_,__)=>  visionControl1.PromptToSaveSettings(promptStr);
+            frm.FormClosing += (_, __) => visionControl1.PromptToSaveSettings(promptStr);
 
             // re-attach
             visionControl1.AttachToJobManager(true);
         }
 
         private void btnPause_Click(object sender, EventArgs e)
-        {
-            if (visionControl1.IsAutoRun)
-                visionControl1.RunCont();
-            else
-                visionControl1.RunJobCont(visionControl1.SelectedTab);
+       {
+            //    if (visionControl1.CurrentRunState == RunState.RunningContinuous)
+            //        visionControl1.RunCont();
+            //    else if(visionControl1.CurrentRunState == RunState.RunningOnce)
+            //        //visionControl1.RunJob(visionControl1.SelectedTab);
+            //        visionControl1.RunOnce();
+            visionControl1.JobManager.Stop();
         }
 
         private void uiContextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
