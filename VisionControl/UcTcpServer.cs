@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using IteUtils;
 using Sunny.UI;
+using Utilities;
 using Utilities.ExMethod;
 using Utilities.Net;
 using Utilities.UI.ExMethod;
@@ -30,7 +30,7 @@ namespace VisionControl
             this.Disposed += UcTcpServer_Disposed;
             tbIP.Text = Utilities.Net.TcpHelper.GetInnerIP(); 
             btnClose.Enabled=false;
-            var cfg=AppConfig.TcpServerInfo;
+            var cfg = MyAppConfig.TcpServerInfo;
             if(cfg!=null)
             {
                 tbPort.Text = cfg.Port.ToString();

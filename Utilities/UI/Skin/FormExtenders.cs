@@ -20,7 +20,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Utilities;
 
-namespace IteUI
+namespace UtilityUI
 {
     /// <summary>
     /// This class provides some methods which provide drawing specific data.

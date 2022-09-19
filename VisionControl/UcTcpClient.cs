@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using IteUtils;
+using System.Windows.Forms; 
 using Sunny.UI;
+using Utilities;
 using Utilities.ExMethod;
 using Utilities.Net;
 using Utilities.UI;
@@ -29,7 +29,7 @@ namespace VisionControl
             this.Disposed += UcTcpClient_Disposed;
             btnDisCon.Enabled = false;
             this.BackColor = Color.Transparent;
-            var cfg = AppConfig.TcpClientInfo;
+            var cfg = MyAppConfig.TcpClientInfo;
             if (cfg != null)
             {
                 tbServer.Text = cfg.Server;

@@ -23,7 +23,7 @@
 using System.Drawing;  
 using Utilities;
 
-namespace IteUI.Painting
+namespace UtilityUI.Painting
 {
     /// <summary>
     /// The base class for painting definitions.

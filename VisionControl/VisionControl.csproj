@@ -40,7 +40,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Automation.BDaq4, Version=4.0.0.0, Culture=neutral, PublicKeyToken=463f5928d60183a0, processorArchitecture=MSIL" />
+    <Reference Include="Automation.BDaq4, Version=4.0.0.0, Culture=neutral, PublicKeyToken=463f5928d60183a0, processorArchitecture=MSIL">
+      <HintPath>C:\Advantech\DAQNavi\Automation.BDaq\4.0.0.0\Automation.BDaq4.dll</HintPath>
+    </Reference>
     <Reference Include="Cognex.VisionPro">
       <Name>Cognex.VisionPro</Name>
     </Reference>
@@ -299,12 +301,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Utilities\Utilities.csproj">
-      <Project>{cadec15a-bb9d-4352-ac44-276aa27cc445}</Project>
-      <Name>Utilities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Run_Once.png" />
   </ItemGroup>
   <ItemGroup>
@@ -312,6 +308,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{cadec15a-bb9d-4352-ac44-276aa27cc445}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Runtime.WindowsRuntime.4.6.0\build\net461\System.Runtime.WindowsRuntime.targets" Condition="Exists('..\packages\System.Runtime.WindowsRuntime.4.6.0\build\net461\System.Runtime.WindowsRuntime.targets')" />

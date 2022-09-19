@@ -18,7 +18,7 @@ using System.Drawing;
 using System.ComponentModel; 
 using Utilities;
 
-namespace IteUI
+namespace UtilityUI
 {
     /// <summary>
     /// This class represents a caption button used for SysCommands like Close, Maximize and Minimize.

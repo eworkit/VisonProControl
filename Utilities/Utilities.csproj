@@ -8,8 +8,8 @@
     <ProjectGuid>{CADEC15A-BB9D-4352-AC44-276AA27CC445}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IteUtils</RootNamespace>
-    <AssemblyName>IteUtils</AssemblyName>
+    <RootNamespace>Utilities</RootNamespace>
+    <AssemblyName>Utilities</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
@@ -84,7 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppConfig.cs" />
+    <Compile Include="MyAppConfig.cs" />
     <Compile Include="Common\DllInvoke.cs" />
     <Compile Include="Common\Ini.cs" />
     <Compile Include="Data\DataEx.cs" />

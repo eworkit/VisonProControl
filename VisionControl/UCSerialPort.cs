@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using IteUtils;
+using Utilities;
 using Sunny.UI;
 using Utilities.Net;
 using Utilities.UI;
@@ -34,7 +34,7 @@ namespace VisionControl
                 cbParity.Items.Add(item.ToString());
             }
             cbParity.SelectedIndex = 0;
-            var cfg = AppConfig.SerialPortInfo;
+            var cfg = MyAppConfig.SerialPortInfo;
             if(cfg!=null)
             {
                 tbPort.Text = cfg.Port;

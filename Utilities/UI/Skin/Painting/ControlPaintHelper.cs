@@ -21,7 +21,7 @@ using System.Resources;
 using System.Windows.Forms;
 using System.Xml;
 
-namespace IteUI
+namespace UtilityUI
 {
     /// <summary>
     /// This class handles the loading of resources and drawing of all controls.

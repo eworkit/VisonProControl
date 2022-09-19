@@ -18,7 +18,7 @@
 using System;
 using System.Drawing;
 
-namespace IteUI
+namespace UtilityUI
 {
 /// <summary>
 /// Lists all alignments
