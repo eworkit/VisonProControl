@@ -110,7 +110,7 @@ namespace VisionApplication
             // 
             this.btnRun.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnRun.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnRun.Image = global::VisionApplication.Properties.Resources.Run;
+            this.btnRun.Image = global::VisionApplication.Properties.Resources.RunCont;
             this.btnRun.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRun.Name = "btnRun";
             this.btnRun.Padding = new System.Windows.Forms.Padding(3, 3, 8, 3);
@@ -123,7 +123,7 @@ namespace VisionApplication
             // 
             this.btnRunOnce.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnRunOnce.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnRunOnce.Image = global::VisionApplication.Properties.Resources.Run_Once;
+            this.btnRunOnce.Image = global::VisionApplication.Properties.Resources.Run;
             this.btnRunOnce.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRunOnce.Name = "btnRunOnce";
             this.btnRunOnce.Padding = new System.Windows.Forms.Padding(3, 3, 8, 3);
@@ -218,7 +218,7 @@ namespace VisionApplication
             | System.Windows.Forms.AnchorStyles.Left)));
             this.visionControl1.AutoRunMode = true;
             this.visionControl1.Controls.Add(this.statusStrip1);
-            this.visionControl1.Font = new System.Drawing.Font("ËÎÌו", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.visionControl1.Font = new System.Drawing.Font("ËÎÌו", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.visionControl1.Location = new System.Drawing.Point(-2, 89);
             this.visionControl1.Margin = new System.Windows.Forms.Padding(4);
             this.visionControl1.MinimumSize = new System.Drawing.Size(1, 1);
@@ -281,7 +281,7 @@ namespace VisionApplication
             this.Controls.Add(this.toolStripContainer1);
             this.ExtendBox = true;
             this.ExtendMenu = this.uiContextMenuStrip1;
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.Font = new System.Drawing.Font("ËÎÌו", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "MainForm";
             this.Padding = new System.Windows.Forms.Padding(2, 36, 2, 2);
             this.ShowDragStretch = true;

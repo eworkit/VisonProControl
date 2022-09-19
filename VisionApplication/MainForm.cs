@@ -187,6 +187,7 @@ namespace VisionApplication
         bool IsPreView => 1.Equals(btnPreview.Tag);
         private void btnJob_Click(object sender, EventArgs e)
         {
+            log.Info("执行持续运行所有Job操作");
             bool needPreview = !this.IsPreView;
             visionControl1.Preview(needPreview);
             
@@ -218,6 +219,7 @@ namespace VisionApplication
             //    else if(visionControl1.CurrentRunState == RunState.RunningOnce)
             //        //visionControl1.RunJob(visionControl1.SelectedTab);
             //        visionControl1.RunOnce();
+            log.Info("执行停止所有Job操作");
             visionControl1.JobManager.Stop();
         }
 
@@ -231,6 +233,7 @@ namespace VisionApplication
 
         private void btnRunOnce_Click(object sender, EventArgs e)
         {
+            log.Info("执行单次运行所有Job操作");
             visionControl1.RunOnce();
         }
     }

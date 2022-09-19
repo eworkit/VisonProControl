@@ -146,6 +146,7 @@ namespace VisionControl
             // 
             this.ucOneJob1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ucOneJob1.Font = new System.Drawing.Font("Î¢ÈíÑÅºÚ", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ucOneJob1.Index = -1;
             this.ucOneJob1.Location = new System.Drawing.Point(0, 0);
             this.ucOneJob1.MinimumSize = new System.Drawing.Size(1, 1);
             this.ucOneJob1.Name = "ucOneJob1";
@@ -407,7 +408,7 @@ namespace VisionControl
             this.tpTcp.Font = new System.Drawing.Font("ËÎÌå", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tpTcp.Location = new System.Drawing.Point(0, 40);
             this.tpTcp.Name = "tpTcp";
-            this.tpTcp.Size = new System.Drawing.Size(390, 547);
+            this.tpTcp.Size = new System.Drawing.Size(200, 60);
             this.tpTcp.TabIndex = 1;
             this.tpTcp.Text = "TCP";
             // 
@@ -424,7 +425,7 @@ namespace VisionControl
             this.tabControl1.MainPage = "";
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(390, 547);
+            this.tabControl1.Size = new System.Drawing.Size(200, 60);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl1.TabIndex = 0;
             this.tabControl1.TipsFont = new System.Drawing.Font("Î¢ÈíÑÅºÚ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -437,7 +438,7 @@ namespace VisionControl
             this.tabPage2.Font = new System.Drawing.Font("ËÎÌå", 9F);
             this.tabPage2.Location = new System.Drawing.Point(0, 40);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(390, 507);
+            this.tabPage2.Size = new System.Drawing.Size(200, 20);
             this.tabPage2.TabIndex = 0;
             this.tabPage2.Text = "·þÎñ¶Ë";
             // 
@@ -448,7 +449,7 @@ namespace VisionControl
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(390, 507);
+            this.panel1.Size = new System.Drawing.Size(200, 20);
             this.panel1.TabIndex = 0;
             // 
             // ucTcpServer1
@@ -517,7 +518,7 @@ namespace VisionControl
             this.uiNavBar1.MenuStyle = Sunny.UI.UIMenuStyle.Custom;
             this.uiNavBar1.Name = "uiNavBar1";
             this.uiNavBar1.NodeAlignment = System.Drawing.StringAlignment.Near;
-            this.uiNavBar1.NodeInterval = 8;
+            this.uiNavBar1.NodeInterval = 3;
             treeNode1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             treeNode1.Name = "TabRunState";
             treeNode1.Text = "ÔËÐÐ×´Ì¬";
@@ -539,10 +540,10 @@ namespace VisionControl
             treeNode1,
             treeNode6,
             treeNode7});
-            this.uiNavBar1.NodeSize = new System.Drawing.Size(100, 40);
+            this.uiNavBar1.NodeSize = new System.Drawing.Size(120, 40);
             this.uiNavBar1.SelectedForeColor = System.Drawing.Color.White;
             this.uiNavBar1.SelectedHighColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.uiNavBar1.Size = new System.Drawing.Size(325, 49);
+            this.uiNavBar1.Size = new System.Drawing.Size(318, 49);
             this.uiNavBar1.Style = Sunny.UI.UIStyle.Custom;
             this.uiNavBar1.TabControl = this.uiTabControl1;
             this.uiNavBar1.TabIndex = 0;

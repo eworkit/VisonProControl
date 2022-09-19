@@ -27,12 +27,17 @@ namespace VisionControl
             cogRecordsDisplay1.Hide();
             button1.Size = new Size(28, 28);
             button1.Top = 5;
-            button1.Paint += CogRecordDisplay1_Paint;
-          
+            this.SizeChanged += UCOneJob_SizeChanged;
+   
             button1.Click += (_, __) => RunClicked?.Invoke();
             UpdateUIStat(CogJobStateConstants.Stopped);
         }
-         
+
+        private void UCOneJob_SizeChanged(object sender, EventArgs e)
+        {
+            button1.Left = cogRecordDisplay1.Right - button1.Width - SystemInformation.VerticalScrollBarWidth - 5;
+            button1.Paint += CogRecordDisplay1_Paint;
+        }
 
         private void CogRecordDisplay1_Paint(object sender, PaintEventArgs e)
         {

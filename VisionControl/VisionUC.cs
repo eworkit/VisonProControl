@@ -685,6 +685,7 @@ namespace VisionControl
                 var cc = mCurrentRunState == RunState.RunningContinuous ? CogActionConstants.StoppedContinuous : CogActionConstants.StoppedSingle;
                 mJM_Stopped(mJM, new CogJobManagerActionEventArgs(job, cc));
             }
+            log.Info($"Job[{i}]“{job.Name}”已停止运行");
         }
         #endregion
         bool AllJobsStop()
@@ -831,6 +832,7 @@ namespace VisionControl
             var job = mJM.Job(i);
             if (job.State != CogJobStateConstants.Stopped)
             {
+                log.Info($"执行停止Job[{i}]“{job.Name}”操作");
                 // Stop continuous
                 job.Stop();
 
@@ -867,9 +869,15 @@ namespace VisionControl
                     }
                     UCJobsStat.ElementAt(i).Start();
                     if (once)
+                    {
+                        log.Info($"执行单次运行Job[{i}]“{job.Name}”操作");
                         job.Run();
+                    }
                     else
+                    {
+                        log.Info($"执行持续运行Job[{i}]“{job.Name}”操作"); 
                         job.RunContinuous();
+                    }
                 }
                 catch (Cognex.VisionPro.Exceptions.CogNotStoppedException)
                 {
@@ -879,7 +887,7 @@ namespace VisionControl
                 {
                     mCurrentRunState = RunState.Stopped;
                     //UpdateControlsEnabled();
-                    log.Error(ex);
+                    log.Error($"Job[{i}]“{job.Name}”运行出错。"+ex);
                     MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                       mApplicationName);
                 }
@@ -1168,7 +1176,7 @@ namespace VisionControl
                 bool isLive = mCurrentRunState == RunState.RunningLive;
                 if (isLive)
                     return;
-
+                var job = (CogJob)sender;
                 RunState newrunstate = RunState.Stopped;
 
                 switch (e.Action)
@@ -1189,6 +1197,7 @@ namespace VisionControl
                     mCurrentRunState = newrunstate;
                     UpdateControlsEnabled();
                 }
+                log.Info($"Job{job.Name}已启动运行");
             }
             catch { }
         }
@@ -1220,7 +1229,7 @@ namespace VisionControl
                     SetElapseText(null, true);
 
                     stopWatch.Reset();
-                    log.Info("Job Stpoped");
+                    log.Info("所有Job已停止运行");
                 }
                 if (stoppingLive)
                 {
@@ -1759,6 +1768,7 @@ namespace VisionControl
                     {
                         Utility.FlushAllQueues(mJM);
                         CogSerializer.SaveObjectToFile(mJM, vpp);
+                        log.Info($"编辑保存VPP文件“{vpp}”");
                     }
                     catch (Exception ex)
                     {
