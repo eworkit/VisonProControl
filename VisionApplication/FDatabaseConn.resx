@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,22 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="toolStrip1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="toolStrip1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>147, 17</value>
-  </metadata>
-  <metadata name="uiContextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>291, 17</value>
-  </metadata>
+  <data name="ucdbConfig1.DBInfo" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAEBVdGlsaXRpZXMsIFZlcnNpb249MS4xLjAuOSwgQ3VsdHVyZT1u
+        ZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1udWxsBQEAAAAZVXRpbGl0aWVzLkRhdGEuREJDb25uSW5mbwYA
+        AAAGZGJUeXBlFzxkYk5hbWU+a19fQmFja2luZ0ZpZWxkFTxob3N0PmtfX0JhY2tpbmdGaWVsZBQ8cHdk
+        PmtfX0JhY2tpbmdGaWVsZBU8dXNlcj5rX19CYWNraW5nRmllbGQVPHBvcnQ+a19fQmFja2luZ0ZpZWxk
+        BAEBAQEBF1V0aWxpdGllcy5EYXRhLkRCTVNUeXBlAgAAAAIAAAAF/f///xdVdGlsaXRpZXMuRGF0YS5E
+        Qk1TVHlwZQEAAAAHdmFsdWVfXwAIAgAAAAAAAAAGBAAAAAAJBAAAAAkEAAAACQQAAAAJBAAAAAs=
+</value>
+  </data>
 </root>

@@ -13,6 +13,7 @@ using Utilities.ExMethod;
 
 namespace Utilities.Data
 {
+    [Serializable]
     public class DBConnInfo : ICloneable
     {
         public DBMSType dbType;
@@ -120,7 +121,7 @@ namespace Utilities.Data
             }
         }
 
-        public DbConnection GetConn(string conn, DBMSType db)
+        public static DbConnection GetConn(string conn, DBMSType db)
         {
             DbConnection sqlConn = null;
             if (db == DBMSType.MySQL)
@@ -149,7 +150,7 @@ namespace Utilities.Data
         /// <param name="conn"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public bool TestConn(DBConnInfo conn)
+        public static bool TestConn(DBConnInfo conn)
         {
             if (conn.host.IsEmpty() || conn.dbName.IsEmpty() || conn.port.IsEmpty() || conn.user.IsEmpty())
                 return false;

@@ -27,10 +27,10 @@ using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Device.Gpio;
 using Utilities.UI.ExMethod;
+using Utilities;
 
 namespace VisionControl
 {
-    public enum AccessLevel { Operator, Supervisor, Administrator }
 
     public enum RunState { Stopped, RunningContinuous, RunningOnce, RunningLive };
 
@@ -69,7 +69,18 @@ namespace VisionControl
         private CogJobManager mJM = null;
         private bool mAttached = false;
         private int mSelectedJob = 0;
-        private AccessLevel mCurrentAccessLevel;
+        public AccessLevel CurrentAccessLevel
+        {
+            get
+            {
+                return mCurrentAccessLevel;
+            }
+            set
+            {
+                mCurrentAccessLevel = value;
+                UpdateControlsEnabled(true);
+            }
+        }
         private CogJobResultHistoryCollection mHistoryCollection = new CogJobResultHistoryCollection();
         bool _IsAllRun = false;
         bool _IsPreview = false;
@@ -160,7 +171,7 @@ namespace VisionControl
         }
         public RunState CurrentRunState => mCurrentRunState;
         public int SelectedTab => tabControl_JobTabs.SelectedIndex;
- 
+
         public bool InitError => mInitError;
         public event Action<bool> AutoRunModeChanged;
         /// <summary>
@@ -255,10 +266,10 @@ namespace VisionControl
                 TabPage tp = new TabPage("Job (未设置)");
                 tabControl_JobTabs.TabPages.Add(tp);
                 tp.Controls.Add(new UCOneJob(null) { Left = 3, Top = 3, Dock = DockStyle.Fill });
-                flowLayoutPanel1.Controls.Add(new UCJobStat() { JobName = tp.Text, BackColor= Color.FromArgb(224, 234, 254) });
+                flowLayoutPanel1.Controls.Add(new UCJobStat() { JobName = tp.Text, BackColor = Color.FromArgb(224, 234, 254) });
             }
             //flowLayoutPanel1.Controls.Add(new UCJobStat() { JobName = "Job (未设置)", BackColor = Color.FromArgb(224, 234, 254) });
-            
+
         }
 #endif
 
@@ -538,11 +549,11 @@ namespace VisionControl
             // perform initialization to update the control gui - remainder of initialization
             // takes place in StartApplication
             if (mUsePasswords)
-                mCurrentAccessLevel = AccessLevel.Operator;
+                CurrentAccessLevel = AccessLevel.Operator;
             else
             {
-                mCurrentAccessLevel = AccessLevel.Administrator;
-      
+                CurrentAccessLevel = AccessLevel.Administrator;
+
             }
 
             //this.button_About.Text = ResourceUtility.GetString("RtAboutButton");
@@ -675,12 +686,17 @@ namespace VisionControl
             CogJob job = (CogJob)sender;
             int i = Utility.GetJobIndexFromName(mJM, job.Name);
             var stat = UCJobsStat.ElementAt(i);
-            stat.Stop();
+            if (stat.StopWatch.IsRunning)
+            {
+                stat.Stop();
+                SetElapseText(i, true);
+                stat.Reset();
+            }
             var ucJob = GetUCJob(i);
             ucJob.SafeInvoke(() => ucJob.UpdateUIStat(job.State));
-            SetElapseText(i, true);
-            stat.Reset();
-           if(AllJobsStop())
+
+
+            if (AllJobsStop())
             {
                 var cc = mCurrentRunState == RunState.RunningContinuous ? CogActionConstants.StoppedContinuous : CogActionConstants.StoppedSingle;
                 mJM_Stopped(mJM, new CogJobManagerActionEventArgs(job, cc));
@@ -697,8 +713,8 @@ namespace VisionControl
             //    if(mJM.Job(i).State != CogJobStateConstants.Stopped)
             //        return false;
             //}
-          return  mJM.JobsRunningState == CogJobsRunningStateConstants.None;
-            
+            return mJM.JobsRunningState == CogJobsRunningStateConstants.None;
+
         }
         #region Runtime implementation
         //ILog log => LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -800,7 +816,7 @@ namespace VisionControl
                             }
                         }
                     }
-                    stopWatch.Start(); 
+                    stopWatch.Start();
                     foreach (var sta in UCJobsStat)
                         sta.Start();
                     mJM.RunContinuous();
@@ -820,7 +836,7 @@ namespace VisionControl
                 }
             }
         }
-        public void RunJob(int i, bool once=true)
+        public void RunJob(int i, bool once = true)
         {
             if (!CheckJob())
                 return;
@@ -843,8 +859,8 @@ namespace VisionControl
             {
                 var oldState = mCurrentRunState;
                 // update control state here to prevent an error from a quick button doubleclick
-                if(mCurrentRunState == RunState.Stopped || AllJobsStop())
-                       mCurrentRunState = once ? RunState.RunningOnce : RunState.RunningContinuous;
+                if (mCurrentRunState == RunState.Stopped || AllJobsStop())
+                    mCurrentRunState = once ? RunState.RunningOnce : RunState.RunningContinuous;
 
                 try
                 {
@@ -864,7 +880,7 @@ namespace VisionControl
                         }
                     }
                     if (oldState == RunState.Stopped)
-                    { 
+                    {
                         stopWatch.Start();
                     }
                     UCJobsStat.ElementAt(i).Start();
@@ -875,7 +891,7 @@ namespace VisionControl
                     }
                     else
                     {
-                        log.Info($"执行持续运行Job[{i}]“{job.Name}”操作"); 
+                        log.Info($"执行持续运行Job[{i}]“{job.Name}”操作");
                         job.RunContinuous();
                     }
                 }
@@ -887,7 +903,7 @@ namespace VisionControl
                 {
                     mCurrentRunState = RunState.Stopped;
                     //UpdateControlsEnabled();
-                    log.Error($"Job[{i}]“{job.Name}”运行出错。"+ex);
+                    log.Error($"Job[{i}]“{job.Name}”运行出错。" + ex);
                     MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                       mApplicationName);
                 }
@@ -897,7 +913,7 @@ namespace VisionControl
             UpdateControlsEnabled();
         }
         public event Action<RunState> RunStateUpdated;
-        private void UpdateControlsEnabled(bool force = false)
+        public void UpdateControlsEnabled(bool force = false)
         {
             // Enable or disable controls based on our current run state
             bool running = mCurrentRunState != RunState.Stopped;
@@ -905,8 +921,8 @@ namespace VisionControl
             bool runningContinuous = mCurrentRunState == RunState.RunningContinuous;
             bool currentJobCanLive = mJM != null && mJM.JobCount > mSelectedJob && mJM.Job(mSelectedJob).AcqFifo != null;
 
-            bool canConfig = !running && mCurrentAccessLevel == AccessLevel.Administrator;
-            bool canSaveSettings = !running && mCurrentAccessLevel >= AccessLevel.Supervisor;
+            bool canConfig = !running && CurrentAccessLevel == AccessLevel.Administrator;
+            bool canSaveSettings = !running && CurrentAccessLevel >= AccessLevel.Supervisor;
             RunStateUpdated?.Invoke(mCurrentRunState);
 
 
@@ -916,7 +932,7 @@ namespace VisionControl
             checkBox_LiveDisplay.Enabled = !mInitError && currentJobCanLive &&
               ((mCurrentRunState == RunState.Stopped && checkBox_LiveDisplay.Checked == false) ||
                (mCurrentRunState == RunState.RunningLive && checkBox_LiveDisplay.Checked == true));
- 
+
 
             //button_ResetStatistics.Enabled = !mInitError && !runningLive;
             //button_ResetStatisticsForAllJobs.Enabled = !mInitError && !runningLive;
@@ -940,9 +956,9 @@ namespace VisionControl
                         ctl.Enabled = true;
                 }
                 var ucjob = UCJobs.ElementAt(j);
-                var state = force ? 
-                    (running? 
-                    (runningContinuous? CogJobStateConstants.RunningContinuous: CogJobStateConstants.RunningSingle): CogJobStateConstants.Stopped)
+                var state = force ?
+                    (running ?
+                    (runningContinuous ? CogJobStateConstants.RunningContinuous : CogJobStateConstants.RunningSingle) : CogJobStateConstants.Stopped)
                    : mJM.Job(j).State;
                 ucjob.SafeInvoke(() => ucjob.UpdateUIStat(state));
             }
@@ -1220,7 +1236,7 @@ namespace VisionControl
                 }
 
                 bool stoppingLive = mCurrentRunState == RunState.RunningLive || checkBox_LiveDisplay.Checked;
-                
+
                 mCurrentRunState = RunState.Stopped;
                 _IsAllRun = false;
                 if (stopWatch.IsRunning)
@@ -1435,6 +1451,7 @@ namespace VisionControl
 
         private static string[] _updateDisplayStrings = new string[] { "ShowLastRunRecordForUserQueue", "LastRun" };
         private bool autoRunMode = true;
+        private AccessLevel mCurrentAccessLevel;
 
         private void UpdateGUIForSelectedJob(bool newSelectedJob)
         {
@@ -1649,12 +1666,12 @@ namespace VisionControl
         #endregion
 
         #region Login
-       
+
 
         private bool PromptForAccessLevelChange(AccessLevel newAccessLevel)
         {
             // not using passwords, or going "down" in access level - always allowed
-            if (!mUsePasswords || newAccessLevel <= mCurrentAccessLevel)
+            if (!mUsePasswords || newAccessLevel <= CurrentAccessLevel)
                 return true;
 
             string expected = mCurrentPasswordFile.GetPasswordForAccessLevel(newAccessLevel);
@@ -1927,7 +1944,11 @@ namespace VisionControl
                 ResetMinimumGuiUpdateTimer();
                 if (mCurrentRunState != RunState.Stopped)
                 {
-                    SetElapseText(-1);
+                    for (int i = 0; i < mJM.JobCount; ++i)
+                    {
+                        if (mJM.Job(i).State != CogJobStateConstants.Stopped)
+                            SetElapseText(i);
+                    }
                     SetElapseText(null);
                     //tbElapse.Text += ".000";
                 }
@@ -1985,7 +2006,7 @@ namespace VisionControl
             // the minimum amount of time between paints has elapsed.  if we have any unpainted
             // results, then indicate that the next generated user result should perform a paint.
             bool updateNow = false;
-            if (obj == null) 
+            if (obj == null)
                 return;
             lock (mMinimumGuiPeriodTimer)
             {

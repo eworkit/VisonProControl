@@ -11,26 +11,34 @@ using log4net;
 using VisionControl;
 using Utilities.ExMethod;
 using Sunny.UI;
+using Utilities;
+using Cognex.VisionPro.Implementation.Internal;
+using Utilities.Data;
 
 namespace VisionApplication
 {
     public partial class MainForm :Sunny.UI.UIForm
     {
-        AccessLevel mCurrentAccessLevel = AccessLevel.Administrator;
+        LoginUser loginUser = null;
+        DBConnInfo dbConn;
         ILog log = LogManager.GetLogger(typeof(MainForm));
         public MainForm()
         {
-            InitializeComponent();
+            InitializeComponent(); 
             this.Text = Program.Title;
             this.DoubleBuffered=true;
             this.MinimumSize = new Size(900, 600);
             visionControl1.RunStateUpdated += VisionControl1_RunStateUpdated;
-            visionControl1.ErrorMsgRcv += x => toolStripStatusLabel2.Text = x;
+            visionControl1.ErrorMsgRcv += x => tsbMsg.Text = x;
             visionControl1.AutoRunModeChanged += VisionControl1_AutoRunModeChanged;
             visionControl1.PreviewChanged += VisionControl1_PreviewChanged;
             this.SizeChanged += MainForm_SizeChanged;
             foreach(var tsb in toolStrip1.Items.OfType<ToolStripButton>())
                 tsb.Paint += ToolStripButton_Paint;
+            if(MyAppConfig.AutoLogin)
+            {
+                LoginUser = MyAppConfig.User;
+            }
         }
 
         private void ToolStripButton_Paint(object sender, PaintEventArgs e)
@@ -92,14 +100,15 @@ namespace VisionApplication
 
         private void VisionControl1_RunStateUpdated(VisionControl.RunState mCurrentRunState)
         {
+            var access = visionControl1.CurrentAccessLevel;
             bool running = mCurrentRunState != RunState.Stopped;
             bool runningLive = mCurrentRunState == RunState.RunningLive;
             bool runningContinuous = mCurrentRunState == RunState.RunningContinuous;
             var mJM = visionControl1.JobManager;
             bool currentJobCanLive = mJM != null &&   mJM.JobCount > visionControl1. SelectedTab && mJM.Job(visionControl1.SelectedTab).AcqFifo != null;
 
-            bool canConfig = !running && mCurrentAccessLevel == AccessLevel.Administrator;
-            bool canSaveSettings = !running && mCurrentAccessLevel >= AccessLevel.Supervisor;
+            bool canConfig = !running && access == AccessLevel.Administrator;
+            bool canSaveSettings = !running && access >= AccessLevel.Supervisor;
         
             btnRun.Enabled = btnRunOnce.Enabled = !visionControl1.InitError && !running;
             btnPause.Enabled = !visionControl1.InitError && running;
@@ -163,10 +172,11 @@ namespace VisionApplication
             {
                 file = fileDialog.FileName;//返回文件的完整路径      
                 log.Info("Open vpp file:" + file);
-                toolStripStatusLabel1.Text=Path.GetFileName(file);
-                toolStripStatusLabel1.ToolTipText = file;
-                toolStripStatusLabel2.Text = null;
-                toolStripStatusLabel2.ToolTipText = null;
+                tsbOpenedFile.Text="工程文件："+Path.GetFileName(file);
+                tsbOpenedFile.ToolTipText = file;
+                this.Text = Program.Title + $"({Path.GetFileNameWithoutExtension(file)})";
+                tsbMsg.Text = null;
+                tsbMsg.ToolTipText = null;
                 if (IsPreView)
                     visionControl1.Preview(false);
                 visionControl1.OpenVpp(file);
@@ -185,6 +195,21 @@ namespace VisionApplication
             visionControl1.AutoRunMode = !btnRunMannul.Checked;
         }
         bool IsPreView => 1.Equals(btnPreview.Tag);
+
+        public LoginUser LoginUser
+        {
+            get
+            {
+                return loginUser;
+            }
+
+            set
+            {
+                loginUser = value;
+                UserChnaged();
+            }
+        }
+
         private void btnJob_Click(object sender, EventArgs e)
         {
             log.Info("执行持续运行所有Job操作");
@@ -235,6 +260,67 @@ namespace VisionApplication
         {
             log.Info("执行单次运行所有Job操作");
             visionControl1.RunOnce();
+        }
+
+        private void openLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var f = Program.LogFileAppender().File;
+            System.Diagnostics.Process.Start(f);
+        }
+
+        private void LoginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FLogin f = new FLogin();
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                LoginUser = f.User;
+            }
+        }
+
+        private void tsbLoginInfo_Click(object sender, EventArgs e)
+        {
+            ContextMenu ms = new ContextMenu();
+            if (LoginUser == null)
+            {
+                LoginToolStripMenuItem_Click(sender, e);
+                return;
+            }
+            ms.MenuItems.Add("切换用户",   LoginToolStripMenuItem_Click);
+            ms.MenuItems.Add("退出登录",   (_, __) =>
+            {
+                if (MessageBoxE.Show(this, "确定退出登录吗？", "提示", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    LoginUser = null;
+                }
+            });
+            ms.Show(statusStrip1, statusStrip1.Location);
+        }
+        void UserChnaged()
+        {
+            if (LoginUser == null)
+            {
+                tsbLoginInfo.Text = "未登录";
+                visionControl1.CurrentAccessLevel = AccessLevel.Operator;
+            }
+            else
+            {
+                tsbLoginInfo.Text = visionControl1.CurrentAccessLevel == AccessLevel.Administrator ? "管理员" : "操作员";
+                visionControl1.CurrentAccessLevel = LoginUser?.Level ?? AccessLevel.Operator;
+            }
+        }
+        void dataBaseChanged()
+        {
+            tsbDatabase.Text = $"数据库：[{dbConn.host}] {dbConn.dbName}";
+        }
+
+        private void databaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var f = new FDatabaseConn();
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                dbConn = f.dbInfo;
+                dataBaseChanged();
+            }
         }
     }
     

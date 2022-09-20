@@ -5,6 +5,7 @@ using System.Resources;
 using Cognex.VisionPro;
 using Cognex.VisionPro.Implementation.Internal;
 using Cognex.VisionPro.QuickBuild;
+using Utilities;
 
 namespace VisionControl
 {

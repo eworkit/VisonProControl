@@ -13,7 +13,7 @@ namespace VisionControl
 {
     public partial class UCJobStat : UserControl
     {
-        Stopwatch stopWatch = new Stopwatch();
+        internal Stopwatch StopWatch = new Stopwatch();
         public string JobName { get => uiGroupBox1.Text; set => uiGroupBox1.Text = value; }
         public string ElapsedText { get=>tbElapse.Text; set => tbElapse.Text = value; } 
 
@@ -24,16 +24,16 @@ namespace VisionControl
         }
         public void Start()
         {
-            stopWatch.Start();
+            StopWatch.Start();
         }
         public void Stop()
         {
-            stopWatch.Stop();
+            StopWatch.Stop();
         }
         public void Reset()
         {
-            stopWatch.Reset();
+            StopWatch.Reset();
         }
-        public TimeSpan Elapsed => stopWatch.Elapsed;
+        public TimeSpan Elapsed => StopWatch.Elapsed;
     }
 }

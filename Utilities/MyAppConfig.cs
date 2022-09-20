@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Xml.Linq; 
 using Utilities.Data;
 using Utilities.ExMethod;
@@ -9,9 +10,34 @@ using Utilities.IO;
 
 namespace Utilities
 {
-    public class MyAppConfig
+    public enum AccessLevel { Operator, Supervisor, Administrator }
+    [Serializable]
+    public class LoginUser : ICloneable
     {
-        public class TcpServer
+        public string PwdAdmin { get; set; }
+        public string PwdOpera { get; set; }
+        public string Password
+        {
+            get { return Level == AccessLevel.Administrator ? PwdAdmin : PwdOpera; }
+            set
+            {
+                if (Level == AccessLevel.Administrator)
+                    PwdAdmin = value;
+                else
+                    PwdOpera = value;
+            }
+        }
+        public AccessLevel Level { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+    }
+    [Serializable]
+    public class MyAppConfig : ICloneable
+    {
+        public class TcpServer : ICloneable
         {
             public int Port { get; set; }
 
@@ -20,9 +46,14 @@ namespace Utilities
             public bool HexReceive { get; set; }
 
             public bool HexSend { get; set; }
+            public object Clone()
+            {
+                return MemberwiseClone();
+            }
         }
 
-        public class TcpClient
+        [Serializable]
+        public class TcpClient : ICloneable
         {
             public string Server { get; set; }
 
@@ -37,9 +68,14 @@ namespace Utilities
             public bool AutoSend { get; set; }
 
             public int AutoSendInterval { get; set; }
+            public object Clone()
+            {
+                return MemberwiseClone();
+            }
         }
 
-        public class SerialPort
+        [Serializable]
+        public class SerialPort : ICloneable
         {
             public string Port { get; set; }
 
@@ -50,11 +86,18 @@ namespace Utilities
             public int BaundRate { get; set; }
 
             public int Parity { get; set; }
+            public object Clone()
+            {
+                return MemberwiseClone();
+            }
         }
 
         public static readonly string AppPath;
 
         public static readonly string DefaultDatabase;
+        private static bool autoLogin = false;
+
+        public static LoginUser User { get; set; }
 
         public static DBConnInfo DbInfo { get; set; }
 
@@ -63,14 +106,18 @@ namespace Utilities
         public static TcpClient TcpClientInfo { get; set; }
 
         public static SerialPort SerialPortInfo { get; set; }
-
-        public static event Action UpdateTree;
-
-        public static void OnUpdateTree()
+        public static bool AutoLogin
         {
-            MyAppConfig.UpdateTree?.Invoke();
+            get
+            {
+                return autoLogin;
+            }
+            set
+            {
+                autoLogin = value;
+                SaveElement("Login", x => x.SetAttributeValue("Auto", value ? 1 : 0));
+            }
         }
-
         static MyAppConfig()
         {
             AppPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -85,7 +132,23 @@ namespace Utilities
                 XElement xRoot = XDocument.Load(cfgFile).Element("Root");
                 if (xRoot != null)
                 {
-                    XElement ele = xRoot.Element("Database");
+                    XElement ele = xRoot.Element("User");
+                    if (ele != null)
+                    {
+                        User = new LoginUser();
+                        var pwd = ele.Attribute("PwdAdmin").SafeValue();
+                        if (!string.IsNullOrEmpty(pwd))
+                        {
+                            User.PwdAdmin = Security.DESEncrypt.Decode(pwd);
+                        }
+                        pwd = ele.Attribute("PwdOper").SafeValue();
+                        if (!string.IsNullOrEmpty(pwd))
+                        {
+                            User.PwdOpera = Security.DESEncrypt.Decode(pwd);
+                        }
+                        User.Level = (AccessLevel)ele.Attribute("Level").SafeValue().ToInt32();
+                    }
+                    ele = xRoot.Element("Database");
                     if (ele != null)
                     {
                         DbInfo = new DBConnInfo();
@@ -124,13 +187,60 @@ namespace Utilities
                         SerialPortInfo.Parity = ele.Attribute("Parity").SafeValue().ToInt32();
                         SerialPortInfo.BaundRate = ele.Attribute("BaundRate").SafeValue().ToInt32(9600);
                     }
+                    ele = xRoot.Element("Login");
+                    if (ele != null)
+                    {
+                        AutoLogin = ele.Attribute("Auto").SafeValue() == "1";
+                    }
                 }
             }
             catch
             {
             }
         }
-
+        static void SaveElement(string eleName, Action<XElement> save)
+        {
+            string cfgFile = Path.Combine(AppPath, "Config.inf");
+            XDocument xdoc1 = (File.Exists(cfgFile) ? XDocument.Load(cfgFile) : new XDocument());
+            XElement xRoot = xdoc1.ElementX("Root");
+            XElement xElement = xRoot.ElementX(eleName);
+            save(xElement);
+            xdoc1.Save(cfgFile);
+        }
+   
+        public static void Save(LoginUser user)
+        {
+            if (user != null)
+            {
+                SaveElement( "User", x =>
+                {
+                    if (!string.IsNullOrEmpty(user.PwdAdmin))
+                        x.SetAttributeValue("PwdAdmin", Security.DESEncrypt.Encode(user.PwdAdmin));
+                    if (!string.IsNullOrEmpty(user.PwdOpera))
+                        x.SetAttributeValue("PwdOper", Security.DESEncrypt.Encode(user.PwdOpera));
+                    x.SetAttributeValue("Level", (int)user.Level);
+                });
+                User = user;
+            }
+        }
+        public static void Save(DBConnInfo db)
+        {
+            if (db != null)
+            {
+                SaveElement("Database", x =>
+                {
+                    if (db != null)
+                    {
+                        x.SetAttributeValue("Host", db.host);
+                        x.SetAttributeValue("DbName", db.dbName);
+                        x.SetAttributeValue("Port", db.port);
+                        x.SetAttributeValue("User", db.user);
+                        x.SetAttributeValue("Pwd", db.pwd);
+                    }
+                });
+                DbInfo = db;
+            }
+        }
         public static void Save()
         {
             string cfgFile = Path.Combine(AppPath, "Config.inf");
@@ -172,6 +282,10 @@ namespace Utilities
                 xElement4.SetAttributeValue("Parity", SerialPortInfo.Parity);
             }
             xdoc1.Save(cfgFile);
+        }
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

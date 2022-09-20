@@ -70,7 +70,7 @@ namespace Utilities.ExMethod
         /// <param name="s"></param>
         /// <param name="IgnoreSpace">是否忽略空格</param>
         /// <returns></returns>
-        public static bool IsEmpty(this string s, bool IgnoreSpace = true)
+        public static bool IsEmpty(this string s, bool IgnoreSpace = false)
         {
             if (IgnoreSpace)
                 return string.IsNullOrWhiteSpace(s);

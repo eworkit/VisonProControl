@@ -6,6 +6,9 @@ using System.Reflection;
 using System.Web.Hosting;
 using System.Windows.Forms;
 using Cognex.VisionPro;
+using log4net.Appender;
+using log4net;
+using log4net.Repository.Hierarchy;
 
 namespace VisionApplication
 {
@@ -31,5 +34,20 @@ namespace VisionApplication
         static Assembly _assembly = Assembly.GetExecutingAssembly();
         internal static string Title => _assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
         internal static string Version => _assembly.GetName().Version.ToString();
+
+        public static FileAppender LogFileAppender()
+        {
+            var rootAppender = ((Hierarchy)LogManager.GetRepository())
+                                         .Root.Appenders.OfType<FileAppender>()
+                                         .FirstOrDefault();
+
+            string filename = rootAppender != null ? rootAppender.File : string.Empty;
+
+           
+           return ((Hierarchy)LogManager.GetRepository())
+                                                     .Root.Appenders.OfType<FileAppender>()
+                                                     .FirstOrDefault();
+ 
+        }
   }
 }
