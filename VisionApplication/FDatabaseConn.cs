@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using log4net;
 using Sunny.UI;
 using Utilities;
 using Utilities.Data;
@@ -17,13 +18,19 @@ namespace VisionApplication
 {
     public partial class FDatabaseConn : Sunny.UI.UIEditForm
     {
+        ILog log;
         public DBConnInfo dbInfo;
         public FDatabaseConn()
         {
+            log = LogManager.GetLogger(this.GetType());
             InitializeComponent();
             dbInfo = MyAppConfig.DbInfo ?? new DBConnInfo();
             setDefaultValue(dbInfo, dbInfo.dbType);
             ucdbConfig1.DBInfo = dbInfo;
+            if(MyAppConfig.User?.Level != AccessLevel.Administrator)
+            {
+                btnOK.Visible = false;
+            }
         }
         void setDefaultValue(DBConnInfo dbInfo, DBMSType dbType)
         {
@@ -71,7 +78,7 @@ namespace VisionApplication
 
             dbInfo = db;
             MyAppConfig.Save(db);
-
+            log.Info($"设置数据库：主机[{db.host}]，数据库名称[{db.dbName}]");
             MessageBoxE.Show(this, "数据库设置成功");
             this.DialogResult = DialogResult.OK;
         }

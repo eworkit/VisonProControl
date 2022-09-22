@@ -46,15 +46,14 @@ namespace VisionApplication
             this.visionControl1 = new VisionControl.VisionUC();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsbLoginInfo = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsbDatabase = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsbOpenedFile = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsbMsg = new System.Windows.Forms.ToolStripStatusLabel();
             this.uiContextMenuStrip1 = new Sunny.UI.UIContextMenuStrip();
             this.miAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsbDatabase = new System.Windows.Forms.ToolStripStatusLabel();
             this.uiFlowLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
-            this.visionControl1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.uiContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -259,14 +258,13 @@ namespace VisionApplication
             this.visionControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.visionControl1.AutoRunMode = true;
-            this.visionControl1.Controls.Add(this.statusStrip1);
             this.visionControl1.CurrentAccessLevel = Utilities.AccessLevel.Administrator;
             this.visionControl1.Font = new System.Drawing.Font("ËÎÌå", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.visionControl1.Location = new System.Drawing.Point(-2, 89);
             this.visionControl1.Margin = new System.Windows.Forms.Padding(4);
             this.visionControl1.MinimumSize = new System.Drawing.Size(1, 1);
             this.visionControl1.Name = "visionControl1";
-            this.visionControl1.Size = new System.Drawing.Size(1916, 548);
+            this.visionControl1.Size = new System.Drawing.Size(1916, 532);
             this.visionControl1.TabIndex = 2;
             this.visionControl1.Text = null;
             this.visionControl1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
@@ -280,7 +278,7 @@ namespace VisionApplication
             this.tsbDatabase,
             this.tsbOpenedFile,
             this.tsbMsg});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 519);
+            this.statusStrip1.Location = new System.Drawing.Point(2, 625);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.ShowItemToolTips = true;
             this.statusStrip1.Size = new System.Drawing.Size(1916, 29);
@@ -297,6 +295,12 @@ namespace VisionApplication
             this.tsbLoginInfo.Size = new System.Drawing.Size(61, 23);
             this.tsbLoginInfo.Text = "Î´µÇÂ¼";
             this.tsbLoginInfo.Click += new System.EventHandler(this.tsbLoginInfo_Click);
+            // 
+            // tsbDatabase
+            // 
+            this.tsbDatabase.Margin = new System.Windows.Forms.Padding(10, 4, 0, 2);
+            this.tsbDatabase.Name = "tsbDatabase";
+            this.tsbDatabase.Size = new System.Drawing.Size(0, 23);
             // 
             // tsbOpenedFile
             // 
@@ -328,16 +332,11 @@ namespace VisionApplication
             this.miAbout.Size = new System.Drawing.Size(124, 32);
             this.miAbout.Text = "¹ØÓÚ";
             // 
-            // tsbDatabase
-            // 
-            this.tsbDatabase.Margin = new System.Windows.Forms.Padding(10, 4, 0, 2);
-            this.tsbDatabase.Name = "tsbDatabase";
-            this.tsbDatabase.Size = new System.Drawing.Size(0, 23);
-            // 
             // MainForm
             // 
             this.AllowAddControlOnTitle = true;
             this.ClientSize = new System.Drawing.Size(1920, 656);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.uiFlowLayoutPanel1);
             this.Controls.Add(this.visionControl1);
             this.Controls.Add(this.toolStripContainer1);
@@ -359,12 +358,11 @@ namespace VisionApplication
             this.toolStrip1.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
-            this.visionControl1.ResumeLayout(false);
-            this.visionControl1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.uiContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
     }
 

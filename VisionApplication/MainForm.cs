@@ -39,6 +39,31 @@ namespace VisionApplication
             {
                 LoginUser = MyAppConfig.User;
             }
+            tsbDatabase.Click += TsbDatabase_Click;
+            this.Load += MainForm_Load;
+        } 
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            dbConn = MyAppConfig.DbInfo;
+            try
+            {
+                if(dbConn == null)
+                {
+
+                }
+                if (!DbOperation.TestConn(dbConn))
+                {
+                    tsbDatabase.Text = "数据库未配置";
+                    return;
+                }
+                dataBaseChanged();
+            }
+            catch (Exception ex)
+            {
+                MessageBoxE.Show(this, ex.Message);
+                return;
+            }
         }
 
         private void ToolStripButton_Paint(object sender, PaintEventArgs e)
@@ -74,7 +99,9 @@ namespace VisionApplication
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
-            visionControl1.Width = visionControl1.Parent.Width - visionControl1.Parent.Padding.Left;
+            visionControl1.Width = this.Width - this.Padding.Left;
+            visionControl1.Height = this.Height - visionControl1.Top-statusStrip1.Height;
+            statusStrip1.Top = visionControl1.Bottom;
         }
 
         /// <param name="e"></param>
@@ -285,34 +312,22 @@ namespace VisionApplication
                 LoginToolStripMenuItem_Click(sender, e);
                 return;
             }
-            ms.MenuItems.Add("切换用户",   LoginToolStripMenuItem_Click);
+            ms.MenuItems.Add("切换登录",   LoginToolStripMenuItem_Click);
             ms.MenuItems.Add("退出登录",   (_, __) =>
             {
                 if (MessageBoxE.Show(this, "确定退出登录吗？", "提示", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {
                     LoginUser = null;
+                    MyAppConfig.User = null;
+                    MyAppConfig.SaveLoginSet(null, false);
                 }
             });
             ms.Show(statusStrip1, statusStrip1.Location);
         }
-        void UserChnaged()
+        private void TsbDatabase_Click(object sender, EventArgs e)
         {
-            if (LoginUser == null)
-            {
-                tsbLoginInfo.Text = "未登录";
-                visionControl1.CurrentAccessLevel = AccessLevel.Operator;
-            }
-            else
-            {
-                tsbLoginInfo.Text = visionControl1.CurrentAccessLevel == AccessLevel.Administrator ? "管理员" : "操作员";
-                visionControl1.CurrentAccessLevel = LoginUser?.Level ?? AccessLevel.Operator;
-            }
+            databaseToolStripMenuItem_Click(sender, e);
         }
-        void dataBaseChanged()
-        {
-            tsbDatabase.Text = $"数据库：[{dbConn.host}] {dbConn.dbName}";
-        }
-
         private void databaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var f = new FDatabaseConn();
@@ -322,6 +337,28 @@ namespace VisionApplication
                 dataBaseChanged();
             }
         }
+        void UserChnaged()
+        { 
+            if (LoginUser == null)
+            {
+                tsbLoginInfo.Text = "未登录";
+                tsbLoginInfo.ForeColor = Color.Red;
+                visionControl1.CurrentAccessLevel = AccessLevel.Operator;
+            }
+            else
+            {
+                visionControl1.CurrentAccessLevel = LoginUser?.Level ?? AccessLevel.Operator;
+                tsbLoginInfo.Text = visionControl1.CurrentAccessLevel.GetDescription();
+                tsbLoginInfo.ForeColor = Color.Blue;
+            } 
+        }
+         
+
+        void dataBaseChanged()
+        {
+            tsbDatabase.Text = $"数据库：[{dbConn.host}] {dbConn.dbName}";
+        }
+
     }
     
 }

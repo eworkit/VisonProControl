@@ -125,20 +125,20 @@ namespace Utilities.IO
            attr.Value = attrValue;
            return attr;
        }
-       public static XElement ElementX(this XElement xEle, XName name)
+        public static XElement ElementX(this XElement xEle, XName name, Predicate<XElement> p = null)
+        {
+            var rtnEle = xEle.Element(name);
+            if (rtnEle == null || p?.Invoke(rtnEle) == true)
+            {
+                rtnEle = new XElement(name);
+                xEle.Add(rtnEle);
+            }
+            return rtnEle;
+        }
+       public static XElement ElementX(this XDocument xEle, XName name, Predicate<XElement> p = null)
        {
            var rtnEle = xEle.Element(name);
-           if(rtnEle ==null)
-           {
-               rtnEle = new XElement(name);
-               xEle.Add(rtnEle);
-           }
-           return rtnEle;
-       }
-       public static XElement ElementX(this XDocument xEle, XName name)
-       {
-           var rtnEle = xEle.Element(name);
-           if (rtnEle == null)
+           if (rtnEle == null || p?.Invoke(rtnEle) == true)
            {
                rtnEle = new XElement(name);
                xEle.Add(rtnEle);

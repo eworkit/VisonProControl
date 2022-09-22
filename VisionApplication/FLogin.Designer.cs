@@ -37,7 +37,7 @@
             this.tbNewPass2 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnModify = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.uiCheckBox1 = new Sunny.UI.UICheckBox();
             this.pnlBtm.SuspendLayout();
@@ -150,7 +150,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.btnModify);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.tbNewPass2);
             this.panel1.Controls.Add(this.tbNewPass1);
@@ -163,14 +163,14 @@
             // 
             // button1
             // 
-            this.button1.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button1.Location = new System.Drawing.Point(314, 52);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(87, 34);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "修改";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnModify.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnModify.Location = new System.Drawing.Point(314, 52);
+            this.btnModify.Name = "button1";
+            this.btnModify.Size = new System.Drawing.Size(87, 34);
+            this.btnModify.TabIndex = 9;
+            this.btnModify.Text = "修改";
+            this.btnModify.UseVisualStyleBackColor = true;
+            this.btnModify.Click += new System.EventHandler(this.btnModify_Click);
             // 
             // linkLabel1
             // 
@@ -241,7 +241,7 @@
         private System.Windows.Forms.TextBox tbNewPass2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnModify;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private Sunny.UI.UICheckBox uiCheckBox1;
     }

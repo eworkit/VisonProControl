@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using log4net;
 using Utilities;
 using Utilities.ExMethod;
 using VisionControl;
@@ -15,6 +16,7 @@ namespace VisionApplication
 {
     public partial class FLogin : Sunny.UI.UIEditForm
     {
+        ILog log = LogManager.GetLogger(typeof(FLogin));
         internal LoginUser User = MyAppConfig.User;
         public FLogin()
         {
@@ -22,15 +24,12 @@ namespace VisionApplication
             InitializeComponent();
 
             base.Font = new Font("宋体", 9);
-            if (User != null)
+            if (User != null && User.Level == AccessLevel.Administrator)
             {
-                if (User.Level == AccessLevel.Administrator)
-                { 
-                    rbAdmin.Checked = true;
-                }
+                rbAdmin.Checked = true;
             }
-            else 
-            { 
+            else
+            {
                 rbOperator.Checked = true;
             }
             uiCheckBox1.Checked = MyAppConfig.AutoLogin;
@@ -43,18 +42,26 @@ namespace VisionApplication
             this.Height = panel1.Visible ? panel1.Bottom + 80 : panel1.Top + 80; 
         }
 
-        bool checkPwd(LoginUser user) => string.IsNullOrEmpty(tbPwd.Text) && string.IsNullOrEmpty(user?.Password) || tbPwd.Text == user?.Password;
-        private void btnOK_Click(object sender, EventArgs e)
+        bool checkPwd()
         {
-            var user = User?.DeepClone() ?? new LoginUser();
-            user.Level = rbAdmin.Checked ? AccessLevel.Administrator : AccessLevel.Operator;
-            if (checkPwd(user))
+            var level = rbAdmin.Checked ? AccessLevel.Administrator : AccessLevel.Operator;
+            var user = MyAppConfig.GetUser(level);
+            return string.IsNullOrEmpty(tbPwd.Text) && string.IsNullOrEmpty(user?.Password) || tbPwd.Text == user?.Password;
+        }
+        private void btnOK_Click(object sender, EventArgs e)
+        { 
+            if (checkPwd())
             {
                 try
-                { 
-                    User = user; 
-                    MyAppConfig.AutoLogin = uiCheckBox1.Checked;
+                {
+                    if (User == null)
+                        User = new LoginUser();
+                    User.Level = rbAdmin.Checked ? AccessLevel.Administrator : AccessLevel.Operator;
+                    User.Password = tbPwd.Text;
+                    MyAppConfig.User = User; 
+                    MyAppConfig.SaveLoginSet(User, uiCheckBox1.Checked);
                     this.DialogResult = DialogResult.OK;
+                    
                 }
                 catch (Exception ex)
                 {
@@ -68,12 +75,11 @@ namespace VisionApplication
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnModify_Click(object sender, EventArgs e)
         {
             var user = User?.DeepClone() ?? new LoginUser();
-            user.Level = rbAdmin.Checked ? AccessLevel.Administrator : AccessLevel.Operator;
 
-            if (!checkPwd(user))
+            if (!checkPwd())
             {
                 MessageBoxE.Show(this, "密码错误");
                 return;
@@ -85,8 +91,16 @@ namespace VisionApplication
             }
             try
             {
+                user.Password = tbNewPass1.Text;
+                user.Level = rbAdmin.Checked ? AccessLevel.Administrator : AccessLevel.Operator;
                 MyAppConfig.Save(user);
-                User = user;
+                if (User == null || user.Level == User.Level)
+                {
+                    User = user;
+                    MyAppConfig.User = user;
+                    MyAppConfig.SaveLoginSet(User, MyAppConfig.AutoLogin);
+                }
+                log.Info(user.Level.GetDescription() + "修改密码");
                 MessageBoxE.Show(this, "密码修改成功");
                 panel1.Visible = false;
                 tbNewPass1.Clear();

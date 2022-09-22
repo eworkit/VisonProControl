@@ -1,6 +1,9 @@
 ﻿// IteUtils.AppConfig
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Xml.Linq; 
@@ -10,23 +13,16 @@ using Utilities.IO;
 
 namespace Utilities
 {
-    public enum AccessLevel { Operator, Supervisor, Administrator }
+    public enum AccessLevel {
+        [Description("操作员")]
+        Operator, 
+        Supervisor,
+        [Description("管理员")]
+        Administrator }
     [Serializable]
     public class LoginUser : ICloneable
     {
-        public string PwdAdmin { get; set; }
-        public string PwdOpera { get; set; }
-        public string Password
-        {
-            get { return Level == AccessLevel.Administrator ? PwdAdmin : PwdOpera; }
-            set
-            {
-                if (Level == AccessLevel.Administrator)
-                    PwdAdmin = value;
-                else
-                    PwdOpera = value;
-            }
-        }
+        public string Password { get; set; }
         public AccessLevel Level { get; set; }
 
         public object Clone()
@@ -98,6 +94,30 @@ namespace Utilities
         private static bool autoLogin = false;
 
         public static LoginUser User { get; set; }
+   
+        public static LoginUser GetUser(AccessLevel level)
+        {
+            var root = GetRoot();
+            if(root == null)
+                return   null;
+            var user = new LoginUser();
+            var eles = root.Elements("User");
+            foreach (var e in eles)
+            {
+                if ((int)level == e.Attribute("Level").SafeValue().ToInt32())
+                {
+                    var u = new LoginUser();
+                    u.Level = user.Level;
+                    var pwd = e.Attribute("Pwd").SafeValue();
+                    if (!string.IsNullOrEmpty(pwd))
+                    {
+                        u.Password = Security.DESEncrypt.Decode(pwd);
+                    }
+                    return u;
+                }
+            }
+            return null;
+        }
 
         public static DBConnInfo DbInfo { get; set; }
 
@@ -115,114 +135,127 @@ namespace Utilities
             set
             {
                 autoLogin = value;
-                SaveElement("Login", x => x.SetAttributeValue("Auto", value ? 1 : 0));
             }
         }
         static MyAppConfig()
         {
             AppPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             DefaultDatabase = "VisionData";
+
+            XElement xRoot = GetRoot();
+            if (xRoot != null)
+            {
+                var eles = xRoot.Elements("User");
+                var ele = xRoot.Element("Login");
+                if (ele != null)
+                {
+                    AutoLogin = ele.Attribute("Auto").SafeValue() == "1";
+
+                    var user = new LoginUser
+                    {
+                        Level = (AccessLevel)ele.Attribute("Level").SafeValue().ToInt32(),
+                        Password = Security.DESEncrypt.Decode(ele.Attribute("Pwd").SafeValue()),
+                    };
+                    if (AutoLogin)
+                    {
+                        if (CheckPwd(user))
+                            User = user;
+                    }
+                }
+                ele = xRoot.Element("Database");
+                if (ele != null)
+                {
+                    DbInfo = new DBConnInfo();
+                    DbInfo.host = ele.Attribute("Host").SafeValue();
+                    DbInfo.dbName = ele.Attribute("DbName").SafeValue();
+                    DbInfo.port = ele.Attribute("Port").SafeValue();
+                    DbInfo.user = ele.Attribute("User").SafeValue();
+                    DbInfo.pwd = Security.DESEncrypt.Decode(ele.Attribute("Pwd").SafeValue());
+                }
+                ele = xRoot.Element("TcpServer");
+                if (ele != null)
+                {
+                    TcpServerInfo = new TcpServer();
+                    TcpServerInfo.Port = ele.Attribute("Port").SafeValue().ToInt32(1024);
+                    TcpServerInfo.HexReceive = ele.Attribute("HexReceive").SafeValue() == "1";
+                    TcpServerInfo.HexSend = ele.Attribute("HexSend").SafeValue() == "1";
+                    TcpServerInfo.AutoStart = ele.Attribute("AutoStart").SafeValue() == "1";
+                }
+                ele = xRoot.Element("TcpClient");
+                if (ele != null)
+                {
+                    TcpClientInfo = new TcpClient();
+                    TcpClientInfo.Server = ele.Attribute("Server").SafeValue();
+                    TcpClientInfo.Port = ele.Attribute("Port").SafeValue().ToInt32(1024);
+                    TcpClientInfo.HexReceive = ele.Attribute("HexReceive").SafeValue() == "1";
+                    TcpClientInfo.HexSend = ele.Attribute("HexSend").SafeValue() == "1";
+                    TcpClientInfo.AutoConn = ele.Attribute("AutoConn").SafeValue() == "1";
+                }
+                ele = xRoot.Element("SerialPort");
+                if (ele != null)
+                {
+                    SerialPortInfo = new SerialPort();
+                    SerialPortInfo.Port = ele.Attribute("Port").SafeValue();
+                    SerialPortInfo.DataBit = ele.Attribute("DataBit").SafeValue().ToInt32(8);
+                    SerialPortInfo.StopBit = ele.Attribute("StopBit").SafeValue().ToInt32(1);
+                    SerialPortInfo.Parity = ele.Attribute("Parity").SafeValue().ToInt32();
+                    SerialPortInfo.BaundRate = ele.Attribute("BaundRate").SafeValue().ToInt32(9600);
+                }
+            }
+        }
+        static XElement GetRoot()
+        {
             string cfgFile = Path.Combine(AppPath, "Config.inf");
             if (!File.Exists(cfgFile))
             {
-                return;
+                return null;
             }
             try
             {
-                XElement xRoot = XDocument.Load(cfgFile).Element("Root");
-                if (xRoot != null)
-                {
-                    XElement ele = xRoot.Element("User");
-                    if (ele != null)
-                    {
-                        User = new LoginUser();
-                        var pwd = ele.Attribute("PwdAdmin").SafeValue();
-                        if (!string.IsNullOrEmpty(pwd))
-                        {
-                            User.PwdAdmin = Security.DESEncrypt.Decode(pwd);
-                        }
-                        pwd = ele.Attribute("PwdOper").SafeValue();
-                        if (!string.IsNullOrEmpty(pwd))
-                        {
-                            User.PwdOpera = Security.DESEncrypt.Decode(pwd);
-                        }
-                        User.Level = (AccessLevel)ele.Attribute("Level").SafeValue().ToInt32();
-                    }
-                    ele = xRoot.Element("Database");
-                    if (ele != null)
-                    {
-                        DbInfo = new DBConnInfo();
-                        DbInfo.host = ele.Attribute("Host").SafeValue();
-                        DbInfo.dbName = ele.Attribute("DbName").SafeValue();
-                        DbInfo.port = ele.Attribute("Port").SafeValue();
-                        DbInfo.user = ele.Attribute("User").SafeValue();
-                        DbInfo.pwd = ele.Attribute("Pwd").SafeValue();
-                    }
-                    ele = xRoot.Element("TcpServer");
-                    if (ele != null)
-                    {
-                        TcpServerInfo = new TcpServer();
-                        TcpServerInfo.Port = ele.Attribute("Port").SafeValue().ToInt32(1024);
-                        TcpServerInfo.HexReceive = ele.Attribute("HexReceive").SafeValue() == "1";
-                        TcpServerInfo.HexSend = ele.Attribute("HexSend").SafeValue() == "1";
-                        TcpServerInfo.AutoStart = ele.Attribute("AutoStart").SafeValue() == "1";
-                    }
-                    ele = xRoot.Element("TcpClient");
-                    if (ele != null)
-                    {
-                        TcpClientInfo = new TcpClient();
-                        TcpClientInfo.Server = ele.Attribute("Server").SafeValue();
-                        TcpClientInfo.Port = ele.Attribute("Port").SafeValue().ToInt32(1024);
-                        TcpClientInfo.HexReceive = ele.Attribute("HexReceive").SafeValue() == "1";
-                        TcpClientInfo.HexSend = ele.Attribute("HexSend").SafeValue() == "1";
-                        TcpClientInfo.AutoConn = ele.Attribute("AutoConn").SafeValue() == "1";
-                    }
-                    ele = xRoot.Element("SerialPort");
-                    if (ele != null)
-                    {
-                        SerialPortInfo = new SerialPort();
-                        SerialPortInfo.Port = ele.Attribute("Port").SafeValue();
-                        SerialPortInfo.DataBit = ele.Attribute("DataBit").SafeValue().ToInt32(8);
-                        SerialPortInfo.StopBit = ele.Attribute("StopBit").SafeValue().ToInt32(1);
-                        SerialPortInfo.Parity = ele.Attribute("Parity").SafeValue().ToInt32();
-                        SerialPortInfo.BaundRate = ele.Attribute("BaundRate").SafeValue().ToInt32(9600);
-                    }
-                    ele = xRoot.Element("Login");
-                    if (ele != null)
-                    {
-                        AutoLogin = ele.Attribute("Auto").SafeValue() == "1";
-                    }
-                }
+                return XDocument.Load(cfgFile).Element("Root");
             }
-            catch
-            {
-            }
+            catch  { }
+            return null;
         }
-        static void SaveElement(string eleName, Action<XElement> save)
+        static void SaveElement(string eleName, Action<XElement> save, Predicate<XElement> p = null)
         {
-            string cfgFile = Path.Combine(AppPath, "Config.inf");
-            XDocument xdoc1 = (File.Exists(cfgFile) ? XDocument.Load(cfgFile) : new XDocument());
-            XElement xRoot = xdoc1.ElementX("Root");
-            XElement xElement = xRoot.ElementX(eleName);
+            var cfgFile = Path.Combine(AppPath, "Config.inf");
+            var xdoc1 = (File.Exists(cfgFile) ? XDocument.Load(cfgFile) : new XDocument());
+            var xRoot = xdoc1.ElementX("Root");
+            var xElement = xRoot.ElementX(eleName, p);
             save(xElement);
             xdoc1.Save(cfgFile);
         }
-   
+
         public static void Save(LoginUser user)
         {
             if (user != null)
             {
-                SaveElement( "User", x =>
+                SaveElement("User", x =>
                 {
-                    if (!string.IsNullOrEmpty(user.PwdAdmin))
-                        x.SetAttributeValue("PwdAdmin", Security.DESEncrypt.Encode(user.PwdAdmin));
-                    if (!string.IsNullOrEmpty(user.PwdOpera))
-                        x.SetAttributeValue("PwdOper", Security.DESEncrypt.Encode(user.PwdOpera));
+                    x.SetAttributeValue("Pwd", Security.DESEncrypt.Encode(user.Password));
                     x.SetAttributeValue("Level", (int)user.Level);
-                });
+                },
+                x => x.Attribute("Level").SafeValue().ToInt32() != (int)user.Level);
                 User = user;
             }
         }
+        public static void SaveLoginSet(LoginUser currentUser, bool autoLogin)
+        {
+            SaveElement("Login", x =>
+            {
+                if(currentUser== null)
+                {
+                    x.Remove();
+                    return;
+                }
+                x.SetAttributeValue("Auto", autoLogin ? 1 : 0);
+                x.SetAttributeValue("Level", (int)currentUser.Level);
+                if (!string.IsNullOrEmpty(currentUser.Password))
+                    x.SetAttributeValue("Pwd", Security.DESEncrypt.Encode(currentUser.Password));
+            });
+        }
+
         public static void Save(DBConnInfo db)
         {
             if (db != null)
@@ -235,7 +268,7 @@ namespace Utilities
                         x.SetAttributeValue("DbName", db.dbName);
                         x.SetAttributeValue("Port", db.port);
                         x.SetAttributeValue("User", db.user);
-                        x.SetAttributeValue("Pwd", db.pwd);
+                        x.SetAttributeValue("Pwd", Security.DESEncrypt.Encode(db.pwd));
                     }
                 });
                 DbInfo = db;
@@ -282,6 +315,11 @@ namespace Utilities
                 xElement4.SetAttributeValue("Parity", SerialPortInfo.Parity);
             }
             xdoc1.Save(cfgFile);
+        }
+        static bool CheckPwd(LoginUser user)
+        {
+            return (GetUser(user.Level)?.Password ?? string.Empty) == (user.Password ?? string.Empty) ;
+
         }
         public object Clone()
         {

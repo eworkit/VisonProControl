@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Collections;
 using System.Text;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace Utilities.ExMethod
 {
@@ -357,23 +359,27 @@ namespace Utilities.ExMethod
         {
             return arr.Contains(t,comparer);
         }
-       
+
         public static void ThenInvoke(this bool b, Action a)
         {
             if (b)
             {
-                if (a != null)
-                    a.Invoke();
+                a?.Invoke();
             }
         }
         public static void ThenInvoke(this bool? b, Action a)
         {
-            if (b==true)
+            if (b == true)
             {
-                if (a != null)
-                    a.Invoke();
-                
+                a?.Invoke();
             }
-        } 
+        }
+        public static string GetDescription(this Enum enumValue)
+        {
+            var field = enumValue.GetType().GetField(enumValue.ToString());
+            var objs = field.GetCustomAttribute(typeof(DescriptionAttribute));
+            var descriptionAttribute = (DescriptionAttribute)objs;
+            return descriptionAttribute?.Description??enumValue.ToString();
+        }
     }
 }
