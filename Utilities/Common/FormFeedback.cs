@@ -23,7 +23,7 @@ namespace Utilities
             this.StartPosition = FormStartPosition.CenterParent;
             this.AcceptButton = gmButton1;
             this.CancelButton = gmButton2;
-            waitDlg = new UI.WaitAnimate(language);
+            waitDlg = new UI.WaitAnimate();
             waitDlg.DoWork += waitDlg_DoWork;
             waitDlg.RunWorkerCompleted += waitDlg_RunWorkerCompleted;
             SetLanguage(language);

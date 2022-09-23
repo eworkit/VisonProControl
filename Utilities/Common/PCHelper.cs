@@ -6,6 +6,7 @@ using System.Management;
 using System.Management.Instrumentation;
 using System.Xml;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace Utilities
 {
@@ -105,7 +106,7 @@ namespace Utilities
 
                 int curId = System.Diagnostics.Process.GetCurrentProcess().Id;
                 foreach (var p2 in processes)
-                {                  
+                {
                     if (p2.Id != curId)
                     {
                         if (string.IsNullOrEmpty(p2.MainWindowTitle))
@@ -126,32 +127,64 @@ namespace Utilities
             }
             return null;
         }
+
+        public static void AutoStart(bool isAuto)
+        {
+            try
+            {
+                if (isAuto == true)
+                {
+                    RegistryKey R_local = Microsoft.Win32.Registry.LocalMachine;//RegistryKey R_local = Registry.CurrentUser;
+                    RegistryKey R_run = R_local.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+                    R_run.SetValue("应用名称", Application.ExecutablePath);
+                    R_run.Close();
+                    R_local.Close();
+                }
+                else
+                {
+                    RegistryKey R_local = Microsoft.Win32.Registry.LocalMachine;//RegistryKey R_local = Registry.CurrentUser;
+                    RegistryKey R_run = R_local.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+                    R_run.DeleteValue("应用名称", false);
+                    R_run.Close();
+                    R_local.Close();
+                }
+
+                //GlobalVariant.Instance.UserConfig.AutoStart = isAuto;
+            }
+            catch (Exception)
+            {
+                //MessageBoxDlg dlg = new MessageBoxDlg();
+                //dlg.InitialData("您需要管理员权限修改", "提示", MessageBoxButtons.OK, MessageBoxDlgIcon.Error);
+                //dlg.ShowDialog();
+                MessageBox.Show("您需要以管理员身份运行本程序来设置", "提示");
+            }
+
+        }
     }
+
 }
-
-
 namespace Utilities.EzLicense
 {
     public class IteRegist
-    { 
+    {
         /// <summary>
         /// 软件注册
         /// </summary>
         /// <param name="DeformatterData">注册码</param>
         /// <returns></returns>
-        public static  bool Regist(string DeformatterData)
+        public static bool Regist(string DeformatterData)
         {
             try
             {
-                if(DeformatterData==getRNum())
-                  return SignVerifyEnvelope.SignFile(DeformatterData);
+                if (DeformatterData == getRNum())
+                    return SignVerifyEnvelope.SignFile(DeformatterData);
                 else
                 {
                     MessageBox.Show("注册码验证失败", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
-            catch (Exception ex) { MessageBox.Show("注册码验证失败。"+ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (Exception ex) { MessageBox.Show("注册码验证失败。" + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error); }
             return false;
         }
 
@@ -271,3 +304,4 @@ namespace Utilities.EzLicense
         }
     }
 }
+ 

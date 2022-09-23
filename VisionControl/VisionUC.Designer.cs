@@ -36,7 +36,7 @@ namespace VisionControl
     {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("运行状态");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("TCP");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("TCP/IP");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("通用IO");
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("串口");
             System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("ModBus");
@@ -523,7 +523,7 @@ namespace VisionControl
             treeNode1.Name = "TabRunState";
             treeNode1.Text = "运行状态";
             treeNode2.Name = "TCP";
-            treeNode2.Text = "TCP";
+            treeNode2.Text = "TCP/IP";
             treeNode3.Name = "节点0";
             treeNode3.Text = "通用IO";
             treeNode4.Name = "节点1";
@@ -543,7 +543,7 @@ namespace VisionControl
             this.uiNavBar1.NodeSize = new System.Drawing.Size(120, 40);
             this.uiNavBar1.SelectedForeColor = System.Drawing.Color.White;
             this.uiNavBar1.SelectedHighColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.uiNavBar1.Size = new System.Drawing.Size(318, 49);
+            this.uiNavBar1.Size = new System.Drawing.Size(311, 49);
             this.uiNavBar1.Style = Sunny.UI.UIStyle.Custom;
             this.uiNavBar1.TabControl = this.uiTabControl1;
             this.uiNavBar1.TabIndex = 0;

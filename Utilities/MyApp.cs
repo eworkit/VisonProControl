@@ -124,7 +124,7 @@ namespace Utilities
             //   System.Diagnostics. Trace.WriteLine(s);
             //if ((int)levle > (int)LogLevle.warning)
             //    s += new StackTrace().ToString();
-
+            return;
             if (caption.IsEmpty())
             {
                 switch (levle)

@@ -47,6 +47,8 @@
             this.uiDoubleUpDown1 = new Sunny.UI.UIDoubleUpDown();
             this.ckTimeToSent = new Sunny.UI.UICheckBox();
             this.btnSend = new System.Windows.Forms.Button();
+            this.btnSave = new Sunny.UI.UIButton();
+            this.ckbAutoStart = new Sunny.UI.UICheckBox();
             this.SuspendLayout();
             // 
             // uiLabel5
@@ -119,7 +121,7 @@
             // uiLabel2
             // 
             this.uiLabel2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel2.Location = new System.Drawing.Point(5, 82);
+            this.uiLabel2.Location = new System.Drawing.Point(14, 95);
             this.uiLabel2.Name = "uiLabel2";
             this.uiLabel2.Size = new System.Drawing.Size(128, 23);
             this.uiLabel2.TabIndex = 1;
@@ -132,7 +134,7 @@
             this.lbRcvClients.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lbRcvClients.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(200)))), ((int)(((byte)(255)))));
             this.lbRcvClients.ItemSelectForeColor = System.Drawing.Color.White;
-            this.lbRcvClients.Location = new System.Drawing.Point(10, 110);
+            this.lbRcvClients.Location = new System.Drawing.Point(19, 123);
             this.lbRcvClients.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lbRcvClients.MinimumSize = new System.Drawing.Size(1, 1);
             this.lbRcvClients.Name = "lbRcvClients";
@@ -147,7 +149,7 @@
             // uiLabel3
             // 
             this.uiLabel3.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel3.Location = new System.Drawing.Point(5, 276);
+            this.uiLabel3.Location = new System.Drawing.Point(14, 289);
             this.uiLabel3.Name = "uiLabel3";
             this.uiLabel3.Size = new System.Drawing.Size(128, 23);
             this.uiLabel3.TabIndex = 1;
@@ -159,7 +161,7 @@
             // 
             this.tbRcvData.FillColor = System.Drawing.Color.White;
             this.tbRcvData.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbRcvData.Location = new System.Drawing.Point(10, 306);
+            this.tbRcvData.Location = new System.Drawing.Point(19, 319);
             this.tbRcvData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbRcvData.MinimumSize = new System.Drawing.Size(1, 1);
             this.tbRcvData.Name = "tbRcvData";
@@ -174,7 +176,7 @@
             // uiLabel4
             // 
             this.uiLabel4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiLabel4.Location = new System.Drawing.Point(18, 485);
+            this.uiLabel4.Location = new System.Drawing.Point(27, 498);
             this.uiLabel4.Name = "uiLabel4";
             this.uiLabel4.Size = new System.Drawing.Size(128, 23);
             this.uiLabel4.TabIndex = 1;
@@ -186,7 +188,7 @@
             // 
             this.tbSendData.FillColor = System.Drawing.Color.White;
             this.tbSendData.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbSendData.Location = new System.Drawing.Point(10, 513);
+            this.tbSendData.Location = new System.Drawing.Point(19, 526);
             this.tbSendData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbSendData.MinimumSize = new System.Drawing.Size(1, 1);
             this.tbSendData.Name = "tbSendData";
@@ -201,7 +203,7 @@
             // btnTcpSvrRcvClear
             // 
             this.btnTcpSvrRcvClear.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnTcpSvrRcvClear.Location = new System.Drawing.Point(365, 276);
+            this.btnTcpSvrRcvClear.Location = new System.Drawing.Point(374, 289);
             this.btnTcpSvrRcvClear.Name = "btnTcpSvrRcvClear";
             this.btnTcpSvrRcvClear.Size = new System.Drawing.Size(81, 29);
             this.btnTcpSvrRcvClear.TabIndex = 3;
@@ -213,7 +215,7 @@
             // 
             this.ckRcvHex.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ckRcvHex.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.ckRcvHex.Location = new System.Drawing.Point(137, 280);
+            this.ckRcvHex.Location = new System.Drawing.Point(146, 293);
             this.ckRcvHex.MinimumSize = new System.Drawing.Size(1, 1);
             this.ckRcvHex.Name = "ckRcvHex";
             this.ckRcvHex.Padding = new System.Windows.Forms.Padding(22, 0, 0, 0);
@@ -226,7 +228,7 @@
             // 
             this.ckSentHex.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ckSentHex.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.ckSentHex.Location = new System.Drawing.Point(137, 488);
+            this.ckSentHex.Location = new System.Drawing.Point(146, 501);
             this.ckSentHex.MinimumSize = new System.Drawing.Size(1, 1);
             this.ckSentHex.Name = "ckSentHex";
             this.ckSentHex.Padding = new System.Windows.Forms.Padding(22, 0, 0, 0);
@@ -249,7 +251,7 @@
             // uiLabel6
             // 
             this.uiLabel6.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.uiLabel6.Location = new System.Drawing.Point(365, 698);
+            this.uiLabel6.Location = new System.Drawing.Point(374, 711);
             this.uiLabel6.Name = "uiLabel6";
             this.uiLabel6.Size = new System.Drawing.Size(54, 23);
             this.uiLabel6.TabIndex = 17;
@@ -261,8 +263,9 @@
             // 
             this.uiDoubleUpDown1.DecimalPlaces = 0;
             this.uiDoubleUpDown1.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.uiDoubleUpDown1.Location = new System.Drawing.Point(231, 697);
+            this.uiDoubleUpDown1.Location = new System.Drawing.Point(240, 710);
             this.uiDoubleUpDown1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.uiDoubleUpDown1.Minimum = 1D;
             this.uiDoubleUpDown1.MinimumSize = new System.Drawing.Size(100, 0);
             this.uiDoubleUpDown1.Name = "uiDoubleUpDown1";
             this.uiDoubleUpDown1.ShowText = false;
@@ -278,7 +281,7 @@
             // 
             this.ckTimeToSent.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ckTimeToSent.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.ckTimeToSent.Location = new System.Drawing.Point(109, 695);
+            this.ckTimeToSent.Location = new System.Drawing.Point(118, 708);
             this.ckTimeToSent.MinimumSize = new System.Drawing.Size(1, 1);
             this.ckTimeToSent.Name = "ckTimeToSent";
             this.ckTimeToSent.Padding = new System.Windows.Forms.Padding(22, 0, 0, 0);
@@ -290,7 +293,7 @@
             // btnSend
             // 
             this.btnSend.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnSend.Location = new System.Drawing.Point(10, 695);
+            this.btnSend.Location = new System.Drawing.Point(19, 708);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(81, 29);
             this.btnSend.TabIndex = 14;
@@ -298,11 +301,40 @@
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
+            // btnSave
+            // 
+            this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSave.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSave.Location = new System.Drawing.Point(355, 759);
+            this.btnSave.MinimumSize = new System.Drawing.Size(1, 1);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(100, 35);
+            this.btnSave.TabIndex = 18;
+            this.btnSave.Text = "保存配置";
+            this.btnSave.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSave.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // ckbAutoStart
+            // 
+            this.ckbAutoStart.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ckbAutoStart.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ckbAutoStart.Location = new System.Drawing.Point(19, 764);
+            this.ckbAutoStart.MinimumSize = new System.Drawing.Size(1, 1);
+            this.ckbAutoStart.Name = "ckbAutoStart";
+            this.ckbAutoStart.Padding = new System.Windows.Forms.Padding(22, 0, 0, 0);
+            this.ckbAutoStart.Size = new System.Drawing.Size(150, 29);
+            this.ckbAutoStart.TabIndex = 19;
+            this.ckbAutoStart.Text = "自动开启";
+            this.ckbAutoStart.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            // 
             // UcTcpServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Transparent;
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.Controls.Add(this.ckbAutoStart);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.uiLabel6);
             this.Controls.Add(this.uiDoubleUpDown1);
             this.Controls.Add(this.ckTimeToSent);
@@ -324,7 +356,7 @@
             this.Controls.Add(this.uiLabel5);
             this.MinimumSize = new System.Drawing.Size(400, 0);
             this.Name = "UcTcpServer";
-            this.Size = new System.Drawing.Size(470, 747);
+            this.Size = new System.Drawing.Size(502, 807);
             this.ResumeLayout(false);
 
         }
@@ -350,5 +382,7 @@
         private Sunny.UI.UIDoubleUpDown uiDoubleUpDown1;
         private Sunny.UI.UICheckBox ckTimeToSent;
         private System.Windows.Forms.Button btnSend;
+        private Sunny.UI.UIButton btnSave;
+        private Sunny.UI.UICheckBox ckbAutoStart;
     }
 }

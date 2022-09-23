@@ -30,6 +30,14 @@ namespace VisionApplication
     {
             this.uiFlowLayoutPanel1 = new Sunny.UI.UIFlowLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.tsbLoginInfo = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsbDatabase = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsbOpenedFile = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsbMsg = new System.Windows.Forms.ToolStripStatusLabel();
+            this.uiContextMenuStrip1 = new Sunny.UI.UIContextMenuStrip();
+            this.miAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnRun = new System.Windows.Forms.ToolStripButton();
             this.btnRunOnce = new System.Windows.Forms.ToolStripButton();
@@ -41,16 +49,9 @@ namespace VisionApplication
             this.LoginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.systemConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTool = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.visionControl1 = new VisionControl.VisionUC();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.tsbLoginInfo = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsbDatabase = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsbOpenedFile = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsbMsg = new System.Windows.Forms.ToolStripStatusLabel();
-            this.uiContextMenuStrip1 = new Sunny.UI.UIContextMenuStrip();
-            this.miAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.uiFlowLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -98,6 +99,84 @@ namespace VisionApplication
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripContainer1
+            // 
+            this.toolStripContainer1.BottomToolStripPanelVisible = false;
+            // 
+            // toolStripContainer1.ContentPanel
+            // 
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(150, 150);
+            this.toolStripContainer1.LeftToolStripPanelVisible = false;
+            this.toolStripContainer1.Location = new System.Drawing.Point(28, 35);
+            this.toolStripContainer1.Name = "toolStripContainer1";
+            this.toolStripContainer1.RightToolStripPanelVisible = false;
+            this.toolStripContainer1.Size = new System.Drawing.Size(150, 175);
+            this.toolStripContainer1.TabIndex = 3;
+            this.toolStripContainer1.Text = "toolStripContainer1";
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbLoginInfo,
+            this.tsbDatabase,
+            this.tsbOpenedFile,
+            this.tsbMsg});
+            this.statusStrip1.Location = new System.Drawing.Point(2, 625);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.ShowItemToolTips = true;
+            this.statusStrip1.Size = new System.Drawing.Size(1916, 29);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 55;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // tsbLoginInfo
+            // 
+            this.tsbLoginInfo.Font = new System.Drawing.Font("Microsoft YaHei UI", 10F);
+            this.tsbLoginInfo.ForeColor = System.Drawing.Color.Blue;
+            this.tsbLoginInfo.LinkVisited = true;
+            this.tsbLoginInfo.Name = "tsbLoginInfo";
+            this.tsbLoginInfo.Size = new System.Drawing.Size(61, 23);
+            this.tsbLoginInfo.Text = "未登录";
+            this.tsbLoginInfo.Click += new System.EventHandler(this.tsbLoginInfo_Click);
+            // 
+            // tsbDatabase
+            // 
+            this.tsbDatabase.Margin = new System.Windows.Forms.Padding(10, 4, 0, 2);
+            this.tsbDatabase.Name = "tsbDatabase";
+            this.tsbDatabase.Size = new System.Drawing.Size(0, 23);
+            // 
+            // tsbOpenedFile
+            // 
+            this.tsbOpenedFile.Margin = new System.Windows.Forms.Padding(10, 4, 0, 2);
+            this.tsbOpenedFile.Name = "tsbOpenedFile";
+            this.tsbOpenedFile.Size = new System.Drawing.Size(0, 23);
+            // 
+            // tsbMsg
+            // 
+            this.tsbMsg.AutoToolTip = true;
+            this.tsbMsg.Margin = new System.Windows.Forms.Padding(50, 3, 0, 2);
+            this.tsbMsg.Name = "tsbMsg";
+            this.tsbMsg.Size = new System.Drawing.Size(0, 24);
+            // 
+            // uiContextMenuStrip1
+            // 
+            this.uiContextMenuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(249)))), ((int)(((byte)(255)))));
+            this.uiContextMenuStrip1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiContextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.uiContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miAbout});
+            this.uiContextMenuStrip1.Name = "uiContextMenuStrip1";
+            this.uiContextMenuStrip1.Size = new System.Drawing.Size(125, 36);
+            this.uiContextMenuStrip1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.uiContextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.uiContextMenuStrip1_ItemClicked);
+            // 
+            // miAbout
+            // 
+            this.miAbout.Name = "miAbout";
+            this.miAbout.Size = new System.Drawing.Size(124, 32);
+            this.miAbout.Text = "关于";
             // 
             // btnOpen
             // 
@@ -195,6 +274,7 @@ namespace VisionApplication
             // 
             this.btnOption.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.LoginToolStripMenuItem,
+            this.systemConfigToolStripMenuItem,
             this.databaseToolStripMenuItem,
             this.openLogToolStripMenuItem});
             this.btnOption.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F);
@@ -225,6 +305,13 @@ namespace VisionApplication
             this.openLogToolStripMenuItem.Text = "查看日志";
             this.openLogToolStripMenuItem.Click += new System.EventHandler(this.openLogToolStripMenuItem_Click);
             // 
+            // systemConfigToolStripMenuItem
+            // 
+            this.systemConfigToolStripMenuItem.Name = "systemConfigToolStripMenuItem";
+            this.systemConfigToolStripMenuItem.Size = new System.Drawing.Size(178, 32);
+            this.systemConfigToolStripMenuItem.Text = "系统";
+            this.systemConfigToolStripMenuItem.Click += new System.EventHandler(this.systemConfigToolStripMenuItem_Click);
+            // 
             // btnTool
             // 
             this.btnTool.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -237,21 +324,6 @@ namespace VisionApplication
             this.btnTool.Text = "工具";
             this.btnTool.ToolTipText = "工具  ";
             this.btnTool.Visible = false;
-            // 
-            // toolStripContainer1
-            // 
-            this.toolStripContainer1.BottomToolStripPanelVisible = false;
-            // 
-            // toolStripContainer1.ContentPanel
-            // 
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(150, 150);
-            this.toolStripContainer1.LeftToolStripPanelVisible = false;
-            this.toolStripContainer1.Location = new System.Drawing.Point(28, 35);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(150, 175);
-            this.toolStripContainer1.TabIndex = 3;
-            this.toolStripContainer1.Text = "toolStripContainer1";
             // 
             // visionControl1
             // 
@@ -269,68 +341,6 @@ namespace VisionApplication
             this.visionControl1.Text = null;
             this.visionControl1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
             this.visionControl1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbLoginInfo,
-            this.tsbDatabase,
-            this.tsbOpenedFile,
-            this.tsbMsg});
-            this.statusStrip1.Location = new System.Drawing.Point(2, 625);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.ShowItemToolTips = true;
-            this.statusStrip1.Size = new System.Drawing.Size(1916, 29);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 55;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // tsbLoginInfo
-            // 
-            this.tsbLoginInfo.Font = new System.Drawing.Font("Microsoft YaHei UI", 10F);
-            this.tsbLoginInfo.ForeColor = System.Drawing.Color.Blue;
-            this.tsbLoginInfo.LinkVisited = true;
-            this.tsbLoginInfo.Name = "tsbLoginInfo";
-            this.tsbLoginInfo.Size = new System.Drawing.Size(61, 23);
-            this.tsbLoginInfo.Text = "未登录";
-            this.tsbLoginInfo.Click += new System.EventHandler(this.tsbLoginInfo_Click);
-            // 
-            // tsbDatabase
-            // 
-            this.tsbDatabase.Margin = new System.Windows.Forms.Padding(10, 4, 0, 2);
-            this.tsbDatabase.Name = "tsbDatabase";
-            this.tsbDatabase.Size = new System.Drawing.Size(0, 23);
-            // 
-            // tsbOpenedFile
-            // 
-            this.tsbOpenedFile.Margin = new System.Windows.Forms.Padding(10, 4, 0, 2);
-            this.tsbOpenedFile.Name = "tsbOpenedFile";
-            this.tsbOpenedFile.Size = new System.Drawing.Size(0, 23);
-            // 
-            // tsbMsg
-            // 
-            this.tsbMsg.Margin = new System.Windows.Forms.Padding(50, 3, 0, 2);
-            this.tsbMsg.Name = "tsbMsg";
-            this.tsbMsg.Size = new System.Drawing.Size(0, 24);
-            // 
-            // uiContextMenuStrip1
-            // 
-            this.uiContextMenuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(249)))), ((int)(((byte)(255)))));
-            this.uiContextMenuStrip1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiContextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.uiContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miAbout});
-            this.uiContextMenuStrip1.Name = "uiContextMenuStrip1";
-            this.uiContextMenuStrip1.Size = new System.Drawing.Size(125, 36);
-            this.uiContextMenuStrip1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
-            this.uiContextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.uiContextMenuStrip1_ItemClicked);
-            // 
-            // miAbout
-            // 
-            this.miAbout.Name = "miAbout";
-            this.miAbout.Size = new System.Drawing.Size(124, 32);
-            this.miAbout.Text = "关于";
             // 
             // MainForm
             // 
@@ -390,6 +400,7 @@ namespace VisionApplication
         private System.Windows.Forms.ToolStripStatusLabel tsbLoginInfo;
         private System.Windows.Forms.ToolStripMenuItem databaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel tsbDatabase;
+        private System.Windows.Forms.ToolStripMenuItem systemConfigToolStripMenuItem;
     }
 }
 

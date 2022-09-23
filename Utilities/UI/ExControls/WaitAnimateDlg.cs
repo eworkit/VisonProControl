@@ -189,7 +189,7 @@ namespace Utilities.UI
                 dlg.CancelButton = value;
             }
         }
-        public WaitAnimate(string language, Form owner = null)
+        public WaitAnimate(Form owner = null, string language = "")
         {
            dlg = new WaitAnimateDlg(language);
             if (owner == null)

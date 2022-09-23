@@ -26,11 +26,7 @@ namespace VisionApplication
             InitializeComponent();
             dbInfo = MyAppConfig.DbInfo ?? new DBConnInfo();
             setDefaultValue(dbInfo, dbInfo.dbType);
-            ucdbConfig1.DBInfo = dbInfo;
-            if(MyAppConfig.User?.Level != AccessLevel.Administrator)
-            {
-                btnOK.Visible = false;
-            }
+            ucdbConfig1.DBInfo = dbInfo; 
         }
         void setDefaultValue(DBConnInfo dbInfo, DBMSType dbType)
         {
@@ -52,6 +48,11 @@ namespace VisionApplication
         private void btnOK_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.None;
+            if (MyAppConfig.User?.Level != AccessLevel.Administrator)
+            {
+                MessageBoxE.Show(this, "需要管理员权限", "提示", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
             var db = ucdbConfig1.DBInfo;
            
                 db.dbType = DBMSType.MySQL;
@@ -66,7 +67,7 @@ namespace VisionApplication
             }
             catch (Exception ex)
             {
-                MessageBoxE.Show(this, ex.Message);
+                MessageBoxE.Show(this, "数据库连接失败\r\n" + ex.Message);
                 return;
             }
             //if (!new DbOperation(db).ExistTable("VisionData"))

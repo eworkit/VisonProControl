@@ -259,8 +259,10 @@ namespace Utilities.Net
                     for (int i= connections.Count-1;i>=0; i-- )
                     {
                         var conn = connections[i];
-                        var client = conn.Socket;
-                        if (((client.Client.Poll(1000, SelectMode.SelectRead) && (client.Available == 0)) || !client.Connected))
+                        var client = conn.Socket; 
+                        if (client.Client == null
+                            || ((client.Client.Poll(1000, SelectMode.SelectRead) && (client.Available == 0)) 
+                            || !client.Connected))
                         {
                             OnLostConnect?.Invoke(conn);
                             connections.RemoveAt(i);

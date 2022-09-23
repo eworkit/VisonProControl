@@ -14,6 +14,11 @@ using Sunny.UI;
 using Utilities;
 using Cognex.VisionPro.Implementation.Internal;
 using Utilities.Data;
+using Utilities.UI;
+using Utilities.UI.ExMethod;
+using System.Threading;
+using System.Threading.Tasks;
+using Sunny.UI.Win32;
 
 namespace VisionApplication
 {
@@ -29,9 +34,10 @@ namespace VisionApplication
             this.DoubleBuffered=true;
             this.MinimumSize = new Size(900, 600);
             visionControl1.RunStateUpdated += VisionControl1_RunStateUpdated;
-            visionControl1.ErrorMsgRcv += x => tsbMsg.Text = x;
+            visionControl1.ErrorMsgRcv += VisionControl1_ErrorMsgRcv;
             visionControl1.AutoRunModeChanged += VisionControl1_AutoRunModeChanged;
             visionControl1.PreviewChanged += VisionControl1_PreviewChanged;
+            visionControl1.ProjectOpened += VisionControl1_ProjectOpened;
             this.SizeChanged += MainForm_SizeChanged;
             foreach(var tsb in toolStrip1.Items.OfType<ToolStripButton>())
                 tsb.Paint += ToolStripButton_Paint;
@@ -39,11 +45,14 @@ namespace VisionApplication
             {
                 LoginUser = MyAppConfig.User;
             }
+            btnRunMannul.Checked = !MyAppConfig.AutoRunMode;
+            visionControl1.AutoRunMode = MyAppConfig.AutoRunMode;
             tsbDatabase.Click += TsbDatabase_Click;
             this.Load += MainForm_Load;
-        } 
+        }
 
-        private void MainForm_Load(object sender, EventArgs e)
+
+        private async void MainForm_Load(object sender, EventArgs e)
         {
             dbConn = MyAppConfig.DbInfo;
             try
@@ -61,14 +70,29 @@ namespace VisionApplication
             }
             catch (Exception ex)
             {
-                MessageBoxE.Show(this, ex.Message);
+                MessageBoxE.Show(this, "数据库连接失败\r\n"+ex.Message);
                 return;
             }
+            if (MyAppConfig.AutoOpenFile)
+            {
+                string lastFile = MyAppConfig.LastRunFile;
+                if (!string.IsNullOrEmpty(lastFile) && File.Exists(lastFile))
+                {
+                     ShowWaitForm("正在打开上次工程");
+                    log.Info("自动打开上次vpp文件："+MyAppConfig.LastRunFile);
+                    new Thread(() =>
+                         this.SafeInvoke(() =>
+                         {
+                             visionControl1.OpenVpp(MyAppConfig.LastRunFile);
+                             HideWaitForm();
+                         })).Start(); 
+                }
+            }
         }
+      
 
         private void ToolStripButton_Paint(object sender, PaintEventArgs e)
-        {
-            return;
+        { 
             var t = sender as ToolStripButton;
             var bcolor = t.BackColor;
             if (bcolor == Color.Transparent)
@@ -81,18 +105,33 @@ namespace VisionApplication
                 using (var pen = new Pen(Color.Blue))
                     e.Graphics.DrawRectangle(pen, new Rectangle(Point.Empty, btnRunMannul.Size));
 
-            int imgW = (int)textSize.Height + 3;
+            int imgW = toolStrip1.ImageScalingSize.Width;
             var img = t.Enabled ? t.Image : t.Image.CreateDisabledImage(null);
             e.Graphics.DrawImage(img, 3, (t.Height - imgW) / 2, imgW, imgW);
             e.Graphics.DrawString(t.Text, t.Font, new SolidBrush(t.Enabled ? t.ForeColor : Color.DarkGray), imgW + 6, (t.Height - textSize.Height) / 2);
         }
 
+        private void VisionControl1_ErrorMsgRcv(string x)
+        {
+            //tsbMsg.Visible = true;
+            //tsbMsg.Text = x;
+            log.Error(x);
+            HideWaitForm();
+            MessageBoxE.Show(this, x, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private void VisionControl1_AutoRunModeChanged(bool autoRun)
         {
             if (autoRun)
+            {
                 btnRunMannul.BackColor = Color.Transparent;
+                btnRunMannul.ToolTipText = "点击切换为手动运行模式";
+            }
             else
+            {
                 btnRunMannul.BackColor = Color.Orange;
+                btnRunMannul.ToolTipText = "点击切换为自动运行模式";
+            }
             toolStrip1.Refresh();
         }
  
@@ -103,8 +142,7 @@ namespace VisionApplication
             visionControl1.Height = this.Height - visionControl1.Top-statusStrip1.Height;
             statusStrip1.Top = visionControl1.Bottom;
         }
-
-        /// <param name="e"></param>
+         
         //protected override void OnPaint(PaintEventArgs e)
         //{
         //    // 使用双缓冲
@@ -156,6 +194,16 @@ namespace VisionApplication
             //button_ResetStatisticsForAllJobs.Enabled = !mInitError && !runningLive;
         }
 
+        private void VisionControl1_ProjectOpened(string file)
+        {
+            tsbOpenedFile.Text = "工程文件：" + Path.GetFileName(file);
+            tsbOpenedFile.ToolTipText = file;
+            this.Text = Program.Title + $"({Path.GetFileNameWithoutExtension(file)})";
+            tsbMsg.Text = null;
+            tsbMsg.ToolTipText = null;
+            HideWaitForm();
+        }
+
         private void VisionControl1_PreviewChanged(bool preview)
         {
             if (preview)
@@ -198,15 +246,17 @@ namespace VisionApplication
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
                 file = fileDialog.FileName;//返回文件的完整路径      
-                log.Info("Open vpp file:" + file);
-                tsbOpenedFile.Text="工程文件："+Path.GetFileName(file);
-                tsbOpenedFile.ToolTipText = file;
-                this.Text = Program.Title + $"({Path.GetFileNameWithoutExtension(file)})";
-                tsbMsg.Text = null;
-                tsbMsg.ToolTipText = null;
+                log.Info("打开 Vpp 文件:" + file);
                 if (IsPreView)
                     visionControl1.Preview(false);
-                visionControl1.OpenVpp(file);
+                ShowWaitForm("正在加载工程...");
+                new Thread(() =>
+                     this.SafeInvoke(() =>
+                     {
+                         visionControl1.OpenVpp(file);
+                     })).Start();
+
+                MyAppConfig.LastRunFile = file;
             }
         }
 
@@ -219,7 +269,8 @@ namespace VisionApplication
         {
             //visionControl1.RunJobCont(visionControl1.SelectedTab);
             btnRunMannul.Checked = !btnRunMannul.Checked;
-            visionControl1.AutoRunMode = !btnRunMannul.Checked;
+           MyAppConfig.AutoRunMode = visionControl1.AutoRunMode = !btnRunMannul.Checked;
+            log.Info(visionControl1.AutoRunMode ? "进入自动运行模式" : "进入手动运行模式");
         }
         bool IsPreView => 1.Equals(btnPreview.Tag);
 
@@ -359,6 +410,10 @@ namespace VisionApplication
             tsbDatabase.Text = $"数据库：[{dbConn.host}] {dbConn.dbName}";
         }
 
+        private void systemConfigToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FSysConfig().ShowDialog(this);
+        }
     }
     
 }

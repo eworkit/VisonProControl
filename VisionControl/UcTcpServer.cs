@@ -18,6 +18,7 @@ namespace VisionControl
     public partial class UcTcpServer : UserControl
     {
         TcpServer _tcpServer;
+        public event Action<string> Received;
         public UcTcpServer()
         {
             InitializeComponent();
@@ -31,16 +32,23 @@ namespace VisionControl
             tbIP.Text = Utilities.Net.TcpHelper.GetInnerIP(); 
             btnClose.Enabled=false;
             var cfg = MyAppConfig.TcpServerInfo;
-            if(cfg!=null)
+            if (cfg != null)
             {
                 tbPort.Text = cfg.Port.ToString();
                 ckSentHex.Checked = cfg.HexSend;
                 ckRcvHex.Checked = cfg.HexReceive;
-                if(cfg.AutoStart)
+                if (cfg.AutoStart)
                 {
                     btnTcpSvrOpen_Click(null, EventArgs.Empty);
                 }
             }
+            this.Load += UcTcpServer_Load;
+           
+        }
+
+        private void UcTcpServer_Load(object sender, EventArgs e)
+        {
+            
         }
 
         private void _tcpServer_OnLostConnect(TcpServerConnection connection)
@@ -79,12 +87,10 @@ namespace VisionControl
         {
             var data = connection.Read();
             string text = ByteConverter.ToSocketString(data, ckRcvHex.Checked); 
-            
+            Received?.Invoke(text);
             tbRcvData.SafeInvoke(()=>
-            {
-                if (!string.IsNullOrEmpty(tbRcvData.Text))
-                    text = Environment.NewLine + text; 
-                tbRcvData.AppendText(text);
+            { 
+                tbRcvData.AppendText($"[{DateTime.Now.ToString("MM-dd HH:mm:ss")}]{text}\r\n");
             });
         }
 
@@ -108,9 +114,9 @@ namespace VisionControl
 
         private void _tcpServer_OnConnect(TcpServerConnection connection)
         {
-            var t = connection.LastVerifyTime.ToString("mm-dd HH:mm:ss");
+            var t = connection.LastVerifyTime.ToString("MM-dd HH:mm:ss");
             var client = connection.Socket.Client; 
-            lbRcvClients.SafeInvoke(()=>lbRcvClients.Items.Add($"[{t}] {((System.Net.IPEndPoint)client.RemoteEndPoint).Address.ToString()}"));
+            this.SafeInvoke(()=>lbRcvClients.Items.Add($"[{t}] {((System.Net.IPEndPoint)client.RemoteEndPoint).Address.ToString()}"));
         }
  
 
@@ -126,6 +132,31 @@ namespace VisionControl
         {
             var data = ByteConverter.ToSocketBytes(tbSendData.Text, ckRcvHex.Checked);
             _tcpServer.Send(data);
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+          if(ckTimeToSent.Checked)
+            {
+                if(string.IsNullOrEmpty( tbSendData.Text))
+                {
+                    MessageBoxE.Show(this, "设为定时发送模式时发送的数据不能为空", "提示");
+                    tbSendData.Focus();
+                    return;
+                }
+            }
+            var cfg = MyAppConfig.TcpServerInfo ?? new MyAppConfig.TcpServer();
+            cfg.Port = tbPort.Text.ToInt();
+            cfg.HexReceive = ckRcvHex.Checked;
+            cfg.HexSend = ckSentHex.Checked;
+            cfg.AutoStart = ckbAutoStart.Checked;
+            cfg.AutoSendInterval = (int)uiDoubleUpDown1.Value;
+            try
+            {
+                MyAppConfig.Save(cfg);
+                MessageBoxE.Show(this, " 保存成功");
+            }
+            catch(Exception ex) { MessageBoxE.Show(this, " 保存失败\r\n"+ex.Message); }
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using Utilities.Data;
 using Utilities.ExMethod;
 using Utilities.IO;
+using Utilities.Net;
 
 namespace Utilities
 {
@@ -42,6 +43,9 @@ namespace Utilities
             public bool HexReceive { get; set; }
 
             public bool HexSend { get; set; }
+            public string SendText { get; set; }
+            public bool AutoSend { get; set; }
+            public int AutoSendInterval { get; set; }
             public object Clone()
             {
                 return MemberwiseClone();
@@ -64,6 +68,7 @@ namespace Utilities
             public bool AutoSend { get; set; }
 
             public int AutoSendInterval { get; set; }
+            public string SendText { get; set; }
             public object Clone()
             {
                 return MemberwiseClone();
@@ -92,14 +97,66 @@ namespace Utilities
 
         public static readonly string DefaultDatabase;
         private static bool autoLogin = false;
+        private static bool autoRunMode = true;
+        private static string lastRunFile;
+        private static bool autoOpenFile = false;
+        private static bool autoStart;
 
+        public static bool AutoRunMode
+        {
+            get
+            {
+                return autoRunMode;
+            }
+            set
+            {
+                autoRunMode = value;
+                SaveElement("Run", x => x.SetAttributeValue("Manual", value ? 1 : 0));
+            }
+        }
+        public static bool AutoOpenFile
+        {
+            get
+            {
+                return autoOpenFile;
+            }
+            set
+            {
+                autoOpenFile = value;
+                SaveElement("Run", x => x.SetAttributeValue("AutoOpen", value ? 1 : 0));
+            }
+        }
+        public static string LastRunFile
+        {
+            get
+            {
+                return lastRunFile;
+            }
+            set
+            {
+                lastRunFile = value;
+                SaveElement("Run", x => x.SetAttributeValue("LastRunFile", value));
+            }
+        }
+        public static bool AutoStart
+        {
+            get
+            {
+                return autoStart;
+            }
+            set
+            {
+                autoStart = value;
+                SaveElement("Sys", x => x.SetAttributeValue("AutoStart", value ? 1 : 0));
+            }
+        }
         public static LoginUser User { get; set; }
-   
+
         public static LoginUser GetUser(AccessLevel level)
         {
             var root = GetRoot();
-            if(root == null)
-                return   null;
+            if (root == null)
+                return null;
             var user = new LoginUser();
             var eles = root.Elements("User");
             foreach (var e in eles)
@@ -180,6 +237,9 @@ namespace Utilities
                     TcpServerInfo.HexReceive = ele.Attribute("HexReceive").SafeValue() == "1";
                     TcpServerInfo.HexSend = ele.Attribute("HexSend").SafeValue() == "1";
                     TcpServerInfo.AutoStart = ele.Attribute("AutoStart").SafeValue() == "1";
+                    TcpServerInfo.AutoSend = ele.Attribute("AutoSend").SafeValue() == "1";
+                    TcpServerInfo.AutoSendInterval = ele.Attribute("SendInterval").SafeValue().ToInt32();
+                    TcpServerInfo.SendText = ele.Attribute("SendData").SafeValue();
                 }
                 ele = xRoot.Element("TcpClient");
                 if (ele != null)
@@ -189,7 +249,9 @@ namespace Utilities
                     TcpClientInfo.Port = ele.Attribute("Port").SafeValue().ToInt32(1024);
                     TcpClientInfo.HexReceive = ele.Attribute("HexReceive").SafeValue() == "1";
                     TcpClientInfo.HexSend = ele.Attribute("HexSend").SafeValue() == "1";
+                    TcpServerInfo.AutoSendInterval = ele.Attribute("SendInterval").SafeValue().ToInt32();
                     TcpClientInfo.AutoConn = ele.Attribute("AutoConn").SafeValue() == "1";
+                    TcpClientInfo.SendText = ele.Attribute("SendData").SafeValue();
                 }
                 ele = xRoot.Element("SerialPort");
                 if (ele != null)
@@ -200,6 +262,18 @@ namespace Utilities
                     SerialPortInfo.StopBit = ele.Attribute("StopBit").SafeValue().ToInt32(1);
                     SerialPortInfo.Parity = ele.Attribute("Parity").SafeValue().ToInt32();
                     SerialPortInfo.BaundRate = ele.Attribute("BaundRate").SafeValue().ToInt32(9600);
+                }
+                ele = xRoot.Element("Run");
+                if (ele != null)
+                {
+                    autoRunMode = ele.Attribute("Manual").SafeValue() != "1";
+                    autoOpenFile = ele.Attribute("AutoOpen").SafeValue() == "1";
+                    lastRunFile = ele.Attribute("LastRunFile").SafeValue();
+                }
+                ele = xRoot.Element("Sys");
+                if(ele != null)
+                {
+                    autoStart = ele.Attribute("AutoStart").SafeValue() == "1";
                 }
             }
         }
@@ -214,7 +288,7 @@ namespace Utilities
             {
                 return XDocument.Load(cfgFile).Element("Root");
             }
-            catch  { }
+            catch { }
             return null;
         }
         static void SaveElement(string eleName, Action<XElement> save, Predicate<XElement> p = null)
@@ -244,7 +318,7 @@ namespace Utilities
         {
             SaveElement("Login", x =>
             {
-                if(currentUser== null)
+                if (currentUser == null)
                 {
                     x.Remove();
                     return;
@@ -274,6 +348,33 @@ namespace Utilities
                 DbInfo = db;
             }
         }
+        public static void Save(TcpServer info)
+        {
+
+            SaveElement("TcpServer", x =>
+            {
+                x.SetAttributeValue("Port", info.Port);
+                x.SetAttributeValue("HexReceive", info.HexReceive);
+                x.SetAttributeValue("HexSend", info.HexSend ? 1 : 0);
+                x.SetAttributeValue("AutoStart", info.AutoStart ? 1 : 0);
+                x.SetAttributeValue("SendData", info.SendText);
+                x.SetAttributeValue("SendInterval", info.AutoSendInterval);
+            });
+        }
+        public static void Save(TcpClient info)
+        {
+
+            SaveElement("TcpClient", x =>
+            {
+                x.SetAttributeValue("Port", info.Port);
+                x.SetAttributeValue("Server", info.Server);
+                x.SetAttributeValue("HexReceive", info.HexReceive);
+                x.SetAttributeValue("HexSend", info.HexSend ? 1 : 0);
+                x.SetAttributeValue("AutoConn", info.AutoConn ? 1 : 0);
+                x.SetAttributeValue("SendData", info.SendText);
+                x.SetAttributeValue("SendInterval", info.AutoSendInterval);
+            });
+        }
         public static void Save()
         {
             string cfgFile = Path.Combine(AppPath, "Config.inf");
@@ -298,7 +399,7 @@ namespace Utilities
             }
             if (TcpClientInfo != null)
             {
-                XElement xElement3 = xRoot.ElementX("TcpServer");
+                XElement xElement3 = xRoot.ElementX("TcpClient");
                 xElement3.SetAttributeValue("Server", TcpClientInfo.Server);
                 xElement3.SetAttributeValue("Port", TcpClientInfo.Port);
                 xElement3.SetAttributeValue("HexReceive", TcpClientInfo.HexReceive);
@@ -318,7 +419,7 @@ namespace Utilities
         }
         static bool CheckPwd(LoginUser user)
         {
-            return (GetUser(user.Level)?.Password ?? string.Empty) == (user.Password ?? string.Empty) ;
+            return (GetUser(user.Level)?.Password ?? string.Empty) == (user.Password ?? string.Empty);
 
         }
         public object Clone()

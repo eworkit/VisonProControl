@@ -28,6 +28,7 @@ using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Device.Gpio;
 using Utilities.UI.ExMethod;
 using Utilities;
+using Utilities.ExMethod;
 
 namespace VisionControl
 {
@@ -36,6 +37,7 @@ namespace VisionControl
 
     public partial class VisionUC : Sunny.UI.UIUserControl
     {
+        const string runJobCmd = "CCD ";
         //==20220718
         private CogToolGroup myTG = new CogToolGroup();
         //  private CogToolBlock MyToolBlock = new CogToolBlock();
@@ -174,6 +176,7 @@ namespace VisionControl
 
         public bool InitError => mInitError;
         public event Action<bool> AutoRunModeChanged;
+        public event Action<string> ProjectOpened;
         /// <summary>
         /// Event fired for every user result produced by a job in the QuickBuild application (.vpp
         /// file).  The event is fired by the job thread itself, so any subscribers must handle this
@@ -243,9 +246,32 @@ namespace VisionControl
             //    this.tabPage1.Controls.Add(new UCOneJob() { Dock = DockStyle.Fill });
             this.uiTabControl1.TabVisible = false;
             tpStat.BackColor = Color.FromArgb(224, 234, 254);
+            ucTcpClient1.Received += UcTcpClient1_Received;
+            ucTcpServer1.Received += UcTcpClient1_Received;
 #if Test
             FillJobTabs();
 #endif
+        }
+
+        private void UcTcpClient1_Received(string obj)
+        {
+            if (autoRunMode && obj.Contains(runJobCmd))
+            {
+                var arr = obj.Split(" ,.;\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                for (int i = 0; i < arr.Length; ++i)
+                {
+                    if (arr[i] == runJobCmd.TrimEnd())
+                    {
+                        if (int.TryParse(arr[i + 1], out int jobIndex))
+                        {
+                            if (mJM != null && mJM.Job(jobIndex).State == CogJobStateConstants.Stopped)
+                                ThreadPool.QueueUserWorkItem(_ => this.SafeInvoke(() => RunJob(jobIndex)));
+                        }
+                        ++i;
+                    }
+                }
+            }
         }
 
         private void VisionUC_SizeChanged(object sender, EventArgs e)
@@ -548,13 +574,13 @@ namespace VisionControl
         {
             // perform initialization to update the control gui - remainder of initialization
             // takes place in StartApplication
-            if (mUsePasswords)
-                CurrentAccessLevel = AccessLevel.Operator;
-            else
-            {
-                CurrentAccessLevel = AccessLevel.Administrator;
+            //if (mUsePasswords)
+            //    CurrentAccessLevel = AccessLevel.Operator;
+            //else
+            //{
+            //    CurrentAccessLevel = AccessLevel.Administrator;
 
-            }
+            //}
 
             //this.button_About.Text = ResourceUtility.GetString("RtAboutButton");
             //this.button_Chose.Text = ResourceUtility.GetString("RtChoseButton");
@@ -907,6 +933,10 @@ namespace VisionControl
                     MessageBoxE.Show(this, ResourceUtility.GetString("RtUnexpectedErrorQB") + ex.Message,
                       mApplicationName);
                 }
+                catch (Exception ex)
+                {
+
+                }
             }
             SetElapseText(i, true);
 
@@ -1213,7 +1243,10 @@ namespace VisionControl
                     mCurrentRunState = newrunstate;
                     UpdateControlsEnabled();
                 }
-                log.Info($"Job{job.Name}已启动运行");
+                int jobInd = Utility.GetJobIndex(mJM, job);
+                UCJobs.ElementAt(jobInd).UpdateUIStat(job.State);
+                var runType = job.State == CogJobStateConstants.RunningContinuous ? "连续" : "单次";
+                log.Info($"Job[{jobInd}]“{job.Name}”已启动{runType}运行");
             }
             catch { }
         }
@@ -2159,6 +2192,7 @@ namespace VisionControl
             string promptStr = ResourceUtility.FormatString("RtSaveSettingsText", quotedvpp);
             if (JobManager != null)
                 PromptToSaveSettings_NOMessage(promptStr);
+            ProjectOpened?.Invoke(file);
         }
         private void button_Chose_Click(object sender, EventArgs e)
         {
@@ -2183,7 +2217,7 @@ namespace VisionControl
             switch (itemText)
             {
 
-                case "TCP":
+                case "TCP/IP":
                     this.uiTabControl1.SelectedTab = tpTcp;
                     break;
                 case "串口":

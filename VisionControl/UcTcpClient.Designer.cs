@@ -36,7 +36,7 @@
             this.uiLabel3 = new Sunny.UI.UILabel();
             this.tbRcvData = new Sunny.UI.UIRichTextBox();
             this.uiLabel4 = new Sunny.UI.UILabel();
-            this.tbSentData = new Sunny.UI.UIRichTextBox();
+            this.tbSendData = new Sunny.UI.UIRichTextBox();
             this.btnSend = new System.Windows.Forms.Button();
             this.ckTimeToSent = new Sunny.UI.UICheckBox();
             this.uiDoubleUpDown1 = new Sunny.UI.UIDoubleUpDown();
@@ -46,6 +46,8 @@
             this.ckRcvHex = new Sunny.UI.UICheckBox();
             this.ckAutoConn = new Sunny.UI.UICheckBox();
             this.btnClear = new System.Windows.Forms.Button();
+            this.ckbAutoStart = new Sunny.UI.UICheckBox();
+            this.btnSave = new Sunny.UI.UIButton();
             this.SuspendLayout();
             // 
             // uiLabel5
@@ -155,21 +157,21 @@
             this.uiLabel4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.uiLabel4.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
-            // tbSentData
+            // tbSendData
             // 
-            this.tbSentData.FillColor = System.Drawing.Color.White;
-            this.tbSentData.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbSentData.Location = new System.Drawing.Point(9, 357);
-            this.tbSentData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tbSentData.MinimumSize = new System.Drawing.Size(1, 1);
-            this.tbSentData.Name = "tbSentData";
-            this.tbSentData.Padding = new System.Windows.Forms.Padding(2);
-            this.tbSentData.ShowText = false;
-            this.tbSentData.Size = new System.Drawing.Size(446, 174);
-            this.tbSentData.Style = Sunny.UI.UIStyle.Custom;
-            this.tbSentData.TabIndex = 5;
-            this.tbSentData.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tbSentData.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.tbSendData.FillColor = System.Drawing.Color.White;
+            this.tbSendData.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tbSendData.Location = new System.Drawing.Point(9, 357);
+            this.tbSendData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tbSendData.MinimumSize = new System.Drawing.Size(1, 1);
+            this.tbSendData.Name = "tbSendData";
+            this.tbSendData.Padding = new System.Windows.Forms.Padding(2);
+            this.tbSendData.ShowText = false;
+            this.tbSendData.Size = new System.Drawing.Size(446, 174);
+            this.tbSendData.Style = Sunny.UI.UIStyle.Custom;
+            this.tbSendData.TabIndex = 5;
+            this.tbSendData.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            this.tbSendData.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // btnSend
             // 
@@ -285,12 +287,41 @@
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
+            // ckbAutoStart
+            // 
+            this.ckbAutoStart.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ckbAutoStart.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ckbAutoStart.Location = new System.Drawing.Point(15, 589);
+            this.ckbAutoStart.MinimumSize = new System.Drawing.Size(1, 1);
+            this.ckbAutoStart.Name = "ckbAutoStart";
+            this.ckbAutoStart.Padding = new System.Windows.Forms.Padding(22, 0, 0, 0);
+            this.ckbAutoStart.Size = new System.Drawing.Size(150, 29);
+            this.ckbAutoStart.TabIndex = 21;
+            this.ckbAutoStart.Text = "自动连接";
+            this.ckbAutoStart.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSave.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSave.Location = new System.Drawing.Point(351, 584);
+            this.btnSave.MinimumSize = new System.Drawing.Size(1, 1);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(100, 35);
+            this.btnSave.TabIndex = 20;
+            this.btnSave.Text = "保存配置";
+            this.btnSave.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSave.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // UcTcpClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Control;
+            this.Controls.Add(this.ckbAutoStart);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.ckAutoConn);
             this.Controls.Add(this.ckRcvHex);
@@ -299,7 +330,7 @@
             this.Controls.Add(this.ckSentHex);
             this.Controls.Add(this.ckTimeToSent);
             this.Controls.Add(this.btnSend);
-            this.Controls.Add(this.tbSentData);
+            this.Controls.Add(this.tbSendData);
             this.Controls.Add(this.tbRcvData);
             this.Controls.Add(this.btnDisCon);
             this.Controls.Add(this.btnConnect);
@@ -310,7 +341,7 @@
             this.Controls.Add(this.uiLabel1);
             this.Controls.Add(this.uiLabel5);
             this.Name = "UcTcpClient";
-            this.Size = new System.Drawing.Size(470, 580);
+            this.Size = new System.Drawing.Size(470, 622);
             this.ResumeLayout(false);
 
         }
@@ -325,7 +356,7 @@
         private Sunny.UI.UILabel uiLabel3;
         private Sunny.UI.UIRichTextBox tbRcvData;
         private Sunny.UI.UILabel uiLabel4;
-        private Sunny.UI.UIRichTextBox tbSentData;
+        private Sunny.UI.UIRichTextBox tbSendData;
         private System.Windows.Forms.Button btnSend;
         private Sunny.UI.UICheckBox ckTimeToSent;
         private Sunny.UI.UIDoubleUpDown uiDoubleUpDown1;
@@ -335,5 +366,7 @@
         private Sunny.UI.UICheckBox ckRcvHex;
         private Sunny.UI.UICheckBox ckAutoConn;
         private System.Windows.Forms.Button btnClear;
+        private Sunny.UI.UICheckBox ckbAutoStart;
+        private Sunny.UI.UIButton btnSave;
     }
 }
