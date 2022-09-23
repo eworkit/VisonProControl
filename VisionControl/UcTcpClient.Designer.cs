@@ -196,6 +196,7 @@
             this.ckTimeToSent.TabIndex = 7;
             this.ckTimeToSent.Text = "定时发送";
             this.ckTimeToSent.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.ckTimeToSent.CheckedChanged += new System.EventHandler(this.ckTimeToSent_CheckedChanged);
             // 
             // uiDoubleUpDown1
             // 
@@ -213,6 +214,7 @@
             this.uiDoubleUpDown1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
             this.uiDoubleUpDown1.Value = 500D;
             this.uiDoubleUpDown1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.uiDoubleUpDown1.ValueChanged += new Sunny.UI.UIDoubleUpDown.OnValueChanged(this.uiDoubleUpDown1_ValueChanged);
             // 
             // uiLabel2
             // 

@@ -158,5 +158,35 @@ namespace VisionControl
             }
             catch(Exception ex) { MessageBoxE.Show(this, " 保存失败\r\n"+ex.Message); }
         }
+        System.Timers.Timer timerSend = new System.Timers.Timer();
+        private void ckTimeToSent_CheckedChanged(object sender, EventArgs e)
+        {
+            if(ckTimeToSent.Checked)
+            {
+                timerSend.Interval = uiDoubleUpDown1.Value;
+                timerSend.Elapsed += TimerSend_Elapsed;
+                timerSend.Start();
+            }
+            else
+            {
+                timerSend.Elapsed -= TimerSend_Elapsed;
+                timerSend.Stop();
+            }
+        }
+
+        private void TimerSend_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            this.SafeInvoke(() =>
+            {
+                if (!string.IsNullOrEmpty(tbSendData.Text))
+                    btnSend_Click(sender, e);
+            });
+        }
+
+        private void uiDoubleUpDown1_ValueChanged(object sender, double value)
+        {
+            if (uiDoubleUpDown1.Value > 0)
+            { timerSend.Interval = uiDoubleUpDown1.Value; }
+        }
     }
 }

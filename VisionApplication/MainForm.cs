@@ -29,19 +29,19 @@ namespace VisionApplication
         ILog log = LogManager.GetLogger(typeof(MainForm));
         public MainForm()
         {
-            InitializeComponent(); 
+            InitializeComponent();
             this.Text = Program.Title;
-            this.DoubleBuffered=true;
+            this.DoubleBuffered = true;
             this.MinimumSize = new Size(900, 600);
-            visionControl1.RunStateUpdated += VisionControl1_RunStateUpdated;
-            visionControl1.ErrorMsgRcv += VisionControl1_ErrorMsgRcv;
-            visionControl1.AutoRunModeChanged += VisionControl1_AutoRunModeChanged;
+            visionControl1.RunStateUpdated += x => this.SafeInvoke(() => VisionControl1_RunStateUpdated(x));
+            visionControl1.ErrorMsgRcv += x => this.SafeInvoke(() => VisionControl1_ErrorMsgRcv(x));
+            visionControl1.AutoRunModeChanged += x => this.SafeInvoke(() => VisionControl1_AutoRunModeChanged(x));
             visionControl1.PreviewChanged += VisionControl1_PreviewChanged;
-            visionControl1.ProjectOpened += VisionControl1_ProjectOpened;
+            visionControl1.ProjectOpened += x => this.SafeInvoke(() => VisionControl1_ProjectOpened(x));
             this.SizeChanged += MainForm_SizeChanged;
-            foreach(var tsb in toolStrip1.Items.OfType<ToolStripButton>())
+            foreach (var tsb in toolStrip1.Items.OfType<ToolStripButton>())
                 tsb.Paint += ToolStripButton_Paint;
-            if(MyAppConfig.AutoLogin)
+            if (MyAppConfig.AutoLogin)
             {
                 LoginUser = MyAppConfig.User;
             }
@@ -49,21 +49,24 @@ namespace VisionApplication
             visionControl1.AutoRunMode = MyAppConfig.AutoRunMode;
             tsbDatabase.Click += TsbDatabase_Click;
             this.Load += MainForm_Load;
+            Application.ThreadException += Application_ThreadException;
         }
 
+        private void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            if (e.Exception.InnerException != null)
+                log.Error(e.Exception.InnerException);
+            log.Error(e.Exception);
+        }
 
-        private async void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
             dbConn = MyAppConfig.DbInfo;
             try
             {
-                if(dbConn == null)
+                if (dbConn == null || !DbOperation.TestConn(dbConn))
                 {
-
-                }
-                if (!DbOperation.TestConn(dbConn))
-                {
-                    tsbDatabase.Text = "数据库未配置";
+                    tsbDatabase.Text = "数据库未设置";
                     return;
                 }
                 dataBaseChanged();
@@ -78,14 +81,9 @@ namespace VisionApplication
                 string lastFile = MyAppConfig.LastRunFile;
                 if (!string.IsNullOrEmpty(lastFile) && File.Exists(lastFile))
                 {
-                     ShowWaitForm("正在打开上次工程");
-                    log.Info("自动打开上次vpp文件："+MyAppConfig.LastRunFile);
-                    new Thread(() =>
-                         this.SafeInvoke(() =>
-                         {
-                             visionControl1.OpenVpp(MyAppConfig.LastRunFile);
-                             HideWaitForm();
-                         })).Start(); 
+                    ShowWaitForm("正在打开上次工程");
+                    log.Info("自动打开上次vpp文件：" + MyAppConfig.LastRunFile);
+                    new Thread(() => this.SafeInvoke(() => visionControl1.OpenVpp(MyAppConfig.LastRunFile))).Start();
                 }
             }
         }
@@ -98,8 +96,9 @@ namespace VisionApplication
             if (bcolor == Color.Transparent)
                 bcolor = toolStrip1.Parent.BackColor;
             var fillRect = t.Checked ? new Rectangle(0, 0, t.Width, t.Height) : new Rectangle(1, 1, t.Width - 2, t.Height - 2);
-
-            e.Graphics.FillRectangle(new SolidBrush(bcolor), fillRect);
+            var g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            g.FillRectangle(new SolidBrush(bcolor), fillRect);
             var textSize = e.Graphics.MeasureString(t.Text, t.Font);
             if (t.Checked)
                 using (var pen = new Pen(Color.Blue))
@@ -107,8 +106,8 @@ namespace VisionApplication
 
             int imgW = toolStrip1.ImageScalingSize.Width;
             var img = t.Enabled ? t.Image : t.Image.CreateDisabledImage(null);
-            e.Graphics.DrawImage(img, 3, (t.Height - imgW) / 2, imgW, imgW);
-            e.Graphics.DrawString(t.Text, t.Font, new SolidBrush(t.Enabled ? t.ForeColor : Color.DarkGray), imgW + 6, (t.Height - textSize.Height) / 2);
+            g.DrawImage(img, 3, (t.Height - imgW) / 2, imgW, imgW);
+            g.DrawString(t.Text, t.Font, new SolidBrush(t.Enabled ? t.ForeColor : Color.DarkGray), imgW + 6, (t.Height - textSize.Height) / 2);
         }
 
         private void VisionControl1_ErrorMsgRcv(string x)
@@ -250,12 +249,7 @@ namespace VisionApplication
                 if (IsPreView)
                     visionControl1.Preview(false);
                 ShowWaitForm("正在加载工程...");
-                new Thread(() =>
-                     this.SafeInvoke(() =>
-                     {
-                         visionControl1.OpenVpp(file);
-                     })).Start();
-
+                new Thread(() => this.SafeInvoke(() => visionControl1.OpenVpp(file))).Start();
                 MyAppConfig.LastRunFile = file;
             }
         }

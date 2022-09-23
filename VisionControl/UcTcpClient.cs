@@ -28,6 +28,8 @@ namespace VisionControl
             tbPort.SetType(TextInputType.Int, false);
             tcpClient = new TcpClientEx();
             tcpClient.OnReceive += TcpClient_OnReceive;
+            tcpClient.Connected += (_, __) => SetUIStat();
+            tcpClient.LostedConnect += (_, __) => SetUIStat();
             this.Disposed += UcTcpClient_Disposed;
             btnDisCon.Enabled = false;
             this.BackColor = Color.Transparent;
@@ -84,8 +86,7 @@ namespace VisionControl
         {
             try
             {
-                tcpClient.BeginConnect(tbServer.Text, tbPort.Text.ToInt());
-                SetUIStat();
+                tcpClient.BeginConnect(tbServer.Text, tbPort.Text.ToInt(), 8000); 
             }
             catch (Exception ex)
             {
@@ -157,6 +158,51 @@ namespace VisionControl
                 MessageBoxE.Show(this, " 保存成功");
             }
             catch (Exception ex) { MessageBoxE.Show(this, " 保存失败\r\n" + ex.Message); }
+        }
+
+        System.Timers.Timer timerSend = new System.Timers.Timer();
+        private void ckTimeToSent_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckTimeToSent.Checked)
+            {
+                timerSend.Interval = uiDoubleUpDown1.Value;
+                timerSend.Elapsed += TimerSend_Elapsed;
+                timerSend.Start();
+            }
+            else
+            {
+                timerSend.Elapsed -= TimerSend_Elapsed;
+                timerSend.Stop();
+            }
+        }
+
+        private void TimerSend_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            this.SafeInvoke(() =>
+            {
+                if (!string.IsNullOrEmpty(tbSendData.Text))
+                {
+                    if (!tcpClient.IsOnline)
+                    {
+                        if (ckAutoConn.Checked)
+                        {
+                            try { tcpClient.Connect(tbServer.Text, tbPort.Text.ToInt()); } catch { }
+                        }
+                    }
+                    if (!tcpClient.client.Connected)
+                    { 
+                        return;
+                    }
+                    var data = ByteConverter.ToSocketBytes(tbSendData.Text, ckSentHex.Checked);                   
+                    tcpClient.Send(data);
+                }
+            });
+        }
+
+        private void uiDoubleUpDown1_ValueChanged(object sender, double value)
+        {
+            if (uiDoubleUpDown1.Value > 0)
+            { timerSend.Interval = uiDoubleUpDown1.Value; }
         }
     }
 }

@@ -354,7 +354,7 @@ namespace Utilities
             SaveElement("TcpServer", x =>
             {
                 x.SetAttributeValue("Port", info.Port);
-                x.SetAttributeValue("HexReceive", info.HexReceive);
+                x.SetAttributeValue("HexReceive", info.HexReceive ? 1 : 0);
                 x.SetAttributeValue("HexSend", info.HexSend ? 1 : 0);
                 x.SetAttributeValue("AutoStart", info.AutoStart ? 1 : 0);
                 x.SetAttributeValue("SendData", info.SendText);
@@ -368,7 +368,7 @@ namespace Utilities
             {
                 x.SetAttributeValue("Port", info.Port);
                 x.SetAttributeValue("Server", info.Server);
-                x.SetAttributeValue("HexReceive", info.HexReceive);
+                x.SetAttributeValue("HexReceive", info.HexReceive ? 1 : 0);
                 x.SetAttributeValue("HexSend", info.HexSend ? 1 : 0);
                 x.SetAttributeValue("AutoConn", info.AutoConn ? 1 : 0);
                 x.SetAttributeValue("SendData", info.SendText);

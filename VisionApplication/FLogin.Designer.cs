@@ -62,6 +62,7 @@
             // btnOK
             // 
             this.btnOK.Location = new System.Drawing.Point(208, 12);
+            this.btnOK.Text = "登录";
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // rbAdmin
@@ -161,11 +162,11 @@
             this.panel1.TabIndex = 9;
             this.panel1.Visible = false;
             // 
-            // button1
+            // btnModify
             // 
             this.btnModify.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnModify.Location = new System.Drawing.Point(314, 52);
-            this.btnModify.Name = "button1";
+            this.btnModify.Name = "btnModify";
             this.btnModify.Size = new System.Drawing.Size(87, 34);
             this.btnModify.TabIndex = 9;
             this.btnModify.Text = "修改";

@@ -45,6 +45,7 @@
             // btnOK
             // 
             this.btnOK.Location = new System.Drawing.Point(298, 12);
+            this.btnOK.Text = "保存";
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // ckbAutoStart

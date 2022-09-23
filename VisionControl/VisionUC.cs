@@ -19,9 +19,7 @@ using Cognex.VisionPro.ResultsAnalysis;
 using Cognex.VisionPro.ToolBlock;
 using Automation.BDaq;
 using log4net;
-using Sunny.UI.Win32;
-using static System.Net.WebRequestMethods;
-using File = System.IO.File;
+using Sunny.UI.Win32;  
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
@@ -393,7 +391,30 @@ namespace VisionControl
             }
         }
         UCOneJob SelectedUcJob => GetUCJob(SelectedTab);
-        UCOneJob GetUCJob(int i) => UCJobs.ElementAt(i);
+        UCOneJob GetUCJob(int i)
+        {
+            try
+            {
+                return UCJobs.ElementAt(i);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+            return UCJobs.First();
+        }
+        UCJobStat GetUCJobStat(int i)
+        {
+            try
+            {
+                return UCJobsStat.ElementAt(i);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+            return UCJobsStat.First();
+        }
 
         public event Action<string> ErrorMsgRcv;
         void SetErrorMsg(string text)
@@ -562,8 +583,10 @@ namespace VisionControl
                 {
                     mJM.IOEnable = true;
                 }
-                catch (Cognex.VisionPro.Exceptions.CogException)
-                { }
+                catch (Cognex.VisionPro.Exceptions.CogException ex)
+                {
+                    log.Error(ex);
+                }
             }
 
             // start heartbeats, if QuickBuild app is configured for them
@@ -711,7 +734,7 @@ namespace VisionControl
             // stopWatch.Stop();
             CogJob job = (CogJob)sender;
             int i = Utility.GetJobIndexFromName(mJM, job.Name);
-            var stat = UCJobsStat.ElementAt(i);
+            var stat = GetUCJobStat(i);
             if (stat.StopWatch.IsRunning)
             {
                 stat.Stop();
@@ -909,7 +932,7 @@ namespace VisionControl
                     {
                         stopWatch.Start();
                     }
-                    UCJobsStat.ElementAt(i).Start();
+                    GetUCJobStat(i).Start();
                     if (once)
                     {
                         log.Info($"执行单次运行Job[{i}]“{job.Name}”操作");
@@ -985,12 +1008,15 @@ namespace VisionControl
                     else
                         ctl.Enabled = true;
                 }
-                var ucjob = UCJobs.ElementAt(j);
-                var state = force ?
-                    (running ?
-                    (runningContinuous ? CogJobStateConstants.RunningContinuous : CogJobStateConstants.RunningSingle) : CogJobStateConstants.Stopped)
-                   : mJM.Job(j).State;
-                ucjob.SafeInvoke(() => ucjob.UpdateUIStat(state));
+                if (j < tabControl_JobTabs.TabCount)
+                {
+                    var ucjob = GetUCJob(j);
+                    var state = force ?
+                        (running ?
+                        (runningContinuous ? CogJobStateConstants.RunningContinuous : CogJobStateConstants.RunningSingle) : CogJobStateConstants.Stopped)
+                       : mJM.Job(j).State;
+                    ucjob.SafeInvoke(() => ucjob.UpdateUIStat(state));
+                }
             }
         }
 
@@ -1166,6 +1192,7 @@ namespace VisionControl
         //没啥用，别删，删了报错。
         static bool BioFailed(ErrorCode err)
         {
+            return false;
             return err < ErrorCode.Success && err >= ErrorCode.ErrorHandleNotValid;
         }
         //====================
@@ -1244,7 +1271,7 @@ namespace VisionControl
                     UpdateControlsEnabled();
                 }
                 int jobInd = Utility.GetJobIndex(mJM, job);
-                UCJobs.ElementAt(jobInd).UpdateUIStat(job.State);
+                GetUCJob(jobInd).UpdateUIStat(job.State);
                 var runType = job.State == CogJobStateConstants.RunningContinuous ? "连续" : "单次";
                 log.Info($"Job[{jobInd}]“{job.Name}”已启动{runType}运行");
             }
@@ -1319,7 +1346,7 @@ namespace VisionControl
                 }
                 else
                 {
-                    var jobStat = UCJobsStat.ElementAt(i.Value);
+                    var jobStat = GetUCJobStat(i.Value);
                     jobStat.SafeInvoke(() => jobStat.ElapsedText = jobStat.Elapsed.ToString(fmt));
                 }
             }
@@ -1428,7 +1455,12 @@ namespace VisionControl
             // set the selected job text
             Wizard_AddJobTabs(newPagesList);
 
-            // remove all the tabs
+            // remove all the tabs 
+            for (int i = 0; i < tabControl_JobTabs.TabCount; ++i)
+            {
+                GetUCJob(i).cogRecordDisplay1.Dispose();
+                GetUCJob(i).cogRecordsDisplay1.Dispose();
+            }
             tabControl_JobTabs.Controls.ClearAndDispose();
             flowLayoutPanel1.Controls.ClearAndDispose();
 
@@ -2180,6 +2212,13 @@ namespace VisionControl
         #endregion
         public void OpenVpp(string file)
         {
+            if (mJM != null)
+            {
+                AttachToJobManager(false);
+
+                mJM.Shutdown();
+            }
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
             setApplication(file);
 
             //for (int i = 0; i < tabControl_JobTabs.TabCount; i++)

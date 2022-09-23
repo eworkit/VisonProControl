@@ -18,6 +18,8 @@ namespace Utilities.Net
       // public   System.Net.IPEndPoint IPEndPoint { get; private set; }
         public event EventHandler<TcpClientEventArgs> OnReceive;
         public event EventHandler LostedConnect;
+        public event EventHandler Connected;
+        public int WaitConnect { get; set; } = -1;
         public TcpClientEx()
         {
             client = new TcpClient();
@@ -47,10 +49,33 @@ namespace Utilities.Net
             }
         }
         ManualResetEvent connectDone = new ManualResetEvent(false);
-        /// <summary>
-        /// 异步连接
-        /// </summary>
-        public void BeginConnect(string server, int port)
+        public void  Connect(string server, int port, int wait = -1)
+        {
+            try { Stop(); }
+            catch { }
+            //IPEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse(ip), port);
+            this.Server = server;
+            this.Port = port;
+            client = new TcpClient();
+            client.ReceiveTimeout = 10;
+            connectDone.Reset();
+            Exception sockExc = null;
+            //  client.BeginConnect(ip, port, new AsyncCallback(ConnectCallback), client);
+           client.Connect(server, port);
+           Connected?.Invoke(this, EventArgs.Empty);
+         
+            if ((client != null) && (client.Connected))
+            {
+                netstream = client.GetStream();
+                asyncread(client);
+            }
+            //             else
+            //                 return false;
+            //             return true;
+        }/// <summary>
+         /// 异步连接
+         /// </summary>
+        public void BeginConnect(string server, int port, int wait = -1)
         {
             try { Stop(); }
             catch { }
@@ -73,6 +98,7 @@ namespace Utilities.Net
                         if (t.Connected)
                         {
                             t.EndConnect(ar);
+                            Connected?.Invoke(this, EventArgs.Empty);
                         }
                         else
                         {
@@ -92,7 +118,7 @@ namespace Utilities.Net
                 }
                 connectDone.Set();
             }), client);
-            connectDone.WaitOne();
+            connectDone.WaitOne(wait);
             if (sockExc != null)
             {
                 DebugLog.WriteLine("TcpClientEx:BeginConnect(): " + sockExc.Message);
